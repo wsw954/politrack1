@@ -1,0 +1,147 @@
+﻿\---app
+|   \---admin
+|   |   \---dashboard
+|   |   |   |   page.js
+|   |   \---manage-bills
+|   |   |   |   page.js
+|   |   \---manage-politicians
+|   |   |   |   page.js
+|   |   \---manage-users
+|   |   |   |   page.js
+|   |   |   layout.js
+|   \---api
+|   |   \---bills
+|   |   |   \---[id]
+|   |   |   |   |   route.js
+|   |   |   |   route.js
+|   |   \---engagement
+|   |   |   \---[id]
+|   |   |   |   |   route.js
+|   |   |   |   route.js
+|   |   \---politicians
+|   |   |   \---[id]
+|   |   |   |   |   route.js
+|   |   |   |   route.js
+|   |   \---users
+|   |   |   \---[id]
+|   |   |   |   |   route.js
+|   |   |   |   route.js
+|   \---auth
+|   |   \---login
+|   |   |   |   page.js
+|   |   \---register
+|   |   |   |   page.js
+|   |   \---reset-password
+|   |   |   |   page.js
+|   \---bills
+|   |   \---new
+|   |   |   |   page.js
+|   |   \---[id]
+|   |   |   \---edit
+|   |   |   |   |   page.js
+|   |   |   |   page.js
+|   |   |   layout.js
+|   |   |   page.js
+|   \---engagement
+|   |   \---new
+|   |   |   |   page.js
+|   |   \---[id]
+|   |   |   \---edit
+|   |   |   |   |   page.js
+|   |   |   |   page.js
+|   |   |   layout.js
+|   |   |   page.js
+|   \---politicians
+|   |   \---new
+|   |   |   |   page.js
+|   |   \---[id]
+|   |   |   \---edit
+|   |   |   |   |   page.js
+|   |   |   |   page.js
+|   |   |   layout.js
+|   |   |   page.js
+|   \---user
+|   |   \---dashboard
+|   |   |   |   page.js
+|   |   \---history
+|   |   |   |   page.js
+|   |   \---profile
+|   |   |   |   page.js
+|   |   \---settings
+|   |   |   |   page.js
+|   |   \---watchlist
+|   |   |   |   page.js
+|   |   |   layout.js
+|   |   favicon.ico
+|   |   globals.css
+|   |   layout.js
+|   |   page.js
+\---components
+|   \---bills
+|   |   |   BillCard.js
+|   |   |   BillForm.js
+|   |   |   StatusTimeline.js
+|   |   |   TagList.js
+|   \---engagement
+|   |   |   ActionPromptBox.js
+|   |   |   EngagementCard.js
+|   |   |   EngagementForm.js
+|   \---layouts
+|   |   |   AdminLayout.js
+|   |   |   Layout.js
+|   |   |   UserLayout.js
+|   \---politicians
+|   |   |   PoliticianCard.js
+|   |   |   PoliticianForm.js
+|   |   |   VotingRecordTable.js
+|   \---ui
+|   |   |   Button.js
+|   |   |   Dropdown.js
+|   |   |   Input.js
+|   |   |   Modal.js
+|   |   |   Spinner.js
+|   \---user
+|   |   |   ActivityCard.js
+|   |   |   SettingsForm.js
+|   |   |   UserNav.js
+|   |   |   WatchlistItem.js
+\---config
+|   |   db.js
+\---models
+|   |   Bill.js
+|   |   Engagement.js
+|   |   Politician.js
+|   |   User.js
+\---public
+|   \---avatars
+|   |   |   .gitkeep
+|   \---bills
+|   |   |   .gitkeep
+|   \---politicians
+|   |   |   .gitkeep
+|   |   file.svg
+|   |   globe.svg
+|   |   next.svg
+|   |   vercel.svg
+|   |   window.svg
+\---store
+|   \---slices
+|   |   |   billsSlice.js
+|   |   |   politiciansSlice.js
+|   |   |   userSlice.js
+|   |   index.js
+\---utils
+|   |   authHelpers.js
+|   |   roleCheck.js
+|   .gitignore
+|   eslint.config.mjs
+|   folder-structure.txt
+|   jsconfig.json
+|   middleware.js
+|   next.config.mjs
+|   package-lock.json
+|   package.json
+|   postcss.config.js
+|   postcss.config.mjs
+|   README.md
+|   tailwind.config.js
