@@ -10,6 +10,10 @@
 |   |   |   |   page.js
 |   |   |   layout.js
 |   \---api
+|   |   \---auth
+|   |   |   \---login
+|   |   |   \---register
+|   |   |   |   |   route.js
 |   |   \---bills
 |   |   |   \---[id]
 |   |   |   |   |   route.js
@@ -96,9 +100,14 @@
 |   |   |   VotingRecordTable.js
 |   \---ui
 |   |   |   Button.js
+|   |   |   Card.js
 |   |   |   Dropdown.js
+|   |   |   FormButton.js
+|   |   |   FormError.js
+|   |   |   FormInput.js
 |   |   |   Input.js
 |   |   |   Modal.js
+|   |   |   PasswordInput.js
 |   |   |   Spinner.js
 |   \---user
 |   |   |   ActivityCard.js
@@ -133,11 +142,11 @@
 \---utils
 |   |   authHelpers.js
 |   |   roleCheck.js
+|   .env.local
 |   .gitignore
 |   eslint.config.mjs
 |   folder-structure.txt
 |   jsconfig.json
-|   middleware.js
 |   next.config.mjs
 |   package-lock.json
 |   package.json
