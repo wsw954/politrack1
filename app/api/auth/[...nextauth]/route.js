@@ -19,7 +19,9 @@ export const authOptions = {
         await dbConnect();
 
         // Find user by email
-        const user = await User.findOne({ email: credentials.email });
+        const user = await User.findOne({ email: credentials.email }).select(
+          "+password"
+        );
         if (!user) throw new Error("Invalid email or password");
 
         // Compare hashed passwords

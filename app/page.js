@@ -1,5 +1,4 @@
-// /app/page.js
-
+//app/page.js
 "use client";
 import Link from "next/link";
 import Button from "@/components/ui/Button";
@@ -19,9 +18,14 @@ export default function HomePage() {
           bills—all in one place.
         </p>
 
-        <Link href="/auth/register">
-          <Button>Register</Button>
-        </Link>
+        <div className="flex flex-col sm:flex-row justify-center gap-4">
+          <Link href="/auth/register">
+            <Button>Register</Button>
+          </Link>
+          <Link href="/auth/login">
+            <Button>Login</Button>
+          </Link>
+        </div>
       </Card>
     </main>
   );

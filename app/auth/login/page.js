@@ -1,9 +1,9 @@
 //app/auth/login/page.js
-
 "use client";
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { signIn } from "next-auth/react";
 import FormInput from "@/components/ui/FormInput";
 import FormButton from "@/components/ui/FormButton";
 import FormError from "@/components/ui/FormError";
@@ -24,11 +24,19 @@ export default function LoginPage() {
     setLoading(true);
     setError("");
 
-    // Placeholder logic until NextAuth signIn is added
-    setTimeout(() => {
-      setLoading(false);
-      router.push("/user/dashboard"); // Redirect mock
-    }, 1000);
+    const res = await signIn("credentials", {
+      redirect: false,
+      email: form.email,
+      password: form.password,
+    });
+
+    setLoading(false);
+
+    if (res?.error) {
+      setError(res.error);
+    } else {
+      router.push("/user/dashboard");
+    }
   };
 
   return (
