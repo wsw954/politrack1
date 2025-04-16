@@ -1,4 +1,5 @@
 // components/ui/FormButton.js
+"use client";
 export default function FormButton({
   children,
   loading = false,

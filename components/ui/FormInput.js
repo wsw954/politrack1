@@ -1,4 +1,5 @@
 // components/ui/FormInput.js
+"use client";
 export default function FormInput({
   label,
   name,

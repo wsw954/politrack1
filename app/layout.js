@@ -1,4 +1,6 @@
 // app/layout.js
+import AuthProvider from "@/components/providers/AuthProvider";
+
 export const metadata = {
   title: "Politrack",
   description: "Track how politicians vote and what laws really mean",
@@ -7,7 +9,9 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        <AuthProvider>{children}</AuthProvider>
+      </body>
     </html>
   );
 }

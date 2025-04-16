@@ -1,10 +1,9 @@
 // components/ui/Card.js
-export default function Card({ children, className = "", ...props }) {
+"use client";
+
+export default function Card({ children, className = "" }) {
   return (
-    <div
-      className={`bg-white rounded-xl shadow-md p-6 ${className}`}
-      {...props}
-    >
+    <div className={`bg-white shadow-md rounded-2xl p-6 ${className}`}>
       {children}
     </div>
   );

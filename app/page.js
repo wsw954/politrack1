@@ -1,7 +1,9 @@
 // /app/page.js
+
+"use client";
 import Link from "next/link";
-import Button from "@/components/ui/Button"; // already in your components
-import Card from "@/components/ui/Card"; // already in your components
+import Button from "@/components/ui/Button";
+import Card from "@/components/ui/Card";
 
 export default function HomePage() {
   return (

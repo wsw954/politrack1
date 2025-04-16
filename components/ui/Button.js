@@ -1,4 +1,6 @@
 // components/ui/Button.js
+
+"use client";
 export default function Button({
   children,
   onClick,

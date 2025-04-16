@@ -1,4 +1,6 @@
 // components/ui/PasswordInput.js
+
+"use client";
 import { useState } from "react";
 
 export default function PasswordInput({
