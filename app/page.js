@@ -1,32 +1,60 @@
 //app/page.js
 "use client";
-import Link from "next/link";
-import Button from "@/components/ui/Button";
+
 import Card from "@/components/ui/Card";
+import Button from "@/components/ui/Button";
+import SectionWrapper from "@/components/ui/SectionWrapper";
+import FlexRow from "@/components/ui/FlexRow";
+import Link from "next/link";
 
 export default function HomePage() {
   return (
-    <main className="min-h-screen bg-gray-50 p-6 flex flex-col items-center justify-center">
-      <Card className="max-w-xl text-center p-8">
-        <h1 className="text-4xl font-bold mb-4 text-blue-800">
+    <SectionWrapper>
+      <div className="text-center space-y-4 mb-10">
+        <h1 className="text-4xl font-bold text-gray-900">
           Welcome to Politrack
         </h1>
-        <p className="text-lg mb-6 text-gray-700">
-          A clear, actionable, and user-friendly platform that helps Floridians
-          track how their elected officials vote, understand what legislation
-          really means, and take meaningful action to support or oppose
-          bills—all in one place.
+        <p className="text-lg text-gray-600">
+          Track how politicians vote, understand what legislation really means,
+          and take action.
         </p>
+      </div>
 
-        <div className="flex flex-col sm:flex-row justify-center gap-4">
-          <Link href="/auth/register">
-            <Button>Register</Button>
+      <FlexRow>
+        <Card>
+          <h2 className="text-xl font-semibold mb-2 text-center">
+            View Politicians
+          </h2>
+          <p className="text-sm text-gray-600 mb-4 text-center">
+            Explore voting records, profiles, and political affiliations.
+          </p>
+          <Link href="/politicians">
+            <Button>Explore Politicians</Button>
           </Link>
-          <Link href="/auth/login">
-            <Button>Login</Button>
+        </Card>
+
+        <Card>
+          <h2 className="text-xl font-semibold mb-2 text-center">View Bills</h2>
+          <p className="text-sm text-gray-600 mb-4 text-center">
+            See summaries of key legislation and follow their progress.
+          </p>
+          <Link href="/bills">
+            <Button>Browse Bills</Button>
           </Link>
-        </div>
-      </Card>
-    </main>
+        </Card>
+
+        <Card>
+          <h2 className="text-xl font-semibold mb-2 text-center">
+            Take Action
+          </h2>
+          <p className="text-sm text-gray-600 mb-4 text-center">
+            Contact your representatives or sign petitions on current issues.
+          </p>
+          <Link href="/engagement">
+            <Button>Engage Now</Button>
+          </Link>
+        </Card>
+      </FlexRow>
+    </SectionWrapper>
   );
 }

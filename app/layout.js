@@ -1,4 +1,5 @@
 // app/layout.js
+import "@/app/globals.css"; // ← This is required to activate Tailwind!
 import AuthProvider from "@/components/providers/AuthProvider";
 
 export const metadata = {

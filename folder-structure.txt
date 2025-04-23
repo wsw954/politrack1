@@ -12,7 +12,10 @@
 |   \---api
 |   |   \---auth
 |   |   |   \---login
+|   |   |   |   |   route.js
 |   |   |   \---register
+|   |   |   |   |   route.js
+|   |   |   \---[...nextauth]
 |   |   |   |   |   route.js
 |   |   \---bills
 |   |   |   \---[id]
@@ -62,6 +65,7 @@
 |   |   |   \---edit
 |   |   |   |   |   page.js
 |   |   |   |   page.js
+|   |   |   advancedSearch.js
 |   |   |   layout.js
 |   |   |   page.js
 |   \---user
@@ -95,19 +99,24 @@
 |   |   |   Layout.js
 |   |   |   UserLayout.js
 |   \---politicians
+|   |   |   FilterBar.js
 |   |   |   PoliticianCard.js
 |   |   |   PoliticianForm.js
 |   |   |   VotingRecordTable.js
+|   \---providers
+|   |   |   AuthProvider.js
 |   \---ui
 |   |   |   Button.js
 |   |   |   Card.js
 |   |   |   Dropdown.js
+|   |   |   FlexRow.js
 |   |   |   FormButton.js
 |   |   |   FormError.js
 |   |   |   FormInput.js
 |   |   |   Input.js
 |   |   |   Modal.js
 |   |   |   PasswordInput.js
+|   |   |   SectionWrapper.js
 |   |   |   Spinner.js
 |   \---user
 |   |   |   ActivityCard.js
@@ -127,6 +136,13 @@
 |   \---bills
 |   |   |   .gitkeep
 |   \---politicians
+|   |   \---images
+|   |   |   |   alicia_martinez.jpg
+|   |   |   |   brian_thompson.jpg
+|   |   |   |   clara_nguyen.jpg
+|   |   |   |   david_patel.jpg
+|   |   |   |   emma_rodriguez.jpg
+|   |   |   |   frank_wilson.jpg
 |   |   |   .gitkeep
 |   |   file.svg
 |   |   globe.svg
@@ -151,6 +167,5 @@
 |   package-lock.json
 |   package.json
 |   postcss.config.js
-|   postcss.config.mjs
 |   README.md
 |   tailwind.config.js

@@ -1,1 +1,51 @@
-@tailwind base;\n@tailwind components;\n@tailwind utilities;
+/*app/globals.css */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+;
+
+/* 1. Apply a modern default font */
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #f9fafb;
+    /* Light gray background */
+    color: #111827;
+    /* Almost black text */
+    margin: 0;
+    padding: 0;
+}
+
+/* 2. Reset common elements */
+* {
+    box-sizing: border-box;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+/* 3. Optional: Set default spacing for root */
+html,
+body {
+    height: 100%;
+}
+
+/* 4. Tailwind-compatible headings (optional tweaks) */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+/* 5. Optional helper class */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1rem;
+}

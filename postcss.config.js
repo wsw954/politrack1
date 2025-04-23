@@ -1,3 +1,7 @@
-export default function Page() {
-  return <div>Page</div>;
-}
+// postcss.config.js
+module.exports = {
+  plugins: {
+    tailwindcss: {},
+    autoprefixer: {},
+  },
+};
