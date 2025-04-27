@@ -96,16 +96,17 @@ export default function PoliticianListPage() {
         <div className="mt-12 flex flex-col gap-4">
           {politicians.length > 0 ? (
             politicians.map((p) => (
-              <PoliticianCard
-                key={p._id}
-                politician={{
-                  name: `${p.first_name} ${p.last_name}`,
-                  party: p.party,
-                  district: p.district,
-                  chamber: p.chamber,
-                  photo: p.photo_url.replace("/app/public", ""),
-                }}
-              />
+              <Link key={p._id} href={`/politicians/${p._id}`}>
+                <PoliticianCard
+                  politician={{
+                    name: `${p.first_name} ${p.last_name}`,
+                    party: p.party,
+                    district: p.district,
+                    chamber: p.chamber,
+                    photo: p.photo_url.replace("/app/public", ""),
+                  }}
+                />
+              </Link>
             ))
           ) : (
             <p className="text-gray-500">No politicians match your filters.</p>

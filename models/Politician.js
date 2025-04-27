@@ -1,3 +1,4 @@
+//models/Politician.js
 import mongoose from "mongoose";
 
 const politicianSchema = new mongoose.Schema({

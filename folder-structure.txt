@@ -99,9 +99,13 @@
 |   |   |   Layout.js
 |   |   |   UserLayout.js
 |   \---politicians
+|   |   |   CommitteeList.js
+|   |   |   ConsistencyMeter.js
+|   |   |   ContactInfo.js
 |   |   |   FilterBar.js
 |   |   |   PoliticianCard.js
 |   |   |   PoliticianForm.js
+|   |   |   VotingHistory.js
 |   |   |   VotingRecordTable.js
 |   \---providers
 |   |   |   AuthProvider.js
