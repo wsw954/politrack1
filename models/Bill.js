@@ -1,3 +1,4 @@
+//models/Bill.js
 import mongoose from "mongoose";
 
 const billSchema = new mongoose.Schema({
@@ -29,6 +30,10 @@ const billSchema = new mongoose.Schema({
     current_stage: {
       type: String,
       required: true, // e.g., "Committee"
+    },
+    sponsor: {
+      type: String, // References the _id of a politician (e.g., "FL-HOUSE-001")
+      required: true,
     },
     timeline: [
       {
