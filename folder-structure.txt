@@ -88,6 +88,8 @@
 |   \---bills
 |   |   |   BillCard.js
 |   |   |   BillForm.js
+|   |   |   FilterBar.js
+|   |   |   SponsorCard.js
 |   |   |   StatusTimeline.js
 |   |   |   TagList.js
 |   \---engagement
@@ -145,6 +147,7 @@
 |   |   |   |   brian_thompson.jpg
 |   |   |   |   clara_nguyen.jpg
 |   |   |   |   david_patel.jpg
+|   |   |   |   default.jpg
 |   |   |   |   emma_rodriguez.jpg
 |   |   |   |   frank_wilson.jpg
 |   |   |   .gitkeep

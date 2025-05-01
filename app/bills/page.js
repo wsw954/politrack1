@@ -3,6 +3,7 @@
 
 import { useEffect, useState } from "react";
 import BillCard from "@/components/bills/BillCard";
+import FilterBar from "@/components/bills/FilterBar";
 import Button from "@/components/ui/Button";
 import Link from "next/link";
 
@@ -33,11 +34,9 @@ export default function BillListPage() {
           query.toString() ? `?${query.toString()}` : ""
         }`;
         const res = await fetch(url);
-
         if (!res.ok) throw new Error("Failed to fetch bills");
 
         const data = await res.json();
-        console.log(data);
         setBills(data);
         setAllBills(data);
         setLoading(false);
@@ -66,30 +65,11 @@ export default function BillListPage() {
 
       {/* Filter panel */}
       <div className="bg-white border border-gray-200 rounded-xl shadow-sm p-6 mb-12">
-        {/* Temporary Filter Inputs */}
-        <div className="flex flex-col md:flex-row gap-4">
-          <input
-            type="text"
-            placeholder="Search by Title"
-            value={filters.title}
-            onChange={(e) => setFilters({ ...filters, title: e.target.value })}
-            className="border border-gray-300 rounded-md px-4 py-2 w-full"
-          />
-          <input
-            type="text"
-            placeholder="Filter by Tag"
-            value={filters.tag}
-            onChange={(e) => setFilters({ ...filters, tag: e.target.value })}
-            className="border border-gray-300 rounded-md px-4 py-2 w-full"
-          />
-          <input
-            type="text"
-            placeholder="Filter by Status"
-            value={filters.status}
-            onChange={(e) => setFilters({ ...filters, status: e.target.value })}
-            className="border border-gray-300 rounded-md px-4 py-2 w-full"
-          />
-        </div>
+        <FilterBar
+          allBills={allBills}
+          filters={filters}
+          setFilters={setFilters}
+        />
 
         <div className="flex justify-between items-center mt-4">
           <button
@@ -98,9 +78,8 @@ export default function BillListPage() {
           >
             Reset Filters
           </button>
-
-          <Link href="/bills/new">
-            <Button>Add New Bill</Button>
+          <Link href="/bills/advancedSearch">
+            <Button>Advanced Search</Button>
           </Link>
         </div>
       </div>

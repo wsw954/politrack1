@@ -31,10 +31,6 @@ const billSchema = new mongoose.Schema({
       type: String,
       required: true, // e.g., "Committee"
     },
-    sponsor: {
-      type: String, // References the _id of a politician (e.g., "FL-HOUSE-001")
-      required: true,
-    },
     timeline: [
       {
         stage: {
@@ -47,6 +43,10 @@ const billSchema = new mongoose.Schema({
         },
       },
     ],
+  },
+  sponsor: {
+    type: String, // References the _id of a politician (e.g., "FL-HOUSE-001")
+    required: true,
   },
   source_url: {
     type: String,
