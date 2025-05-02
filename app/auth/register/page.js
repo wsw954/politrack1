@@ -1,47 +1,42 @@
 //app/auth/register/page.js
 "use client";
-
+import useRequireGuest from "@/lib/auth/useRequireGuest";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import Card from "@/components/ui/Card";
 import FormInput from "@/components/ui/FormInput";
-import PasswordInput from "@/components/ui/PasswordInput";
 import FormButton from "@/components/ui/FormButton";
 import FormError from "@/components/ui/FormError";
 
-export default function SignupPage() {
+export default function RegisterPage() {
+  const allowGuest = useRequireGuest();
   const router = useRouter();
-
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    password: "",
-  });
-
+  const [form, setForm] = useState({ name: "", email: "", password: "" });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+
+  if (!allowGuest) return null;
 
   const handleChange = (e) => {
-    setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+    setForm({ ...form, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
     setError("");
+    setLoading(true);
 
     try {
       const res = await fetch("/api/auth/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(form),
       });
 
       const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Registration failed");
 
-      if (!res.ok) throw new Error(data.message || "Registration failed");
-
-      router.push("/buyer/dashboard");
+      router.push("/auth/login");
     } catch (err) {
       setError(err.message);
     } finally {
@@ -50,40 +45,46 @@ export default function SignupPage() {
   };
 
   return (
-    <main className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
-      <Card className="w-full max-w-md">
-        <h1 className="text-2xl font-bold text-center mb-6 text-blue-800">
-          Create Your Account
-        </h1>
-        <form onSubmit={handleSubmit} className="space-y-4">
+    <div className="max-w-md mx-auto mt-12 p-6 border rounded shadow">
+      <h2 className="text-2xl font-bold mb-6 text-center">Register</h2>
+      {error && <FormError message={error} />}
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <FormInput
+          label="Name"
+          name="name"
+          value={form.name}
+          onChange={handleChange}
+          required
+        />
+        <FormInput
+          label="Email"
+          type="email"
+          name="email"
+          value={form.email}
+          onChange={handleChange}
+          required
+        />
+        <div>
           <FormInput
-            label="Name"
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
-            required
-          />
-          <FormInput
-            label="Email"
-            name="email"
-            type="email"
-            value={formData.email}
-            onChange={handleChange}
-            required
-          />
-          <PasswordInput
             label="Password"
+            type={showPassword ? "text" : "password"}
             name="password"
-            value={formData.password}
+            value={form.password}
             onChange={handleChange}
             required
           />
-          {error && <FormError message={error} />}
-          <FormButton type="submit" loading={loading}>
-            Sign Up
-          </FormButton>
-        </form>
-      </Card>
-    </main>
+          <button
+            type="button"
+            onClick={() => setShowPassword((prev) => !prev)}
+            className="text-sm text-blue-600 hover:underline mt-1 ml-1"
+          >
+            {showPassword ? "Hide password" : "Show password"}
+          </button>
+        </div>
+        <FormButton type="submit" loading={loading}>
+          Register
+        </FormButton>
+      </form>
+    </div>
   );
 }

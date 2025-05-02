@@ -3,17 +3,22 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { signIn } from "next-auth/react";
+import { signIn, getSession } from "next-auth/react";
+import useRequireGuest from "@/lib/auth/useRequireGuest";
 import FormInput from "@/components/ui/FormInput";
 import FormButton from "@/components/ui/FormButton";
 import FormError from "@/components/ui/FormError";
 import Card from "@/components/ui/Card";
 
 export default function LoginPage() {
+  const allowGuest = useRequireGuest();
   const router = useRouter();
   const [form, setForm] = useState({ email: "", password: "" });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+
+  if (!allowGuest) return null;
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -30,10 +35,18 @@ export default function LoginPage() {
       password: form.password,
     });
 
-    setLoading(false);
-
     if (res?.error) {
       setError(res.error);
+      setLoading(false);
+      return;
+    }
+
+    // Fetch session to get user role
+    const session = await getSession();
+    setLoading(false);
+
+    if (session?.user?.role === "admin") {
+      router.push("/admin/dashboard");
     } else {
       router.push("/user/dashboard");
     }
@@ -54,14 +67,23 @@ export default function LoginPage() {
             onChange={handleChange}
             required
           />
-          <FormInput
-            label="Password"
-            name="password"
-            type="password"
-            value={form.password}
-            onChange={handleChange}
-            required
-          />
+          <div>
+            <FormInput
+              label="Password"
+              type={showPassword ? "text" : "password"}
+              name="password"
+              value={form.password}
+              onChange={handleChange}
+              required
+            />
+            <button
+              type="button"
+              onClick={() => setShowPassword((prev) => !prev)}
+              className="text-sm text-blue-600 hover:underline mt-1 ml-1"
+            >
+              {showPassword ? "Hide password" : "Show password"}
+            </button>
+          </div>
           <FormError message={error} />
           <FormButton loading={loading}>Login</FormButton>
         </form>

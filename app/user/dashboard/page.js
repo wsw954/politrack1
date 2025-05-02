@@ -1,20 +1,15 @@
 //app/user/dashboard/page.js
 "use client";
 
-import { useRouter } from "next/navigation";
-import { useSession, signOut } from "next-auth/react";
+import useRequireRole from "@/lib/auth/useRequireRole";
 import Button from "@/components/ui/Button";
 import Card from "@/components/ui/Card";
+import { signOut } from "next-auth/react";
 
 export default function UserDashboard() {
-  const router = useRouter();
-  const { data: session, status } = useSession();
+  const session = useRequireRole("user", "/");
 
-  if (status === "loading") return <p>Loading...</p>;
-  if (!session) {
-    router.push("/auth/login");
-    return null;
-  }
+  if (!session) return null; // Prevent rendering briefly during redirect
 
   const handleSignOut = () => {
     signOut({ callbackUrl: "/auth/login" });

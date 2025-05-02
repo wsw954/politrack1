@@ -1,13 +1,29 @@
 //app/page.js
-"use client";
+// "use client";
 
 import Card from "@/components/ui/Card";
 import Button from "@/components/ui/Button";
 import SectionWrapper from "@/components/ui/SectionWrapper";
 import FlexRow from "@/components/ui/FlexRow";
 import Link from "next/link";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 
-export default function HomePage() {
+import { redirect } from "next/navigation";
+
+export default async function HomePage() {
+  const session = await getServerSession(authOptions);
+
+  if (session?.user?.role) {
+    const dashboardPath =
+      session.user.role === "admin"
+        ? "/admin/dashboard"
+        : session.user.role === "user"
+        ? "/user/dashboard"
+        : "/";
+    redirect(dashboardPath);
+  }
+
   return (
     <SectionWrapper>
       <div className="text-center space-y-4 mb-10">
