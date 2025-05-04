@@ -1,178 +1,200 @@
-﻿\---app
-|   \---admin
-|   |   \---dashboard
-|   |   |   |   page.js
-|   |   \---manage-bills
-|   |   |   |   page.js
-|   |   \---manage-politicians
-|   |   |   |   page.js
-|   |   \---manage-users
-|   |   |   |   page.js
-|   |   |   layout.js
-|   \---api
-|   |   \---auth
-|   |   |   \---login
-|   |   |   |   |   route.js
-|   |   |   \---register
-|   |   |   |   |   route.js
-|   |   |   \---[...nextauth]
-|   |   |   |   |   route.js
-|   |   \---bills
-|   |   |   \---[id]
-|   |   |   |   |   route.js
-|   |   |   |   route.js
-|   |   \---engagement
-|   |   |   \---[id]
-|   |   |   |   |   route.js
-|   |   |   |   route.js
-|   |   \---politicians
-|   |   |   \---[id]
-|   |   |   |   |   route.js
-|   |   |   |   route.js
-|   |   \---users
-|   |   |   \---[id]
-|   |   |   |   |   route.js
-|   |   |   |   route.js
-|   \---auth
-|   |   \---login
-|   |   |   |   page.js
-|   |   \---register
-|   |   |   |   page.js
-|   |   \---reset-password
-|   |   |   |   page.js
-|   \---bills
-|   |   \---new
-|   |   |   |   page.js
-|   |   \---[id]
-|   |   |   \---edit
-|   |   |   |   |   page.js
-|   |   |   |   page.js
-|   |   |   layout.js
-|   |   |   page.js
-|   \---engagement
-|   |   \---new
-|   |   |   |   page.js
-|   |   \---[id]
-|   |   |   \---edit
-|   |   |   |   |   page.js
-|   |   |   |   page.js
-|   |   |   layout.js
-|   |   |   page.js
-|   \---politicians
-|   |   \---new
-|   |   |   |   page.js
-|   |   \---[id]
-|   |   |   \---edit
-|   |   |   |   |   page.js
-|   |   |   |   page.js
-|   |   |   advancedSearch.js
-|   |   |   layout.js
-|   |   |   page.js
-|   \---user
-|   |   \---dashboard
-|   |   |   |   page.js
-|   |   \---history
-|   |   |   |   page.js
-|   |   \---profile
-|   |   |   |   page.js
-|   |   \---settings
-|   |   |   |   page.js
-|   |   \---watchlist
-|   |   |   |   page.js
-|   |   |   layout.js
-|   |   favicon.ico
-|   |   globals.css
-|   |   layout.js
-|   |   page.js
-\---components
-|   \---bills
-|   |   |   BillCard.js
-|   |   |   BillForm.js
-|   |   |   FilterBar.js
-|   |   |   SponsorCard.js
-|   |   |   StatusTimeline.js
-|   |   |   TagList.js
-|   \---engagement
-|   |   |   ActionPromptBox.js
-|   |   |   EngagementCard.js
-|   |   |   EngagementForm.js
-|   \---layouts
-|   |   |   AdminLayout.js
-|   |   |   Layout.js
-|   |   |   UserLayout.js
-|   \---politicians
-|   |   |   CommitteeList.js
-|   |   |   ConsistencyMeter.js
-|   |   |   ContactInfo.js
-|   |   |   FilterBar.js
-|   |   |   PoliticianCard.js
-|   |   |   PoliticianForm.js
-|   |   |   VotingHistory.js
-|   |   |   VotingRecordTable.js
-|   \---providers
-|   |   |   AuthProvider.js
-|   \---ui
-|   |   |   Button.js
-|   |   |   Card.js
-|   |   |   Dropdown.js
-|   |   |   FlexRow.js
-|   |   |   FormButton.js
-|   |   |   FormError.js
-|   |   |   FormInput.js
-|   |   |   Input.js
-|   |   |   Modal.js
-|   |   |   PasswordInput.js
-|   |   |   SectionWrapper.js
-|   |   |   Spinner.js
-|   \---user
-|   |   |   ActivityCard.js
-|   |   |   SettingsForm.js
-|   |   |   UserNav.js
-|   |   |   WatchlistItem.js
-\---config
-|   |   db.js
-\---models
-|   |   Bill.js
-|   |   Engagement.js
-|   |   Politician.js
-|   |   User.js
-\---public
-|   \---avatars
-|   |   |   .gitkeep
-|   \---bills
-|   |   |   .gitkeep
-|   \---politicians
-|   |   \---images
-|   |   |   |   alicia_martinez.jpg
-|   |   |   |   brian_thompson.jpg
-|   |   |   |   clara_nguyen.jpg
-|   |   |   |   david_patel.jpg
-|   |   |   |   default.jpg
-|   |   |   |   emma_rodriguez.jpg
-|   |   |   |   frank_wilson.jpg
-|   |   |   .gitkeep
-|   |   file.svg
-|   |   globe.svg
-|   |   next.svg
-|   |   vercel.svg
-|   |   window.svg
-\---store
-|   \---slices
-|   |   |   billsSlice.js
-|   |   |   politiciansSlice.js
-|   |   |   userSlice.js
-|   |   index.js
-\---utils
-|   |   authHelpers.js
-|   |   roleCheck.js
-|   .env.local
-|   .gitignore
-|   eslint.config.mjs
-|   folder-structure.txt
-|   jsconfig.json
-|   next.config.mjs
-|   package-lock.json
-|   package.json
-|   postcss.config.js
-|   README.md
-|   tailwind.config.js
+├── README.md
+├── app
+│   ├── admin
+│   │   ├── dashboard
+│   │   │   └── page.js
+│   │   ├── layout.js
+│   │   ├── manage-bills
+│   │   │   └── page.js
+│   │   ├── manage-politicians
+│   │   │   └── page.js
+│   │   └── manage-users
+│   │       └── page.js
+│   ├── api
+│   │   ├── auth
+│   │   │   ├── [...nextauth]
+│   │   │   │   └── route.js
+│   │   │   ├── login
+│   │   │   │   └── route.js
+│   │   │   └── register
+│   │   │       └── route.js
+│   │   ├── bills
+│   │   │   ├── [id]
+│   │   │   │   └── route.js
+│   │   │   └── route.js
+│   │   ├── engagement
+│   │   │   ├── [id]
+│   │   │   │   └── route.js
+│   │   │   └── route.js
+│   │   ├── politicians
+│   │   │   ├── [id]
+│   │   │   │   └── route.js
+│   │   │   └── route.js
+│   │   └── users
+│   │       ├── [id]
+│   │       │   └── route.js
+│   │       └── route.js
+│   ├── auth
+│   │   ├── login
+│   │   │   └── page.js
+│   │   ├── register
+│   │   │   └── page.js
+│   │   └── reset-password
+│   │       └── page.js
+│   ├── bills
+│   │   ├── [id]
+│   │   │   ├── edit
+│   │   │   │   └── page.js
+│   │   │   └── page.js
+│   │   ├── layout.js
+│   │   ├── new
+│   │   │   └── page.js
+│   │   └── page.js
+│   ├── engagement
+│   │   ├── [id]
+│   │   │   ├── edit
+│   │   │   │   └── page.js
+│   │   │   └── page.js
+│   │   ├── layout.js
+│   │   ├── new
+│   │   │   └── page.js
+│   │   └── page.js
+│   ├── favicon.ico
+│   ├── globals.css
+│   ├── layout.js
+│   ├── page.js
+│   ├── politicians
+│   │   ├── [id]
+│   │   │   ├── edit
+│   │   │   │   └── page.js
+│   │   │   └── page.js
+│   │   ├── advancedSearch.js
+│   │   ├── layout.js
+│   │   ├── new
+│   │   │   └── page.js
+│   │   └── page.js
+│   └── user
+│       ├── dashboard
+│       │   └── page.js
+│       ├── layout.js
+│       ├── profile
+│       │   └── page.js
+│       └── tracker
+│           ├── bills
+│           │   ├── [id]
+│           │   │   ├── edit
+│           │   │   │   └── page.js
+│           │   │   └── page.js
+│           │   └── page.js
+│           ├── page.js
+│           ├── politicians
+│           │   ├── [id]
+│           │   │   ├── edit
+│           │   │   │   └── page.js
+│           │   │   └── page.js
+│           │   └── page.js
+│           └── tags
+│               ├── [name]
+│               │   ├── edit
+│               │   │   └── page.js
+│               │   └── page.js
+│               └── page.js
+├── components
+│   ├── bills
+│   │   ├── BillCard.js
+│   │   ├── BillForm.js
+│   │   ├── FilterBar.js
+│   │   ├── SponsorCard.js
+│   │   ├── StatusTimeline.js
+│   │   └── TagList.js
+│   ├── engagement
+│   │   ├── ActionPromptBox.js
+│   │   ├── EngagementCard.js
+│   │   └── EngagementForm.js
+│   ├── layouts
+│   │   ├── AdminLayout.js
+│   │   ├── AdminNavBar.js
+│   │   ├── GuestNavBar.js
+│   │   ├── Layout.js
+│   │   ├── NavBar.js
+│   │   ├── UserLayout.js
+│   │   └── UserNavBar.js
+│   ├── politicians
+│   │   ├── CommitteeList.js
+│   │   ├── ConsistencyMeter.js
+│   │   ├── ContactInfo.js
+│   │   ├── FilterBar.js
+│   │   ├── PoliticianCard.js
+│   │   ├── PoliticianForm.js
+│   │   ├── VotingHistory.js
+│   │   └── VotingRecordTable.js
+│   ├── providers
+│   │   └── AuthProvider.js
+│   ├── ui
+│   │   ├── Button.js
+│   │   ├── Card.js
+│   │   ├── Dropdown.js
+│   │   ├── FlexRow.js
+│   │   ├── FormButton.js
+│   │   ├── FormError.js
+│   │   ├── FormInput.js
+│   │   ├── Input.js
+│   │   ├── Modal.js
+│   │   ├── PasswordInput.js
+│   │   ├── SectionWrapper.js
+│   │   └── Spinner.js
+│   └── user
+│       ├── ActivityCard.js
+│       ├── SettingsForm.js
+│       ├── UserNav.js
+│       └── WatchlistItem.js
+├── config
+│   └── db.js
+├── eslint.config.mjs
+├── folder-structure.txt
+├── jsconfig.json
+├── lib
+│   └── auth
+│       ├── useRequireAuth.js
+│       ├── useRequireGuest.js
+│       └── useRequireRole.js
+├── models
+│   ├── Bill.js
+│   ├── Engagement.js
+│   ├── Politician.js
+│   ├── User.js
+│   └── schemas
+│       ├── trackedItemSchema.js
+│       └── trackedTagSchema.js
+├── next.config.mjs
+├── package-lock.json
+├── package.json
+├── postcss.config.js
+├── printTree.mjs
+├── public
+│   ├── avatars
+│   ├── bills
+│   ├── file.svg
+│   ├── globe.svg
+│   ├── next.svg
+│   ├── politicians
+│   │   └── images
+│   │       ├── alicia_martinez.jpg
+│   │       ├── brian_thompson.jpg
+│   │       ├── clara_nguyen.jpg
+│   │       ├── david_patel.jpg
+│   │       ├── default.jpg
+│   │       ├── emma_rodriguez.jpg
+│   │       └── frank_wilson.jpg
+│   ├── vercel.svg
+│   └── window.svg
+├── store
+│   ├── index.js
+│   └── slices
+│       ├── billsSlice.js
+│       ├── politiciansSlice.js
+│       └── userSlice.js
+├── tailwind.config.js
+└── utils
+    ├── authHelpers.js
+    └── roleCheck.js

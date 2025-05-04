@@ -1,5 +1,7 @@
 // /models/user.js
 import mongoose from "mongoose";
+import trackedItemSchema from "./schemas/trackedItemSchema.js";
+import trackedTagSchema from "./schemas/trackedTagSchema.js";
 
 const userSchema = new mongoose.Schema(
   {
@@ -14,6 +16,7 @@ const userSchema = new mongoose.Schema(
       unique: true,
       lowercase: true,
       trim: true,
+      index: true,
     },
     password: {
       type: String,
@@ -26,7 +29,13 @@ const userSchema = new mongoose.Schema(
       enum: ["user", "admin"],
       default: "user",
     },
+    tracker: {
+      politicians: [trackedItemSchema],
+      bills: [trackedItemSchema],
+      tags: [trackedTagSchema],
+    },
   },
+
   { timestamps: true }
 );
 

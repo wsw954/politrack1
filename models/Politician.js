@@ -42,7 +42,7 @@ const politicianSchema = new mongoose.Schema({
       required: true, // e.g., "850-717-5010"
     },
     social_media: {
-      twitter: {
+      X: {
         type: String, // e.g., "@AliciaMartinezFL"
         default: null,
       },

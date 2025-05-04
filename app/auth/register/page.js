@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import FormInput from "@/components/ui/FormInput";
 import FormButton from "@/components/ui/FormButton";
 import FormError from "@/components/ui/FormError";
+import { signIn } from "next-auth/react";
 
 export default function RegisterPage() {
   const allowGuest = useRequireGuest();
@@ -36,14 +37,24 @@ export default function RegisterPage() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Registration failed");
 
-      router.push("/auth/login");
+      //Auto-sign in after successful registration
+      const loginRes = await signIn("credentials", {
+        redirect: false,
+        email: form.email,
+        password: form.password,
+      });
+
+      if (loginRes?.error) {
+        throw new Error("Registered, but failed to log in.");
+      }
+
+      router.push("/user/dashboard");
     } catch (err) {
       setError(err.message);
     } finally {
       setLoading(false);
     }
   };
-
   return (
     <div className="max-w-md mx-auto mt-12 p-6 border rounded shadow">
       <h2 className="text-2xl font-bold mb-6 text-center">Register</h2>
