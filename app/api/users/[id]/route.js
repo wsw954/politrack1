@@ -1,1 +1,1 @@
-// Handle GET/PATCH/DELETE for single item
+//app/api/users/[id]/route.js

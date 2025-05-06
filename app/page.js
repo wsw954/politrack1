@@ -7,7 +7,7 @@ import SectionWrapper from "@/components/ui/SectionWrapper";
 import FlexRow from "@/components/ui/FlexRow";
 import Link from "next/link";
 import { getServerSession } from "next-auth";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { authOptions } from "@/lib/auth/options";
 
 import { redirect } from "next/navigation";
 

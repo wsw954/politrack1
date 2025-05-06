@@ -32,7 +32,21 @@
 │   │   │   └── route.js
 │   │   └── users
 │   │       ├── [id]
-│   │       │   └── route.js
+│   │       │   ├── route.js
+│   │       │   └── tracker
+│   │       │       ├── bills
+│   │       │       │   ├── [billId]
+│   │       │       │   │   └── route.js
+│   │       │       │   └── route.js
+│   │       │       ├── politicians
+│   │       │       │   ├── [politicianId]
+│   │       │       │   │   └── route.js
+│   │       │       │   └── route.js
+│   │       │       ├── route.js
+│   │       │       └── tags
+│   │       │           ├── [name]
+│   │       │           │   └── route.js
+│   │       │           └── route.js
 │   │       └── route.js
 │   ├── auth
 │   │   ├── login
@@ -146,18 +160,21 @@
 │   └── user
 │       ├── ActivityCard.js
 │       ├── SettingsForm.js
+│       ├── TrackerStatCard.js
 │       ├── UserNav.js
 │       └── WatchlistItem.js
 ├── config
 │   └── db.js
 ├── eslint.config.mjs
-├── folder-structure.txt
+├── hashpassword.mjs
 ├── jsconfig.json
 ├── lib
-│   └── auth
-│       ├── useRequireAuth.js
-│       ├── useRequireGuest.js
-│       └── useRequireRole.js
+│   ├── auth
+│   │   ├── options.js
+│   │   ├── useRequireAuth.js
+│   │   ├── useRequireGuest.js
+│   │   └── useRequireRole.js
+│   └── axiosInstance.js
 ├── models
 │   ├── Bill.js
 │   ├── Engagement.js
