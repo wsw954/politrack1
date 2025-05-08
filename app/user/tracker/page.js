@@ -39,7 +39,7 @@ export default function TrackerDashboardPage() {
   if (!trackerData) return <p>No tracker data available.</p>;
 
   const { politicians = [], bills = [], tags = [] } = trackerData;
-  console.log(trackerData);
+  console.log(session);
 
   const recentThreshold = Date.now() - 7 * 24 * 60 * 60 * 1000;
   const updatedBills = bills.filter(

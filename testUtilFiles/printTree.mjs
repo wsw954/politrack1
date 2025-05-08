@@ -1,5 +1,11 @@
 import fs from "fs";
 import path from "path";
+import { fileURLToPath } from "url";
+
+// Resolve absolute path to project root (two levels up from this script)
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const rootDir = path.resolve(__dirname, ".."); // from /testUtilFiles/ to /
 
 // ANSI color codes
 const CYAN = "\x1b[36m";
@@ -38,20 +44,12 @@ function printDirTree(dir, prefix = "") {
   return output;
 }
 
-// Use CLI argument or default to ./ (root folder)
-const targetDir = process.argv[2] || "./";
-const fullPath = path.resolve(targetDir);
+const treeOutput = printDirTree(rootDir).join("\n");
 
-if (!fs.existsSync(fullPath)) {
-  console.error(`❌ Directory not found: ${fullPath}`);
-  process.exit(1);
-}
-
-const treeOutput = printDirTree(fullPath).join("\n");
-
-// Save plain (no color) version to .txt file
+// Save plain (no color) version to root of project
+const outputPath = path.join(rootDir, "folder-structure.txt");
 const plainOutput = treeOutput.replace(/\x1b\[[0-9;]*m/g, ""); // strip ANSI codes
-fs.writeFileSync("./folder-structure.txt", plainOutput, "utf8");
+fs.writeFileSync(outputPath, plainOutput, "utf8");
 
-// Print color version to console
+// Print colorized version to console
 console.log(treeOutput);

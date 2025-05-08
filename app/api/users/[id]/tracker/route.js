@@ -16,7 +16,7 @@ export async function GET(req, context) {
 
   console.log("🔍 session.user.id:", session.user.id);
   console.log("🔍 params.id:", id);
-
+  console.log(session);
   if (String(session.user.id) !== String(id)) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }

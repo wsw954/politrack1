@@ -35,11 +35,11 @@
 │   │       │   ├── route.js
 │   │       │   └── tracker
 │   │       │       ├── bills
-│   │       │       │   ├── [billId]
+│   │       │       │   ├── [itemId]
 │   │       │       │   │   └── route.js
 │   │       │       │   └── route.js
 │   │       │       ├── politicians
-│   │       │       │   ├── [politicianId]
+│   │       │       │   ├── [itemId]
 │   │       │       │   │   └── route.js
 │   │       │       │   └── route.js
 │   │       │       ├── route.js
@@ -165,8 +165,9 @@
 │       └── WatchlistItem.js
 ├── config
 │   └── db.js
+├── create-tracker-test-files.ps1
 ├── eslint.config.mjs
-├── hashpassword.mjs
+├── folder-structure.txt
 ├── jsconfig.json
 ├── lib
 │   ├── auth
@@ -186,8 +187,8 @@
 ├── next.config.mjs
 ├── package-lock.json
 ├── package.json
+├── patch-bill.ps1
 ├── postcss.config.js
-├── printTree.mjs
 ├── public
 │   ├── avatars
 │   ├── bills
@@ -212,6 +213,17 @@
 │       ├── politiciansSlice.js
 │       └── userSlice.js
 ├── tailwind.config.js
+├── testUtilFiles
+│   ├── hashpassword.mjs
+│   ├── printTree.mjs
+│   └── tracker
+│       ├── bills
+│       │   ├── deleteTrackedBill.mjs
+│       │   ├── getAllTrackedBills.mjs
+│       │   ├── getTrackedBill.mjs
+│       │   ├── patchTrackedBill.mjs
+│       │   └── postTrackedBill.mjs
+│       └── getAllTrackedItems.mjs
 └── utils
     ├── authHelpers.js
     └── roleCheck.js
