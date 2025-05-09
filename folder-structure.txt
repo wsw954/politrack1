@@ -165,7 +165,6 @@
 │       └── WatchlistItem.js
 ├── config
 │   └── db.js
-├── create-tracker-politician-tests.ps1
 ├── eslint.config.mjs
 ├── folder-structure.txt
 ├── jsconfig.json
@@ -180,6 +179,7 @@
 │   ├── Bill.js
 │   ├── Engagement.js
 │   ├── Politician.js
+│   ├── Tag.js
 │   ├── User.js
 │   └── schemas
 │       ├── trackedItemSchema.js

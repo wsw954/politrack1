@@ -3,9 +3,9 @@ import mongoose from "mongoose";
 
 const trackedTagSchema = new mongoose.Schema(
   {
-    name: {
-      type: String,
-      trim: true,
+    tagId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Tag",
       required: true,
     },
     note: {
@@ -22,7 +22,10 @@ const trackedTagSchema = new mongoose.Schema(
       default: Date.now,
     },
   },
-  { _id: false }
+  {
+    _id: false,
+    timestamps: true,
+  }
 );
 
 export default trackedTagSchema;

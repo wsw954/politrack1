@@ -18,16 +18,11 @@ const trackedItemSchema = new mongoose.Schema(
       trim: true,
       default: "",
     },
-    createdAt: {
-      type: Date,
-      default: Date.now,
-    },
-    updatedAt: {
-      type: Date,
-      default: Date.now,
-    },
   },
-  { _id: false }
+  {
+    _id: false,
+    timestamps: true,
+  }
 );
 
 export default trackedItemSchema;
