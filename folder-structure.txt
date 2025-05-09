@@ -165,7 +165,7 @@
 │       └── WatchlistItem.js
 ├── config
 │   └── db.js
-├── create-tracker-test-files.ps1
+├── create-tracker-politician-tests.ps1
 ├── eslint.config.mjs
 ├── folder-structure.txt
 ├── jsconfig.json
@@ -187,7 +187,6 @@
 ├── next.config.mjs
 ├── package-lock.json
 ├── package.json
-├── patch-bill.ps1
 ├── postcss.config.js
 ├── public
 │   ├── avatars
@@ -223,7 +222,13 @@
 │       │   ├── getTrackedBill.mjs
 │       │   ├── patchTrackedBill.mjs
 │       │   └── postTrackedBill.mjs
-│       └── getAllTrackedItems.mjs
+│       ├── getAllTrackedItems.mjs
+│       └── politicians
+│           ├── deleteTrackedPolitician.mjs
+│           ├── getAllTrackedPoliticians.mjs
+│           ├── getTrackedPolitician.mjs
+│           ├── patchTrackedPolitician.mjs
+│           └── postTrackedPolitician.mjs
 └── utils
     ├── authHelpers.js
     └── roleCheck.js
