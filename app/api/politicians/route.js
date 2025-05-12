@@ -2,6 +2,7 @@
 import { NextResponse } from "next/server";
 import dbConnect from "@/config/db";
 import Politician from "@/models/Politician";
+import { requireAdmin } from "@/lib/auth/api-protect";
 
 export async function GET(req) {
   await dbConnect();
@@ -9,7 +10,6 @@ export async function GET(req) {
   const { searchParams } = new URL(req.url);
   const filters = {};
 
-  // Basic filters
   const chamber = searchParams.get("chamber");
   const party = searchParams.get("party");
   const district = searchParams.get("district");
@@ -27,9 +27,8 @@ export async function GET(req) {
     }
   }
 
-  // Advanced filter: topic-based voting
   const vote_topic = searchParams.get("vote_topic");
-  const voted_yes = searchParams.get("voted_yes"); // "true" or "false"
+  const voted_yes = searchParams.get("voted_yes");
 
   if (vote_topic && voted_yes !== null) {
     filters.voting_history = {
@@ -40,7 +39,6 @@ export async function GET(req) {
     };
   }
 
-  // Advanced filter: consistency range
   const minAlign = parseInt(searchParams.get("party_alignment_min") || "0");
   const maxAlign = parseInt(searchParams.get("party_alignment_max") || "100");
 
@@ -58,6 +56,22 @@ export async function GET(req) {
     return NextResponse.json(
       { error: "Failed to fetch politicians", details: error.message },
       { status: 500 }
+    );
+  }
+}
+
+export async function POST(req) {
+  try {
+    await requireAdmin(req);
+    await dbConnect();
+    const data = await req.json();
+    const newPolitician = new Politician(data);
+    const saved = await newPolitician.save();
+    return NextResponse.json(saved, { status: 201 });
+  } catch (err) {
+    return NextResponse.json(
+      { error: err.message || "Unauthorized" },
+      { status: 403 }
     );
   }
 }

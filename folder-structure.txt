@@ -32,7 +32,6 @@
 │   │   │   └── route.js
 │   │   └── users
 │   │       ├── [id]
-│   │       │   ├── route.js
 │   │       │   └── tracker
 │   │       │       ├── bills
 │   │       │       │   ├── [itemId]
@@ -47,6 +46,8 @@
 │   │       │           ├── [name]
 │   │       │           │   └── route.js
 │   │       │           └── route.js
+│   │       ├── me
+│   │       │   └── route.js
 │   │       └── route.js
 │   ├── auth
 │   │   ├── login
@@ -166,10 +167,10 @@
 ├── config
 │   └── db.js
 ├── eslint.config.mjs
-├── folder-structure.txt
 ├── jsconfig.json
 ├── lib
 │   ├── auth
+│   │   ├── api-protect.js
 │   │   ├── options.js
 │   │   ├── useRequireAuth.js
 │   │   ├── useRequireGuest.js
