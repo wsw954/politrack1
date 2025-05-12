@@ -13,14 +13,6 @@ const trackedTagSchema = new mongoose.Schema(
       trim: true,
       default: "",
     },
-    createdAt: {
-      type: Date,
-      default: Date.now,
-    },
-    updatedAt: {
-      type: Date,
-      default: Date.now,
-    },
   },
   {
     _id: false,

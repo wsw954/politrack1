@@ -1,4 +1,3 @@
 export default function Page() {
-  return <div>Page</div>;
-  n;
+  return <div>Edit Page</div>;
 }
