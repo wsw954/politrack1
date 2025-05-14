@@ -167,6 +167,7 @@
 ├── config
 │   └── db.js
 ├── eslint.config.mjs
+├── folder-structure.txt
 ├── jsconfig.json
 ├── lib
 │   ├── auth
@@ -182,6 +183,8 @@
 │   ├── Tag.js
 │   ├── User.js
 │   └── schemas
+│       ├── amendmentSchema.js
+│       ├── provisionSchema.js
 │       ├── trackedItemSchema.js
 │       └── trackedTagSchema.js
 ├── next.config.mjs
@@ -213,6 +216,8 @@
 │       └── userSlice.js
 ├── tailwind.config.js
 ├── testUtilFiles
+│   ├── bills
+│   │   └── getAllBills.mjs
 │   ├── hashpassword.mjs
 │   ├── printTree.mjs
 │   └── tracker

@@ -3,10 +3,10 @@
 import fetch from "node-fetch";
 
 // Replace with your actual values
-const userId = "68193fe0828a4de759ad6d78";
-const itemId = "FL-2025-HB-1001";
+const userId = "68193fe0828a4de759ad6d79";
+const itemId = "FL-2025-HB-1005";
 const sessionToken =
-  "eyJhbGciOiJkaXIiLCJlbmMiOiJBMjU2R0NNIn0..OByjQCxROf52tUdh.gBvU0_0Woiv16xK5SBOETn3mCpRDJ4PRsCAv1ufDQwysVXs2ohMOczoWcANdtIbuFpHrqfydMBTAp-ymCN-UYnaDCzlc5j9J1BaD5F1GZZWglrYmdwgx61c3bsRYxZX9F99cFA93kdYmv36tbVT0HBAgnPB9tmWE5ALjiIW7Y2XAJHGz7NbM-9A5QWUe9MuYOugdzSO1rOT-GJZYkG-E4kS6iYLJhfzuZoKMn-J3yeXw5SR0O5aW9cSwEDjLC8NjtyxswZ9u2uqSaOuoNnLL0twuIdI.E6wyAkO0Uuxy_68Wugnp3g"; // ← Fresh from browser via Notepad
+  "eyJhbGciOiJkaXIiLCJlbmMiOiJBMjU2R0NNIn0..0TO7iiIipHwzN9x2.cWbgEy6krjoYQpW9-VTUnxpSM0sfVNK1OrI7yw3G4fFpmnvaL_zTeH-4b6PTVHbXUdlAE7elxtcodl6BsU7t4Hen-b-ldbp6pcVJRE7gVyzZPY6iSGUeBVXetLQot2QPtva3--8jErxOGsxjeiXnmQgMj9dnvwuf9GlEUCrSx-pi8wVLkAA-fXIFcTbp09YI5-q9W3klkNfRvRaOnxlS8KeCDY0P7rgRNVMOBdfn92_sYuOM0zZYj50W54KLT-vGFMit6-fxXCxB7AJobgOrOssFRh8.UBjGxEO8gP5jOREzI5ghGQ"; // ← Fresh from browser via Notepad
 
 const url = `http://localhost:3000/api/users/${userId}/tracker/bills/${itemId}`;
 
@@ -25,7 +25,8 @@ try {
 
   if (response.ok) {
     console.log(`📄 Tracked Bill (${itemId}):\n`);
-    console.log(JSON.stringify(data, null, 2));
+    console.log(data);
+    // console.log(JSON.stringify(data, null, 2));
   } else {
     console.error(`❌ HTTP ${response.status} — ${response.statusText}`);
 

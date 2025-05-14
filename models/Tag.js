@@ -21,4 +21,6 @@ const tagSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+tagSchema.index({ name: 1 });
+
 export default mongoose.models.Tag || mongoose.model("Tag", tagSchema);

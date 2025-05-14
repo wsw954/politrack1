@@ -3,9 +3,11 @@ import mongoose from "mongoose";
 
 const politicianSchema = new mongoose.Schema(
   {
-    _id: {
+    name: {
       type: String,
       required: true, // e.g., "FL-HOUSE-001"
+      unique: true,
+      trim: true,
     },
     first_name: {
       type: String,

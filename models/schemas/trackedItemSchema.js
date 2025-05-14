@@ -4,7 +4,7 @@ import mongoose from "mongoose";
 const trackedItemSchema = new mongoose.Schema(
   {
     itemId: {
-      type: String,
+      type: mongoose.Schema.Types.ObjectId,
       required: true,
       refPath: "itemType",
     },
