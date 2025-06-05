@@ -5,7 +5,7 @@ const politicianSchema = new mongoose.Schema(
   {
     name: {
       type: String,
-      required: true, // e.g., "FL-HOUSE-001"
+      required: true, // e.g., "FL-HOUSE-001-FW-2015" Meaning [Florida; House; District 1; Frank Wilson; Elected: 2015]
       unique: true,
       trim: true,
     },
@@ -58,8 +58,9 @@ const politicianSchema = new mongoose.Schema(
     voting_history: [
       {
         bill_id: {
-          type: String,
-          required: true, // e.g., "FL-2025-HB-1001"
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "Bill",
+          required: true,
         },
         vote: {
           type: String,

@@ -4,14 +4,33 @@ import { dbConnect } from "@/config/db";
 import { NextResponse } from "next/server";
 import { requireAdmin } from "@/lib/auth/api-protect";
 
-export async function GET() {
+export async function GET(req) {
   try {
     await dbConnect();
-    const tags = await Tag.find().sort({ name: 1 });
+
+    const { searchParams } = new URL(req.url);
+    const filters = {};
+
+    // Optional: exact match by name
+    const name = searchParams.get("name");
+    if (name) {
+      filters.name = name;
+    }
+
+    // Optional: keyword search (partial match on name or any keyword)
+    const q = searchParams.get("q");
+    if (q) {
+      filters.$or = [
+        { name: { $regex: q, $options: "i" } },
+        { keywords: { $regex: q, $options: "i" } },
+      ];
+    }
+
+    const tags = await Tag.find(filters).sort({ name: 1 });
     return NextResponse.json(tags, { status: 200 });
-  } catch {
+  } catch (err) {
     return NextResponse.json(
-      { error: "Failed to fetch tags." },
+      { error: "Failed to fetch tags.", details: err.message },
       { status: 500 }
     );
   }

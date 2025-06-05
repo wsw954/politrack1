@@ -27,8 +27,8 @@ export default function GuestNavBar() {
         <Link href="/bills" className={linkClass("/bills")}>
           Bills
         </Link>
-        <Link href="/engagement" className={linkClass("/engagement")}>
-          Take Action
+        <Link href="/tags" className={linkClass("/tags")}>
+          Tags
         </Link>
       </div>
       {!isAuthPage && (

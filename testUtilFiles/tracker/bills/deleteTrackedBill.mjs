@@ -1,4 +1,4 @@
-// testUtilFiles/deleteTrackedBill.mjs
+// testUtilFiles/tracker/bills/deleteTrackedBill.mjs
 
 import fetch from "node-fetch";
 

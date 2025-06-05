@@ -9,10 +9,12 @@ const tagSchema = new mongoose.Schema(
       unique: true,
       trim: true,
     },
-    description: {
-      type: String,
-      trim: true,
-    },
+    keywords: [
+      {
+        type: String,
+        trim: true,
+      },
+    ],
     color: {
       type: String,
       trim: true, // optional for UI (e.g., "bg-blue-100 text-blue-800")

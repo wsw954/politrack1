@@ -1,14 +1,11 @@
-//testUtilFiles/tracker/bills/getTrackedBill.mjs
-
+//testUtilFiles/tracker/tags/getAllTrackedPoliticians.mjs
 import fetch from "node-fetch";
 
-// Replace with your actual values
+// Replace with your actual user ID and session token
 const userId = "68193fe0828a4de759ad6d78";
-const itemId = "FL-2025-HB-1001";
 const sessionToken =
-  "eyJhbGciOiJkaXIiLCJlbmMiOiJBMjU2R0NNIn0..4beJcy7mA2_WQ5oS.gapraayppJ96v9vULiGd_scywkSziBse2vysrr4EXgY3wVSfHlBs7VtS35eMBHAUmZ5YCdmGMJn0YrjyqlIIJ6vq7Jtyu44w3yCjOG9xCQEMSfYqsvFr4MmOHu8F3B9eBp3oSJohW7IsrGHXWBmLe0u2ePAFeUnBKpEcdIwljOXQ_0c3BJVPqP4TxDSuAOfJ3Tydllw4KsH16ajtSDxw3tmSFGN8qQfNLG7ef7J3ppWqgf6HfSFfC8qtEp0OR0gcWSGmRcqVBoNJhCxsRSgu7Q.N1bKTtt5paidJblrgbFqpQ"; // ← Fresh from browser via Notepad
-
-const url = `http://localhost:3000/api/users/${userId}/tracker/bills/${itemId}`;
+  "eyJhbGciOiJkaXIiLCJlbmMiOiJBMjU2R0NNIn0..nd7rGt12OD8Yuq1k.CkqEH6tBEw5xJMAn9pzpcIi-YXOJaP2_drDrofXkMXC5ODLsTeNvg_hgPSCapLZrXUhsJ_vaKduZtXkpjG7rLC0n3S89UhIZKDV7QDO715CZiCdaQNlKeCK6Etho61ZlJ9Z-Mi0w0HMh8Q0Bv63kbc3uJl_SN3QVFD9hBraYQSQxjw6KQ6jcRik2C_I8IWtC-nu_RghfarFA0iaom15eWr9v7Xo5aKNQkb-Sh9y2d7dIb8BMFK4Mu_n787zuH8oLYkPku6sPtQzxYqSlNMAwOg.NvE5KwxHC9Sjcyv_IiFJDg";
+const url = `http://localhost:3000/api/users/${userId}/tracker/tags`;
 
 try {
   const response = await fetch(url, {
@@ -22,21 +19,19 @@ try {
   const contentType = response.headers.get("content-type");
   const isJson = contentType && contentType.includes("application/json");
   const data = isJson ? await response.json() : null;
+
   if (response.ok) {
-    console.log(`📄 Tracked Bill (${itemId}):\n`);
-    console.log(data);
-    // console.log(JSON.stringify(data, null, 2));
+    console.log("📋 Tracked Politicians:\n");
+    console.log(JSON.stringify(data, null, 2));
   } else {
     console.error(`❌ HTTP ${response.status} — ${response.statusText}`);
-
     if (response.status === 401) {
       console.error("🔒 Unauthorized — Check your session token.");
     } else if (response.status === 403) {
       console.error("🚫 Forbidden — The userId may not match the session.");
     } else if (response.status === 404) {
-      console.error("❓ Not Found — Bill may not be tracked.");
+      console.error("❓ Not Found — No tracked politicians.");
     }
-
     if (data?.error) {
       console.error(`🛑 API Error Message: ${data.error}`);
     }

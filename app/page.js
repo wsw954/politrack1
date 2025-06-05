@@ -58,16 +58,16 @@ export default async function HomePage() {
             <Button>Browse Bills</Button>
           </Link>
         </Card>
-
         <Card>
           <h2 className="text-xl font-semibold mb-2 text-center">
-            Take Action
+            Explore Tags
           </h2>
           <p className="text-sm text-gray-600 mb-4 text-center">
-            Contact your representatives or sign petitions on current issues.
+            Dive into issues like Housing, Education, or Gun Policy to see
+            related bills and voting patterns.
           </p>
-          <Link href="/engagement">
-            <Button>Engage Now</Button>
+          <Link href="/tags">
+            <Button>Browse Tags</Button>
           </Link>
         </Card>
       </FlexRow>

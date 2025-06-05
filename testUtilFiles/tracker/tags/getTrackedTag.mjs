@@ -1,14 +1,14 @@
-//testUtilFiles/tracker/bills/getTrackedBill.mjs
+//testUtilFiles/tracker/tags/getTrackedTag.mjs
 
 import fetch from "node-fetch";
 
 // Replace with your actual values
 const userId = "68193fe0828a4de759ad6d78";
-const itemId = "FL-2025-HB-1001";
+const tagId = "bb14dad3-2df2-405e-a6be-57d25bd2f15e";
 const sessionToken =
-  "eyJhbGciOiJkaXIiLCJlbmMiOiJBMjU2R0NNIn0..4beJcy7mA2_WQ5oS.gapraayppJ96v9vULiGd_scywkSziBse2vysrr4EXgY3wVSfHlBs7VtS35eMBHAUmZ5YCdmGMJn0YrjyqlIIJ6vq7Jtyu44w3yCjOG9xCQEMSfYqsvFr4MmOHu8F3B9eBp3oSJohW7IsrGHXWBmLe0u2ePAFeUnBKpEcdIwljOXQ_0c3BJVPqP4TxDSuAOfJ3Tydllw4KsH16ajtSDxw3tmSFGN8qQfNLG7ef7J3ppWqgf6HfSFfC8qtEp0OR0gcWSGmRcqVBoNJhCxsRSgu7Q.N1bKTtt5paidJblrgbFqpQ"; // ← Fresh from browser via Notepad
+  "eyJhbGciOiJkaXIiLCJlbmMiOiJBMjU2R0NNIn0..xbzzNwOsQsOBg42e.7iUf1zqqoMR4Pe_InKYj3sEhSkfGK3CjlnI87Vy-yXzJMH__5OdJJUpEXaBg7-IRbOqnJDIPFGyawZKOnLrIX60zYm5luF2s4hilfgo9DztLfQHI--K_b2M61a3ig9Ft-dXAcuBxQIiPJWkxHnzY7YWZR13aHjj3G3166L3OChx2LW_TrxLy9Dd7Pm1nPS2SJsMG2R2kaKvrR4kw7ga6ZBckcQwU80HEZZNm33FHXLEAUAevrNcc2DwNS66vgp3pUGdR1clE130OPS5sEWywLg.-7K4nzC_7cK9JEbjrTvXRA"; // ← Fresh from browser via Notepad
 
-const url = `http://localhost:3000/api/users/${userId}/tracker/bills/${itemId}`;
+const url = `http://localhost:3000/api/users/${userId}/tracker/tags/${tagId}`;
 
 try {
   const response = await fetch(url, {
@@ -23,7 +23,7 @@ try {
   const isJson = contentType && contentType.includes("application/json");
   const data = isJson ? await response.json() : null;
   if (response.ok) {
-    console.log(`📄 Tracked Bill (${itemId}):\n`);
+    console.log(`📄 Tracked Tag (${itemId}):\n`);
     console.log(data);
     // console.log(JSON.stringify(data, null, 2));
   } else {
@@ -34,7 +34,7 @@ try {
     } else if (response.status === 403) {
       console.error("🚫 Forbidden — The userId may not match the session.");
     } else if (response.status === 404) {
-      console.error("❓ Not Found — Bill may not be tracked.");
+      console.error("❓ Not Found — Tag may not be tracked.");
     }
 
     if (data?.error) {

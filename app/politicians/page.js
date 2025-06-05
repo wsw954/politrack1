@@ -1,4 +1,4 @@
-//app/politicians/page.js
+// app/politicians/page.js
 "use client";
 
 import { useEffect, useState } from "react";
@@ -96,17 +96,19 @@ export default function PoliticianListPage() {
         <div className="mt-12 flex flex-col gap-4">
           {politicians.length > 0 ? (
             politicians.map((p) => (
-              <Link key={p._id} href={`/politicians/${p._id}`}>
-                <PoliticianCard
-                  politician={{
-                    name: `${p.first_name} ${p.last_name}`,
-                    party: p.party,
-                    district: p.district,
-                    chamber: p.chamber,
-                    photo: p.photo_url.replace("/app/public", ""),
-                  }}
-                />
-              </Link>
+              <div key={p._id}>
+                <Link href={`/politicians/${p._id}`}>
+                  <PoliticianCard
+                    politician={{
+                      name: `${p.first_name} ${p.last_name}`,
+                      party: p.party,
+                      district: p.district,
+                      chamber: p.chamber,
+                      photo: p.photo_url.replace("/app/public", ""),
+                    }}
+                  />
+                </Link>
+              </div>
             ))
           ) : (
             <p className="text-gray-500">No politicians match your filters.</p>

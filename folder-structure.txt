@@ -43,7 +43,7 @@
 │   │       │       │   └── route.js
 │   │       │       ├── route.js
 │   │       │       └── tags
-│   │       │           ├── [name]
+│   │       │           ├── [tagId]
 │   │       │           │   └── route.js
 │   │       │           └── route.js
 │   │       ├── me
@@ -219,7 +219,14 @@
 │   ├── bills
 │   │   └── getAllBills.mjs
 │   ├── hashpassword.mjs
+│   ├── politicians
+│   │   └── getAllPoliticians.mjs
 │   ├── printTree.mjs
+│   ├── tags
+│   │   ├── deleteTag.mjs
+│   │   ├── getAllTags.mjs
+│   │   ├── postNewTag.mjs
+│   │   └── updateTag.mjs
 │   └── tracker
 │       ├── bills
 │       │   ├── deleteTrackedBill.mjs
@@ -228,12 +235,15 @@
 │       │   ├── patchTrackedBill.mjs
 │       │   └── postTrackedBill.mjs
 │       ├── getAllTrackedItems.mjs
-│       └── politicians
-│           ├── deleteTrackedPolitician.mjs
-│           ├── getAllTrackedPoliticians.mjs
-│           ├── getTrackedPolitician.mjs
-│           ├── patchTrackedPolitician.mjs
-│           └── postTrackedPolitician.mjs
+│       ├── politicians
+│       │   ├── deleteTrackedPolitician.mjs
+│       │   ├── getAllTrackedPoliticians.mjs
+│       │   ├── getTrackedPolitician.mjs
+│       │   ├── patchTrackedPolitician.mjs
+│       │   └── postTrackedPolitician.mjs
+│       └── tags
+│           ├── getAllTrackedTags.mjs
+│           └── getTrackedTag.mjs
 └── utils
     ├── authHelpers.js
     └── roleCheck.js

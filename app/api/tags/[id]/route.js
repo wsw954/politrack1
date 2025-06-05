@@ -38,9 +38,9 @@ export async function PUT(req, { params }) {
   }
 }
 
-export async function DELETE(_, { params }) {
+export async function DELETE(req, { params }) {
   try {
-    await requireAdmin(); // ✅ Only admin
+    await requireAdmin(req); // ✅ Only admin
     await dbConnect();
     const deleted = await Tag.findByIdAndDelete(params.id);
     if (!deleted)

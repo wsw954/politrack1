@@ -1,4 +1,5 @@
 // app/api/politicians/route.js
+// app/api/politicians/route.js
 import { NextResponse } from "next/server";
 import dbConnect from "@/config/db";
 import Politician from "@/models/Politician";
@@ -19,12 +20,9 @@ export async function GET(req) {
   if (party) filters.party = party;
   if (district) filters.district = district;
 
+  // NEW: match full or partial structured name (e.g. "FL-HOUSE", "FL-SENATE-004")
   if (name) {
-    const [first_name, last_name] = name.split(" ");
-    if (first_name && last_name) {
-      filters.first_name = first_name;
-      filters.last_name = last_name;
-    }
+    filters.name = { $regex: name, $options: "i" }; // case-insensitive match
   }
 
   const vote_topic = searchParams.get("vote_topic");

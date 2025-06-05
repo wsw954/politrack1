@@ -5,19 +5,21 @@ import amendmentSchema from "./schemas/amendmentSchema.js";
 
 const billSchema = new mongoose.Schema(
   {
-    name: {
+    number: {
       type: String,
-      required: true, // e.g., "FL-2025-HB-1001"
+      required: true,
       unique: true,
       trim: true,
     },
     title: { type: String, required: true },
+    type: { type: String, required: true, unique: true },
     sponsor: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Politician",
       required: true,
     },
     co_sponsors: [{ type: mongoose.Schema.Types.ObjectId, ref: "Politician" }],
+    tags: [{ type: mongoose.Schema.Types.ObjectId, ref: "Tag" }],
     enacting_clause: {
       type: String,
       default: "Be It Enacted by the Legislature of the State of Florida:",
@@ -38,10 +40,28 @@ const billSchema = new mongoose.Schema(
       ],
     },
     source_url: { type: String, required: true },
+
+    // ✅ Catch-all field for any additional dynamic info
+    extra_info: {
+      type: Map,
+      of: mongoose.Schema.Types.Mixed,
+      default: {},
+    },
+
+    // Optional Future Expansions
+    preliminary_recitals: String,
+    sunset_clause: String,
+    emergency_clause: Boolean,
+    rulemaking_authority: [String],
+    grant_programs: [
+      {
+        name: String,
+        description: String,
+        funding_amount: String,
+      },
+    ],
   },
   { timestamps: true }
 );
-
-billSchema.index({ name: 1 });
 
 export default mongoose.models.Bill || mongoose.model("Bill", billSchema);
