@@ -1,4 +1,4 @@
-//app/api/users/[tagId]/tracker/tags/route.js
+//app/api/users/[id]/tracker/tags/route.js
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth/options";
 import { dbConnect } from "@/config/db";

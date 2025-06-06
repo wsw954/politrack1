@@ -2,9 +2,9 @@
 import fetch from "node-fetch";
 
 // Replace with your actual tag ID and a valid admin JWT token
-const tagId = "683e1444c3bc9f419dffa460"; // e.g., "665e51a8e2e4bc1357e1aa1a"
+const tagId = "683e25c7c3bc9f419dffa464"; // e.g., "665e51a8e2e4bc1357e1aa1a"
 const adminToken =
-  "eyJhbGciOiJkaXIiLCJlbmMiOiJBMjU2R0NNIn0..NMmdSSG4-N85gm5l.U8N19-3alYfS6qtu9GXnzKfo1J4Ns_AFjfo8nT71vZ_9YoH9o9Cl8Q-mlfSpJDpmj1c6dgTHCjS1YnJXY2ezGpzEobmMG_RMJMRDulxXRfiJwyzl7cSl9f9lJutr2aSoeWFIDGgyUY4XfwBFLcXGG9pOcJ34r9P3QFdGjDu8g6U1vVWGEccqOUn-JHSxcqaj8q06Z5UmanTHyrA7EVr88RqhGOJYk9-aNYKOyQF10pZYKGPuymmkOiYQhVsdmRt8BzWxLHVMAo-BvIB1.fOmwWHcC_CJk9WeJIXEnaA"; // From browser DevTools after logging in as admin
+  "eyJhbGciOiJkaXIiLCJlbmMiOiJBMjU2R0NNIn0..I8-IBof3sk8kyaBk.LjAWKGVKd2DNN0QLT3IFTqH8IziZfjMbcSnolt2fOoIbvZ47WD5B0amd8pxZCMkCGEtynKk8ea28ahTS49OYxuv3PoKGvgP3wnlzcD_h58ExjDpPZZK-9zlPL3k-jpGOn8zBbIM8L0N6OmNKgqloCecEf2JX4wpRuq0ngUplmDYTKN13ZgIJc2lXgEF8e1pRm2-qtX2UCo8A8T0n-8VYOERJ2hF0h7sh9R1B65AoDzGdxMhIrmu12D4jAfa8Tpp5sQsFRX7y_WN_TEkv.V46OTdnMwHgrKiShit8n7A"; // From browser DevTools after logging in as admin
 
 const url = `http://localhost:3000/api/tags/${tagId}`;
 

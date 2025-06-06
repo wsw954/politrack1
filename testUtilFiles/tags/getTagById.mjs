@@ -1,18 +1,17 @@
-// deleteTag.mjs
+// getTagById.mjs
+
 import fetch from "node-fetch";
 
-// Replace with a valid tag ID and a valid admin JWT token
-const tagId = "6841966e78edc0fd878cd3f3"; // e.g., "665e51a8e2e4bc1357e1aa1a"
-const adminToken =
-  "eyJhbGciOiJkaXIiLCJlbmMiOiJBMjU2R0NNIn0..I8-IBof3sk8kyaBk.LjAWKGVKd2DNN0QLT3IFTqH8IziZfjMbcSnolt2fOoIbvZ47WD5B0amd8pxZCMkCGEtynKk8ea28ahTS49OYxuv3PoKGvgP3wnlzcD_h58ExjDpPZZK-9zlPL3k-jpGOn8zBbIM8L0N6OmNKgqloCecEf2JX4wpRuq0ngUplmDYTKN13ZgIJc2lXgEF8e1pRm2-qtX2UCo8A8T0n-8VYOERJ2hF0h7sh9R1B65AoDzGdxMhIrmu12D4jAfa8Tpp5sQsFRX7y_WN_TEkv.V46OTdnMwHgrKiShit8n7A";
+// Replace this with a real tag _id from your database
+const tagId = "683e25c7c3bc9f419dffa464";
 
 const url = `http://localhost:3000/api/tags/${tagId}`;
 
 try {
   const response = await fetch(url, {
-    method: "DELETE",
+    method: "GET",
     headers: {
-      Authorization: `Bearer ${adminToken}`,
+      "Content-Type": "application/json",
     },
   });
 
@@ -21,7 +20,7 @@ try {
   const data = isJson ? await response.json() : null;
 
   if (response.ok) {
-    console.log("🗑️ Tag successfully deleted:\n");
+    console.log("📌 Tag fetched by ID:\n");
     console.log(JSON.stringify(data, null, 2));
   } else {
     console.error(`❌ HTTP ${response.status} — ${response.statusText}`);

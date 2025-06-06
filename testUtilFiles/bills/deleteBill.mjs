@@ -1,12 +1,13 @@
-// deleteTag.mjs
+//testUtilFiles/bills/deleteBill.mjs
+
 import fetch from "node-fetch";
 
-// Replace with a valid tag ID and a valid admin JWT token
-const tagId = "6841966e78edc0fd878cd3f3"; // e.g., "665e51a8e2e4bc1357e1aa1a"
+// Replace these with actual values
+const billId = "6842f11fe195f41ac005b190"; // e.g., "665e61c8abc123456789abcd"
 const adminToken =
-  "eyJhbGciOiJkaXIiLCJlbmMiOiJBMjU2R0NNIn0..I8-IBof3sk8kyaBk.LjAWKGVKd2DNN0QLT3IFTqH8IziZfjMbcSnolt2fOoIbvZ47WD5B0amd8pxZCMkCGEtynKk8ea28ahTS49OYxuv3PoKGvgP3wnlzcD_h58ExjDpPZZK-9zlPL3k-jpGOn8zBbIM8L0N6OmNKgqloCecEf2JX4wpRuq0ngUplmDYTKN13ZgIJc2lXgEF8e1pRm2-qtX2UCo8A8T0n-8VYOERJ2hF0h7sh9R1B65AoDzGdxMhIrmu12D4jAfa8Tpp5sQsFRX7y_WN_TEkv.V46OTdnMwHgrKiShit8n7A";
+  "eyJhbGciOiJkaXIiLCJlbmMiOiJBMjU2R0NNIn0..0fSJRiBmqeCTuzCf.Y9EL3N2UFehVg2H-xV8BxJWisVgDBtyCA1QPijpDHEcGdGKv8KTF8CHmtZPNhkDy1PbVJ7y4gXR0xGXAocQ25sXJt3mTiIJ_8n4S4uh_4I2-mopbIJzD1eRIQ4zo2X90NCLjB81oK2nNGVUElA_HdVDbrUSw3_fSKhzeEUrUb4uEATi5QZzE5kQlhqg_q-Ja9UvSvBJfxdMwhadxpuS0ZbfAq7dutNaID0x1QWIup6fQWuO_LtaOU70_FECT1kW-X69ROoM5oFR89Sn9.uHrcMBfh8n-moZWNInFc-w"; // From a logged-in admin session
 
-const url = `http://localhost:3000/api/tags/${tagId}`;
+const url = `http://localhost:3000/api/bills/${billId}`;
 
 try {
   const response = await fetch(url, {
@@ -21,7 +22,7 @@ try {
   const data = isJson ? await response.json() : null;
 
   if (response.ok) {
-    console.log("🗑️ Tag successfully deleted:\n");
+    console.log("🗑️ Bill successfully deleted:\n");
     console.log(JSON.stringify(data, null, 2));
   } else {
     console.error(`❌ HTTP ${response.status} — ${response.statusText}`);

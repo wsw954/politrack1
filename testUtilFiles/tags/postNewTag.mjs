@@ -4,14 +4,14 @@ import fetch from "node-fetch";
 
 // 🔐 Replace this with a real admin JWT token (see notes below)
 const adminToken =
-  "eyJhbGciOiJkaXIiLCJlbmMiOiJBMjU2R0NNIn0..NMmdSSG4-N85gm5l.U8N19-3alYfS6qtu9GXnzKfo1J4Ns_AFjfo8nT71vZ_9YoH9o9Cl8Q-mlfSpJDpmj1c6dgTHCjS1YnJXY2ezGpzEobmMG_RMJMRDulxXRfiJwyzl7cSl9f9lJutr2aSoeWFIDGgyUY4XfwBFLcXGG9pOcJ34r9P3QFdGjDu8g6U1vVWGEccqOUn-JHSxcqaj8q06Z5UmanTHyrA7EVr88RqhGOJYk9-aNYKOyQF10pZYKGPuymmkOiYQhVsdmRt8BzWxLHVMAo-BvIB1.fOmwWHcC_CJk9WeJIXEnaA";
+  "eyJhbGciOiJkaXIiLCJlbmMiOiJBMjU2R0NNIn0..iZ5g0pfrqgBg9ISX.CAoNAYivyKshWVDYiiZOizFkwZytdyHeZ1VxAKqQwO1hGFdqkz8DAPDB13-KE_C1VNW29oTGzgsZSGsXlgi-7W9l1UIP-NrebMSDJ_LPLbz767qt4OKbqxvv3xfMoNaohjScrD8tKOYVJtc8G8vrcm6gdYtp8AWmHHEBUXNVxqqD-WUCLMrcFc41nhcZ-27Qbl3MRbZCpDa_X6Ojja8_Zv6STgSvb8xze-M0gafIKGdp72pgS9UySk_mPMj6gYjnGx7kOQl1MZGNqa03.9uB-imwi88EK5rl5iILvUg";
 
 const url = "http://localhost:3000/api/tags";
 
 // New Tag JSON to insert
 const newTag = {
-  name: "Test Tag",
-  keywords: ["Keyword 123", "No tax on tips", "Jack Sparrow"],
+  name: "Big Beatiful Bill",
+  keywords: ["No Tax on Overtime", "No tax on tips", "Build the wall"],
   color: "",
 };
 

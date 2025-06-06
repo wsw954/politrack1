@@ -37,6 +37,7 @@ export async function GET(req) {
 }
 
 export async function POST(req) {
+  console.log("Line 40 in /app/api/tags/route.js");
   try {
     await requireAdmin(req); // ✅ Only admin
     await dbConnect();

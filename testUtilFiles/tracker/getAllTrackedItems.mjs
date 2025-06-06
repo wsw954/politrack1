@@ -5,7 +5,7 @@ import fetch from "node-fetch";
 // Replace with your real user ID and session token
 const userId = "68193fe0828a4de759ad6d78";
 const sessionToken =
-  "eyJhbGciOiJkaXIiLCJlbmMiOiJBMjU2R0NNIn0..gxkPCupg8eqBgIBo.HsiV_qAlJEJ8v8dzb09xPqP9D7cX1R3whr07cy_6OleXlkSARLJiw1P1CXXZug6LmbR2RgNEZDnFQQ0P9ovfDSAoujeuRTqO4t0nlr6pJkWKWwbvQXhkNoviATsJoP5hcJINe6A-JS3Gh2PkkFVRUdMb8UjeFNryX-eM6XUnyO-aiAz8TZz4-ikk5mnkcBcldGs-KShnNUvL0OLV3E1Seq5rCouvBDYModaplA3vKuRhZ_Ekq9CA6Rpp9xL7NVvZilP0bhDnRUN6GbqCJahcFA.Rxe-IZPh9Bsg6ixoJRsYJA"; // ← Paste fresh from browser via Notepad
+  "eyJhbGciOiJkaXIiLCJlbmMiOiJBMjU2R0NNIn0..1e0yfahGQOhF-sQi.GaAD284Bn5tUfEA7xC8v5ZEj1AcHKEwKihoC7Pg_dzKlDuhpfqnDkRV_0unxs2cOphTAzI53EDfHTDdbOeBG9UVJ1DU2SY1uv1JpNHQD5u9HQPMd49kyjfgLCQ8Slk-OxoVHtjXHh-VlXOZWvmRuhBZM38HBetwWh7SK38PAS_Cfgx4N_RWK2fVoe402sGQplRDJUOZbVC1xSncJevKLrrdp0BQmtWZNo5gB79gJ15p-2-N_4G4n9ys6ez11ZJxrUnWZqcGVzyowsKD4jMonLA.VkMLuT1ftuwbh7hfAEvhiQ"; // ← Paste fresh from browser via Notepad
 
 const url = `http://localhost:3000/api/users/${userId}/tracker`;
 

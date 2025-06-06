@@ -217,14 +217,23 @@
 ├── tailwind.config.js
 ├── testUtilFiles
 │   ├── bills
-│   │   └── getAllBills.mjs
+│   │   ├── deleteBill.mjs
+│   │   ├── getAllBills.mjs
+│   │   ├── getBillById.mjs
+│   │   ├── patchBill.mjs
+│   │   └── postNewBill.mjs
 │   ├── hashpassword.mjs
 │   ├── politicians
-│   │   └── getAllPoliticians.mjs
+│   │   ├── deletePolitician.mjs
+│   │   ├── getAllPoliticians.mjs
+│   │   ├── getPoliticianById.mjs
+│   │   ├── patchPolitician.mjs
+│   │   └── postNewPolitician.mjs
 │   ├── printTree.mjs
 │   ├── tags
 │   │   ├── deleteTag.mjs
 │   │   ├── getAllTags.mjs
+│   │   ├── getTagById.mjs
 │   │   ├── postNewTag.mjs
 │   │   └── updateTag.mjs
 │   └── tracker
@@ -242,8 +251,11 @@
 │       │   ├── patchTrackedPolitician.mjs
 │       │   └── postTrackedPolitician.mjs
 │       └── tags
+│           ├── deleteTrackedTag.mjs
 │           ├── getAllTrackedTags.mjs
-│           └── getTrackedTag.mjs
+│           ├── getTrackedTag.mjs
+│           ├── patchTrackedTag.mjs
+│           └── postTrackedTag.mjs
 └── utils
     ├── authHelpers.js
     └── roleCheck.js

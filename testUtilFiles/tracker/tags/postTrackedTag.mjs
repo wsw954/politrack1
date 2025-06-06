@@ -1,31 +1,36 @@
-//testUtilFiles/tracker/tags/getTrackedTag.mjs
+//testUtilFiles/tracker/postTrackedTag.mjs
 
 import fetch from "node-fetch";
 
 // Replace with your actual values
 const userId = "68193fe0828a4de759ad6d78";
-const tagId = "683df1b701f1934b916170ab";
 const sessionToken =
-  "eyJhbGciOiJkaXIiLCJlbmMiOiJBMjU2R0NNIn0..q0Cwsj4B3PImxqjp.kkqiYmHJFWgdSglv5AUGD8bcwskMERn7tjL7jISHyE5TkH0vpm660aM78cgXl3FJoi7VKGai4gjSLV9cFCRFW1XdDiJBjHcFdfsxhQVYtedUa6gGhFD9syz48NhJ0qzeB3d2IZxgfNcV5XIaYH3UrDz_l3o2qfYK0WCLqxkxt-5WmadFY7ECaNwGpBjx0t6Ieay8ExPH9L7ULKGIMljY7kDDw6d7x0bK4sCdAeWxuDs3pP7_wl_c7k0KSNMR1XgoMR2kKUvKFMxnT7FXZybC-A.2cJDYtkTqxwVS073fcbH7Q"; // ← Fresh from browser via Notepad
+  "eyJhbGciOiJkaXIiLCJlbmMiOiJBMjU2R0NNIn0..Hl5170t-siED8lca.uaF4PYHLOPVJfs2bv55QRtnEB2v1HyU3VLrVeVlFjf46mbIzE3QnL8wAj4EACKYl_Od1WjYLlUNeOhZeRDc8pyRpdsOSh-ZtKw876-GUL5Tf1vMg4WVf_sPh6xltaz0s8rDh1VrZKH-187NBcjG1CvyX-trogeVUCZHi5C-5h_eF-4WRyOkV7QXd_QgQKoXuS_Ku-GLXjSjfnP1NYNsX0qWRvWroGKoHJtZG0JriPm83NwnNaSbEurDOy2T3jsfQFRxrK3FYPNbS5B0ixiHpzw.oPhN7eizE0gO1_P2mCH4BQ"; // ← Paste from browser via Notepad
 
-const url = `http://localhost:3000/api/users/${userId}/tracker/tags/${tagId}`;
+const url = `http://localhost:3000/api/users/${userId}/tracker/tags`;
+
+const newTrackedTag = {
+  tagId: "683e25c7c3bc9f419dffa464",
+  note: "Start looking out for Criminal Deportations",
+};
 
 try {
   const response = await fetch(url, {
-    method: "GET",
+    method: "POST",
     headers: {
       "Content-Type": "application/json",
       Cookie: `next-auth.session-token=${sessionToken}`,
     },
+    body: JSON.stringify(newTrackedTag),
   });
 
   const contentType = response.headers.get("content-type");
   const isJson = contentType && contentType.includes("application/json");
   const data = isJson ? await response.json() : null;
+
   if (response.ok) {
-    console.log(`📄 Tracked Tag (${tagId}):\n`);
-    console.log(data);
-    // console.log(JSON.stringify(data, null, 2));
+    console.log("✅ Successfully added tracked tag:\n");
+    console.log(JSON.stringify(data, null, 2));
   } else {
     console.error(`❌ HTTP ${response.status} — ${response.statusText}`);
 
@@ -33,8 +38,8 @@ try {
       console.error("🔒 Unauthorized — Check your session token.");
     } else if (response.status === 403) {
       console.error("🚫 Forbidden — The userId may not match the session.");
-    } else if (response.status === 404) {
-      console.error("❓ Not Found — Tag may not be tracked.");
+    } else if (response.status === 409) {
+      console.error("⚠️ Conflict — This tag may already be tracked.");
     }
 
     if (data?.error) {
