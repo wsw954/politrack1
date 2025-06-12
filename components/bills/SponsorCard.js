@@ -1,42 +1,19 @@
-// /components/bills/SponsorCard.js
+// components/bills/SponsorCard.js
 "use client";
 
-import { useEffect, useState } from "react";
 import Link from "next/link";
 
-export default function SponsorCard({ sponsorId }) {
-  const [sponsor, setSponsor] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+export default function SponsorCard({ sponsor }) {
+  if (!sponsor) {
+    return (
+      <p className="text-sm text-red-500">Sponsor information not available.</p>
+    );
+  }
 
-  useEffect(() => {
-    async function fetchSponsor() {
-      try {
-        console.log("Sponsor ID:", sponsorId);
-        const res = await fetch(`/api/politicians/${sponsorId}`);
-        if (!res.ok) throw new Error("Failed to fetch sponsor");
-        const data = await res.json();
-        console.log(data);
-        setSponsor(data);
-      } catch (err) {
-        console.error(err);
-        setError("Unable to load sponsor information.");
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    if (sponsorId) fetchSponsor();
-  }, [sponsorId]);
-
-  if (loading) return <p>Loading sponsor info...</p>;
-  if (error || !sponsor)
-    return <p className="text-red-500">{error || "Sponsor not found."}</p>;
-
-  // After this, sponsor is guaranteed to exist:
   const imageFileName =
     `${sponsor.first_name}_${sponsor.last_name}`.toLowerCase();
   const imageSrc = `/politicians/images/${imageFileName}.jpg`;
+  const fallbackSrc = "/politicians/images/default.jpg"; // state flag or placeholder
 
   return (
     <Link
@@ -45,16 +22,16 @@ export default function SponsorCard({ sponsorId }) {
     >
       <img
         src={imageSrc}
-        alt={sponsor.name}
+        alt={`${sponsor.first_name} ${sponsor.last_name}`}
         className="w-12 h-12 rounded-full object-cover border"
         onError={(e) => {
-          e.target.onerror = null; // prevent infinite loop
-          e.target.src = "/politicians/images/default.jpg";
+          e.target.onerror = null;
+          e.target.src = fallbackSrc;
         }}
-      />{" "}
+      />
       <div>
         <h3 className="text-lg font-semibold">
-          {sponsor.first_name + " " + sponsor.last_name}
+          {sponsor.first_name} {sponsor.last_name}
         </h3>
         <p className="text-sm text-gray-600">
           {sponsor.chamber} • {sponsor.party}

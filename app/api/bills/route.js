@@ -1,7 +1,9 @@
-// /app/api/bills/route.js
+//app/api/bills/route.js
 import { NextResponse } from "next/server";
 import dbConnect from "@/config/db";
 import Bill from "@/models/Bill";
+import Tag from "@/models/Tag";
+
 import { requireAdmin } from "@/lib/auth/api-protect";
 
 export async function GET(req) {
@@ -27,7 +29,10 @@ export async function GET(req) {
   }
 
   try {
-    const bills = await Bill.find(filters);
+    console.log(filters);
+    // const bills = await Bill.find(filters || {}).populate("tags", "name");  //This throws the error
+    const bills = await Bill.find(filters || {}).populate("tags", "name");
+    // const bills = await Bill.find(filters || {}); //Works fine
     return NextResponse.json(bills);
   } catch (error) {
     return NextResponse.json(

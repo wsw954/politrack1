@@ -11,7 +11,7 @@ const sessionToken =
 const url = `http://localhost:3000/api/users/${userId}/tracker/tags/${tagId}`;
 
 const updatedNote = {
-  note: "Check for BBB connection",
+  note: "Add CC reciprocity",
 };
 
 try {

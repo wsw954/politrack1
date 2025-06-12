@@ -1,4 +1,4 @@
-// app/bills/page.js
+//app/bills/page.js
 "use client";
 
 import { useEffect, useState } from "react";
@@ -6,6 +6,7 @@ import BillCard from "@/components/bills/BillCard";
 import FilterBar from "@/components/bills/FilterBar";
 import Button from "@/components/ui/Button";
 import Link from "next/link";
+import { normalizeId } from "@/utils/normalizeId";
 
 export default function BillListPage() {
   const [bills, setBills] = useState([]);
@@ -22,30 +23,26 @@ export default function BillListPage() {
     const fetchData = async () => {
       setLoading(true);
       setError(null);
-
       try {
         const query = new URLSearchParams();
-
         if (filters.title) query.append("title", filters.title);
         if (filters.tag) query.append("tag", filters.tag);
         if (filters.status) query.append("status", filters.status);
-
         const url = `/api/bills${
           query.toString() ? `?${query.toString()}` : ""
         }`;
+
         const res = await fetch(url);
         if (!res.ok) throw new Error("Failed to fetch bills");
-
         const data = await res.json();
         setBills(data);
         setAllBills(data);
-        setLoading(false);
       } catch (err) {
         setError(err.message || "Something went wrong");
+      } finally {
         setLoading(false);
       }
     };
-
     fetchData();
   }, [filters]);
 
@@ -63,14 +60,12 @@ export default function BillListPage() {
         Browse Florida Bills
       </h1>
 
-      {/* Filter panel */}
       <div className="bg-white border border-gray-200 rounded-xl shadow-sm p-6 mb-12">
         <FilterBar
           allBills={allBills}
           filters={filters}
           setFilters={setFilters}
         />
-
         <div className="flex justify-between items-center mt-4">
           <button
             onClick={handleResetFilters}
@@ -93,14 +88,18 @@ export default function BillListPage() {
         <div className="mt-12 grid grid-cols-1 md:grid-cols-2 gap-6">
           {bills.length > 0 ? (
             bills.map((bill) => (
-              <Link key={bill._id} href={`/bills/${bill._id}`}>
+              <Link
+                key={normalizeId(bill._id)}
+                href={`/bills/${normalizeId(bill._id)}`}
+              >
                 <BillCard
                   bill={{
-                    id: bill._id,
+                    id: normalizeId(bill._id),
+                    number: bill.number,
                     title: bill.title,
                     summary: bill.summary,
-                    tags: bill.tags,
-                    current_stage: bill.status.current_stage,
+                    tags: bill.tags.map((tag) => tag.name),
+                    current_stage: bill.status?.current_stage,
                   }}
                 />
               </Link>

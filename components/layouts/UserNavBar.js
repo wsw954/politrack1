@@ -22,15 +22,15 @@ export default function UserNavBar() {
       <div className="flex items-center space-x-6 text-sm font-medium">
         <Link href="/" className={linkClass("/")}>
           Home
+        </Link>{" "}
+        <Link href="/bills" className={linkClass("/bills")}>
+          Bills
         </Link>
         <Link href="/politicians" className={linkClass("/politicians")}>
           Politicians
         </Link>
-        <Link href="/bills" className={linkClass("/bills")}>
-          Bills
-        </Link>
-        <Link href="/engagement" className={linkClass("/engagement")}>
-          Take Action
+        <Link href="/tags" className={linkClass("/tags")}>
+          Tags
         </Link>
       </div>
 

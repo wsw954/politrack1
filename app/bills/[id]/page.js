@@ -3,14 +3,16 @@ import StatusTimeline from "@/components/bills/StatusTimeline";
 import TagList from "@/components/bills/TagList";
 import SponsorCard from "@/components/bills/SponsorCard";
 import { notFound } from "next/navigation";
+import { normalizeId } from "@/utils/normalizeId";
 
 export default async function BillDetailPage({ params }) {
   const awaitedParams = await params;
   const { id } = awaitedParams;
 
   const res = await fetch(
-    `${process.env.NEXT_PUBLIC_BASE_URL}/api/bills/${id}`
+    `${process.env.NEXT_PUBLIC_BASE_URL}/api/bills/${normalizeId(id)}`
   );
+
   if (!res.ok) return notFound();
 
   const bill = await res.json();
@@ -20,7 +22,7 @@ export default async function BillDetailPage({ params }) {
       <h1 className="text-3xl font-bold mb-2">{bill.title}</h1>
 
       <p className="text-gray-600 text-sm mb-1">
-        Last Updated: {bill.last_updated}
+        Last Updated: {bill.updatedAt || "Unknown"}
       </p>
 
       <a
@@ -34,39 +36,41 @@ export default async function BillDetailPage({ params }) {
 
       <section className="mt-6">
         <h2 className="text-xl font-semibold">Summary</h2>
-        <p className="mt-2">{bill.summary}</p>
+        <p className="mt-2">{bill.summary || "No summary available."}</p>
       </section>
 
       <section className="mt-6">
         <h2 className="text-xl font-semibold">Key Provisions</h2>
         <ul className="list-disc list-inside mt-2 space-y-1">
-          {bill.key_provisions.map((item, index) => (
-            <li key={index}>{item}</li>
+          {bill.provisions.map((prov, index) => (
+            <li key={index}>
+              <strong>{prov.heading}</strong>: {prov.summary || "No summary."}
+            </li>
           ))}
         </ul>
       </section>
 
       <section className="mt-6">
         <h2 className="text-xl font-semibold">Why It Matters</h2>
-        <p className="mt-2">{bill.why_it_matters}</p>
+        <p className="mt-2">{bill.why_it_matters || "No information."}</p>
       </section>
 
       <section className="mt-6">
         <h2 className="text-xl font-semibold">Tags</h2>
-        <TagList tags={bill.tags} />
+        <TagList tags={bill.tags.map((tag) => tag.name)} />
       </section>
 
       <section className="mt-6">
         <h2 className="text-xl font-semibold">Status Timeline</h2>
         <StatusTimeline
-          timeline={bill.status.timeline}
-          current={bill.status.current_stage}
+          timeline={bill.status?.timeline || []}
+          current={bill.status?.current_stage}
         />
       </section>
 
       <section className="mt-6">
         <h2 className="text-xl font-semibold">Sponsor</h2>
-        <SponsorCard sponsorId={bill.sponsor} />
+        <SponsorCard sponsor={bill.sponsor} />
       </section>
     </main>
   );

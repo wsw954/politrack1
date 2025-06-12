@@ -1,4 +1,3 @@
-// Handle GET/PATCH/DELETE for single item
 // /app/api/politicians/[id]/route.js
 import Politician from "@/models/Politician";
 import { dbConnect } from "@/config/db";
@@ -8,7 +7,7 @@ import { requireAdmin } from "@/lib/auth/api-protect";
 export async function GET(req, { params }) {
   try {
     await dbConnect();
-    const { id } = params;
+    const { id } = await params;
 
     if (!id) {
       return NextResponse.json({ message: "ID is required" }, { status: 400 });

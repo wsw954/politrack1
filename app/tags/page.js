@@ -50,7 +50,7 @@ export default function TagListPage() {
       {!loading && !error && (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
           {tags.map((tag) => (
-            <Link key={tag._id} href={`/tags/${encodeURIComponent(tag.name)}`}>
+            <Link key={tag._id} href={`/tags/${encodeURIComponent(tag._id)}`}>
               <Card className="cursor-pointer hover:shadow-md transition-shadow">
                 <div className="flex flex-col gap-2">
                   <h2 className="text-xl font-semibold text-gray-900">

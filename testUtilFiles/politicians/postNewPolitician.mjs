@@ -4,7 +4,7 @@ import fetch from "node-fetch";
 
 // Replace with a valid admin JWT token
 const adminToken =
-  "eyJhbGciOiJkaXIiLCJlbmMiOiJBMjU2R0NNIn0..0fSJRiBmqeCTuzCf.Y9EL3N2UFehVg2H-xV8BxJWisVgDBtyCA1QPijpDHEcGdGKv8KTF8CHmtZPNhkDy1PbVJ7y4gXR0xGXAocQ25sXJt3mTiIJ_8n4S4uh_4I2-mopbIJzD1eRIQ4zo2X90NCLjB81oK2nNGVUElA_HdVDbrUSw3_fSKhzeEUrUb4uEATi5QZzE5kQlhqg_q-Ja9UvSvBJfxdMwhadxpuS0ZbfAq7dutNaID0x1QWIup6fQWuO_LtaOU70_FECT1kW-X69ROoM5oFR89Sn9.uHrcMBfh8n-moZWNInFc-w"; // Paste from browser/Notepad
+  "eyJhbGciOiJkaXIiLCJlbmMiOiJBMjU2R0NNIn0..jJ6uGI2U7Ww0SsgK.FhUrW_3FE39Tl5bdmNS10xOZsVeHSX10_XszM-1nI4cX--tHOa1axHQZDC1FSt9UXn-4LSqu1vGYHxZJkPKs3KEefF86Id-9orBVY9yqqrcTXW0J52kHQXVya4lNUJUjCkZhtBhR3KkG-a_EtnKNFBZoX5Z4WLrv_hqt0Ama4KqV13ciydTZe-wdZAPC13V7PvPvt9hz-KWn4MXJehXcjUS6-8bXLhyUMy1JGkeWsBXFRTSLfXpjrUxHzkvYzgXcaS9YFDuixCW5JCMr.QLN4cB_gRl1WJKtRutN7xw"; // Paste from browser/Notepad
 
 const url = "http://localhost:3000/api/politicians";
 
@@ -16,7 +16,7 @@ const newPolitician = {
   party: "Republican",
   chamber: "House",
   district: "District 51",
-  photo_url: "/app/public/politicians/images/alicia_martinez.jpg",
+  photo_url: "/app/public/politicians/images/default.jpg",
   contact: {
     email: "chicken.george@myfloridahouse.gov",
     phone: "850-717-5010",

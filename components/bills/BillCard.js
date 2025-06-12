@@ -1,6 +1,8 @@
 // components/bills/BillCard.js
 "use client";
 
+import { normalizeId } from "@/utils/normalizeId";
+
 export default function BillCard({ bill }) {
   const getStatusBadgeStyle = (status) => {
     if (!status) return "bg-gray-100 text-gray-700"; // fallback
@@ -19,6 +21,9 @@ export default function BillCard({ bill }) {
     return "bg-gray-100 text-gray-700"; // default
   };
 
+  // ✅ Normalize bill._id inside the component
+  const billId = normalizeId(bill._id || bill.id);
+
   return (
     <div className="border border-gray-200 rounded-lg p-6 shadow-sm hover:shadow-md transition">
       <div className="flex flex-col gap-2">
@@ -27,20 +32,20 @@ export default function BillCard({ bill }) {
 
         {/* Bill ID */}
         <p className="text-sm text-gray-600">
-          <span className="font-semibold">Bill ID:</span> {bill.id}
+          <span className="font-semibold">Bill Number:</span> {bill.number}
         </p>
 
         {/* Summary */}
         <p className="text-sm text-gray-700">
           <span className="font-semibold text-gray-600">Summary:</span>{" "}
-          {bill.summary}
+          {bill.summary?.trim() ? bill.summary : "No summary available."}
         </p>
 
         {/* Tags */}
         {bill.tags && bill.tags.length > 0 && (
           <p className="text-sm text-gray-700">
             <span className="font-semibold text-gray-600">Tags:</span>{" "}
-            {bill.tags.join(", ")}
+            {bill.tags.map(normalizeId).join(", ")}
           </p>
         )}
 

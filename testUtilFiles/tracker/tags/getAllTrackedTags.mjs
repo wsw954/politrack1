@@ -4,7 +4,7 @@ import fetch from "node-fetch";
 // Replace with your actual user ID and session token
 const userId = "68193fe0828a4de759ad6d78";
 const sessionToken =
-  "eyJhbGciOiJkaXIiLCJlbmMiOiJBMjU2R0NNIn0..Hl5170t-siED8lca.uaF4PYHLOPVJfs2bv55QRtnEB2v1HyU3VLrVeVlFjf46mbIzE3QnL8wAj4EACKYl_Od1WjYLlUNeOhZeRDc8pyRpdsOSh-ZtKw876-GUL5Tf1vMg4WVf_sPh6xltaz0s8rDh1VrZKH-187NBcjG1CvyX-trogeVUCZHi5C-5h_eF-4WRyOkV7QXd_QgQKoXuS_Ku-GLXjSjfnP1NYNsX0qWRvWroGKoHJtZG0JriPm83NwnNaSbEurDOy2T3jsfQFRxrK3FYPNbS5B0ixiHpzw.oPhN7eizE0gO1_P2mCH4BQ";
+  "eyJhbGciOiJkaXIiLCJlbmMiOiJBMjU2R0NNIn0..1e0yfahGQOhF-sQi.GaAD284Bn5tUfEA7xC8v5ZEj1AcHKEwKihoC7Pg_dzKlDuhpfqnDkRV_0unxs2cOphTAzI53EDfHTDdbOeBG9UVJ1DU2SY1uv1JpNHQD5u9HQPMd49kyjfgLCQ8Slk-OxoVHtjXHh-VlXOZWvmRuhBZM38HBetwWh7SK38PAS_Cfgx4N_RWK2fVoe402sGQplRDJUOZbVC1xSncJevKLrrdp0BQmtWZNo5gB79gJ15p-2-N_4G4n9ys6ez11ZJxrUnWZqcGVzyowsKD4jMonLA.VkMLuT1ftuwbh7hfAEvhiQ";
 const url = `http://localhost:3000/api/users/${userId}/tracker/tags`;
 
 try {

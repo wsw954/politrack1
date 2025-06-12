@@ -1,12 +1,17 @@
 // components/bills/FilterBar.js
 "use client";
 
+import { normalizeId } from "@/utils/normalizeId";
+
 export default function FilterBar({ allBills, filters, setFilters }) {
   const getOptions = (key) => {
     const values = new Set();
     allBills.forEach((b) => {
       if (key === "tag") {
-        b.tags.forEach((tag) => values.add(tag));
+        b.tags.forEach((tag) => {
+          const normalized = normalizeId(tag);
+          if (normalized) values.add(normalized);
+        });
       } else if (key === "title") {
         values.add(b.title);
       } else if (key === "status") {
@@ -34,7 +39,9 @@ export default function FilterBar({ allBills, filters, setFilters }) {
         >
           <option value="">Select</option>
           {getOptions("title").map((val) => (
-            <option key={val}>{val}</option>
+            <option key={`title-${val}`} value={val}>
+              {val}
+            </option>
           ))}
         </select>
       </div>
@@ -55,7 +62,9 @@ export default function FilterBar({ allBills, filters, setFilters }) {
         >
           <option value="">Select</option>
           {getOptions("tag").map((val) => (
-            <option key={val}>{val}</option>
+            <option key={`tag-${val}`} value={val}>
+              {val}
+            </option>
           ))}
         </select>
       </div>
@@ -76,7 +85,9 @@ export default function FilterBar({ allBills, filters, setFilters }) {
         >
           <option value="">Select</option>
           {getOptions("status").map((val) => (
-            <option key={val}>{val}</option>
+            <option key={`status-${val}`} value={val}>
+              {val}
+            </option>
           ))}
         </select>
       </div>

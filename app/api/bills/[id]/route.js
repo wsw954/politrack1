@@ -1,16 +1,19 @@
-// Handle GET/PATCH/DELETE for single item
 // /app/api/bills/[id]/route.js
 import Bill from "@/models/Bill";
 import { dbConnect } from "@/config/db";
 import { NextResponse } from "next/server";
 import { requireAdmin } from "@/lib/auth/api-protect";
+import Tag from "@/models/Tag";
 
 export async function GET(req, { params }) {
   try {
     await dbConnect();
-    const { id } = params;
+    const awaitedParams = await params;
+    const { id } = awaitedParams;
 
-    const bill = await Bill.findById(id);
+    const bill = await Bill.findById(id)
+      .populate("tags", "name")
+      .populate("sponsor", "first_name last_name chamber party");
     if (!bill) {
       return NextResponse.json({ message: "Bill not found" }, { status: 404 });
     }

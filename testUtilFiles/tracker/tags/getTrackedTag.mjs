@@ -4,9 +4,9 @@ import fetch from "node-fetch";
 
 // Replace with your actual values
 const userId = "68193fe0828a4de759ad6d78";
-const tagId = "683df1b701f1934b916170ab";
+const tagId = "683df1b701f1934b916170a8";
 const sessionToken =
-  "eyJhbGciOiJkaXIiLCJlbmMiOiJBMjU2R0NNIn0..q0Cwsj4B3PImxqjp.kkqiYmHJFWgdSglv5AUGD8bcwskMERn7tjL7jISHyE5TkH0vpm660aM78cgXl3FJoi7VKGai4gjSLV9cFCRFW1XdDiJBjHcFdfsxhQVYtedUa6gGhFD9syz48NhJ0qzeB3d2IZxgfNcV5XIaYH3UrDz_l3o2qfYK0WCLqxkxt-5WmadFY7ECaNwGpBjx0t6Ieay8ExPH9L7ULKGIMljY7kDDw6d7x0bK4sCdAeWxuDs3pP7_wl_c7k0KSNMR1XgoMR2kKUvKFMxnT7FXZybC-A.2cJDYtkTqxwVS073fcbH7Q"; // ← Fresh from browser via Notepad
+  "eyJhbGciOiJkaXIiLCJlbmMiOiJBMjU2R0NNIn0..1e0yfahGQOhF-sQi.GaAD284Bn5tUfEA7xC8v5ZEj1AcHKEwKihoC7Pg_dzKlDuhpfqnDkRV_0unxs2cOphTAzI53EDfHTDdbOeBG9UVJ1DU2SY1uv1JpNHQD5u9HQPMd49kyjfgLCQ8Slk-OxoVHtjXHh-VlXOZWvmRuhBZM38HBetwWh7SK38PAS_Cfgx4N_RWK2fVoe402sGQplRDJUOZbVC1xSncJevKLrrdp0BQmtWZNo5gB79gJ15p-2-N_4G4n9ys6ez11ZJxrUnWZqcGVzyowsKD4jMonLA.VkMLuT1ftuwbh7hfAEvhiQ"; // ← Fresh from browser via Notepad
 
 const url = `http://localhost:3000/api/users/${userId}/tracker/tags/${tagId}`;
 

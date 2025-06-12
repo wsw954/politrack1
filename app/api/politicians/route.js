@@ -1,5 +1,4 @@
 // app/api/politicians/route.js
-// app/api/politicians/route.js
 import { NextResponse } from "next/server";
 import dbConnect from "@/config/db";
 import Politician from "@/models/Politician";
@@ -48,6 +47,7 @@ export async function GET(req) {
   }
 
   try {
+    console.log(filters);
     const politicians = await Politician.find(filters);
     return NextResponse.json(politicians);
   } catch (error) {

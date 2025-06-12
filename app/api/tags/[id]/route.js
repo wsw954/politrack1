@@ -5,9 +5,11 @@ import { NextResponse } from "next/server";
 import { requireAdmin } from "@/lib/auth/api-protect";
 
 export async function GET(_, { params }) {
+  const { id } = await params;
+
   try {
     await dbConnect();
-    const tag = await Tag.findById(params.id);
+    const tag = await Tag.findById(id);
     if (!tag)
       return NextResponse.json({ error: "Tag not found" }, { status: 404 });
     return NextResponse.json(tag, { status: 200 });
