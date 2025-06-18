@@ -109,7 +109,7 @@
 │           │   │   └── page.js
 │           │   └── page.js
 │           └── tags
-│               ├── [name]
+│               ├── [id]
 │               │   ├── edit
 │               │   │   └── page.js
 │               │   └── page.js
@@ -161,12 +161,14 @@
 │   └── user
 │       ├── ActivityCard.js
 │       ├── SettingsForm.js
+│       ├── TrackedPoliticianCard.js
 │       ├── TrackerStatCard.js
 │       ├── UserNav.js
 │       └── WatchlistItem.js
 ├── config
 │   └── db.js
 ├── eslint.config.mjs
+├── folder-structure.txt
 ├── jsconfig.json
 ├── lib
 │   ├── auth

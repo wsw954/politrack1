@@ -3,15 +3,15 @@
 import fetch from "node-fetch";
 
 // Replace with your actual values
-const userId = "68193fe0828a4de759ad6d79";
-const itemId = "FL-2025-HB-1005";
+const userId = "68193fe0828a4de759ad6d78";
+const itemId = "683df4a401f1934b916170b3";
 const sessionToken =
-  "eyJhbGciOiJkaXIiLCJlbmMiOiJBMjU2R0NNIn0..OByjQCxROf52tUdh.gBvU0_0Woiv16xK5SBOETn3mCpRDJ4PRsCAv1ufDQwysVXs2ohMOczoWcANdtIbuFpHrqfydMBTAp-ymCN-UYnaDCzlc5j9J1BaD5F1GZZWglrYmdwgx61c3bsRYxZX9F99cFA93kdYmv36tbVT0HBAgnPB9tmWE5ALjiIW7Y2XAJHGz7NbM-9A5QWUe9MuYOugdzSO1rOT-GJZYkG-E4kS6iYLJhfzuZoKMn-J3yeXw5SR0O5aW9cSwEDjLC8NjtyxswZ9u2uqSaOuoNnLL0twuIdI.E6wyAkO0Uuxy_68Wugnp3g"; // ← Paste clean token from browser
+  "eyJhbGciOiJkaXIiLCJlbmMiOiJBMjU2R0NNIn0..tFkWFYyE1qGLjJpX.4h43poCkHKd6fu8deeZpQ0P7LWy4rRqz_8totMxAcykj15vNAFS2z3EVu4B1mvuFNZyNvqbmTl6Y9PcyDy0h3LI0F0qy-Jypsv-XxGc-cvL7_-xy1gQmkYIZeKh8bbKBLFsdd9XlR02RfZyqqwN5ZD0f0P68wS2_LyFyO5pGtOsvd48nRrQ7gp8LIvqofwPjBLyfYBfFANkxvnyXDhau0nxjtU5dyPcoWwe0SrU1ONfF_ytqcvUa0HoI4E32ZdZvRRUwJsZze_IleoHVlcdStg.v6qNSb41DznRu4hNzY8yPQ"; // ← Paste clean token from browser
 
 const url = `http://localhost:3000/api/users/${userId}/tracker/bills/${itemId}`;
 
 const updatedNote = {
-  note: "Vote rescheduled for May 15",
+  note: "School Board Tax Issues",
 };
 
 try {

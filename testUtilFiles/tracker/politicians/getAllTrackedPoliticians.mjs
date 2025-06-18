@@ -2,9 +2,9 @@
 import fetch from "node-fetch";
 
 // Replace with your actual user ID and session token
-const userId = "68193fe0828a4de759ad6d79";
+const userId = "68193fe0828a4de759ad6d78";
 const sessionToken =
-  "eyJhbGciOiJkaXIiLCJlbmMiOiJBMjU2R0NNIn0..YM9GUJInHqi7mti8.zIwO3OpMs7pvDb0auAZLHEQWzne8XyteJDqi-nlxV-kkumZPvQBtJzu_MhqMFp--FZWjD6bpOvGaeFqyaD7VphdMjiEsMAwwrZRses_WKVyguKtWdeD-SNhvaxx1gZPSaAMAseAiNMyqJCiKRT34_OYrCSINeXBXoAevv9V0qevEmi1VmZhXnvL7UApEgQ7QYqS1gdENrHjF1R4l6V7iEsHV2gRjhg2jDDE_S3f42u8nXQlysn_s4SjVdH1tkgG_wHkqDIlLhGSrhTFLlDhuIfbNW-c.L4_IFFQRqw3pKaGpaaxhjA";
+  "eyJhbGciOiJkaXIiLCJlbmMiOiJBMjU2R0NNIn0..vHF8QuwA6O_0nsYo.rYSILfGhH8GgI5MAC8D-Ogygyl54k1F-YBTCrDCGTf5cuJ2tOud1Ge9_ftdw0Tx8FHzz1YvXPr0WyGv3EEEh4vUjM5UIuQnvkYqZIOmjDX_lINT4bOMdYWnU2qvvCQD43R4wYpHNbLkrCYsh9L7e91bBc46JuBXRPmtoCJz8Ph5xLhByNj79NICi5oYQMd-JZJBTiOA5oO06Et5EGic86_zFF-WZzaWqmKhu5HQmCmCk-mmHlDlC4_lFFcRtobphBc7IxRaVmEWmMHTmd3gyrw.RRHYuxj6rLr7dDRkbX3oFg";
 
 const url = `http://localhost:3000/api/users/${userId}/tracker/politicians`;
 

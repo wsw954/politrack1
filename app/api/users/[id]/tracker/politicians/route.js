@@ -1,4 +1,4 @@
-// /app/api/users/[id]/tracker/politicians/route.js
+//app/api/users/[id]/tracker/politicians/route.js
 
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth/options";
@@ -22,7 +22,7 @@ export async function GET(req, context) {
     await dbConnect();
 
     const user = await User.findById(id)
-      .populate({ path: "tracker.politicians.itemId", strictPopulate: false })
+      .populate({ path: "tracker.politicians.itemId", model: "Politician" })
       .lean();
 
     if (!user) {

@@ -1,12 +1,15 @@
 // components/ui/FormInput.js
 "use client";
+
 export default function FormInput({
   label,
   name,
-  type = "text",
+  type = "text", // or "textarea"
   value,
   onChange,
   required = false,
+  rows = 4,
+  placeholder = "",
 }) {
   return (
     <div>
@@ -16,15 +19,30 @@ export default function FormInput({
       >
         {label}
       </label>
-      <input
-        id={name}
-        name={name}
-        type={type}
-        value={value}
-        onChange={onChange}
-        required={required}
-        className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500"
-      />
+
+      {type === "textarea" ? (
+        <textarea
+          id={name}
+          name={name}
+          value={value}
+          onChange={onChange}
+          required={required}
+          rows={rows}
+          placeholder={placeholder}
+          className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500"
+        />
+      ) : (
+        <input
+          id={name}
+          name={name}
+          type={type}
+          value={value}
+          onChange={onChange}
+          required={required}
+          placeholder={placeholder}
+          className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500"
+        />
+      )}
     </div>
   );
 }

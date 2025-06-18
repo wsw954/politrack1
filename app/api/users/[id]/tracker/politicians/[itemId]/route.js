@@ -6,13 +6,14 @@ import { dbConnect } from "@/config/db";
 import User from "@/models/User";
 import { NextResponse } from "next/server";
 
-// GET – Fetch a single tracked politician
+// ✅ GET – Fetch a single tracked politician with full Politician document
 export async function GET(req, context) {
   const session = await getServerSession(authOptions);
   if (!session)
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const { id, itemId } = await context.params;
+  const { id, itemId } = context.params;
+
   if (String(session.user.id) !== String(id)) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
@@ -20,16 +21,19 @@ export async function GET(req, context) {
   try {
     await dbConnect();
 
+    // ✅ FIXED: Explicitly populate 'itemId' with Politician model
     const user = await User.findById(id)
       .populate({
         path: "tracker.politicians.itemId",
-        strictPopulate: false,
+        model: "Politician",
       })
       .lean();
 
-    if (!user)
+    if (!user) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
+    }
 
+    // ✅ MATCHED: Locate the specific tracked item
     const tracked = user.tracker.politicians.find(
       (item) => String(item.itemId?._id || item.itemId) === String(itemId)
     );
@@ -41,9 +45,20 @@ export async function GET(req, context) {
       );
     }
 
-    return NextResponse.json(tracked, { status: 200 });
+    // ✅ UPDATED: Send both tracker metadata and full Politician doc
+    return NextResponse.json(
+      {
+        itemId: tracked.itemId?._id || tracked.itemId,
+        itemType: tracked.itemType,
+        note: tracked.note,
+        createdAt: tracked.createdAt,
+        updatedAt: tracked.updatedAt,
+        politician: tracked.itemId, // Full populated document
+      },
+      { status: 200 }
+    );
   } catch (err) {
-    console.error("GET /politicians/[itemId] error:", err);
+    console.error("GET /tracker/politicians/[itemId] error:", err);
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 }
