@@ -1,5 +1,4 @@
 // /app/api/users/[id]/tracker/politicians/[itemId]/route.js
-
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth/options";
 import { dbConnect } from "@/config/db";
@@ -12,7 +11,7 @@ export async function GET(req, context) {
   if (!session)
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const { id, itemId } = context.params;
+  const { id, itemId } = await context.params;
 
   if (String(session.user.id) !== String(id)) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
@@ -28,7 +27,7 @@ export async function GET(req, context) {
         model: "Politician",
       })
       .lean();
-
+    console.log(user.tracker.politicians);
     if (!user) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }

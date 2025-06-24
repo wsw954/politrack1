@@ -1,0 +1,100 @@
+//app/user/tracker/politicians/[id]/edit/page.js
+"use client";
+
+import { useSession } from "next-auth/react";
+import { useEffect, useState } from "react";
+import { useParams, useRouter } from "next/navigation";
+import axios from "@/lib/axiosInstance";
+
+import SectionWrapper from "@/components/ui/SectionWrapper";
+import Spinner from "@/components/ui/Spinner";
+import FormInput from "@/components/ui/FormInput";
+import FormButton from "@/components/ui/FormButton";
+
+export default function EditTrackedPoliticianPage() {
+  const { data: session, status } = useSession();
+  const { id } = useParams(); // this is [itemId]
+  const router = useRouter();
+
+  const [note, setNote] = useState("");
+  const [politicianName, setPoliticianName] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+
+  useEffect(() => {
+    const fetchTracked = async () => {
+      if (!session?.user?.id || !id) return;
+
+      try {
+        const res = await axios.get(
+          `/api/users/${session.user.id}/tracker/politicians/${id}`
+        );
+
+        const { note, politician } = res.data;
+        setNote(note || "");
+        setPoliticianName(
+          politician?.first_name && politician?.last_name
+            ? `${politician.first_name} ${politician.last_name}`
+            : "Unknown Politician"
+        );
+      } catch (err) {
+        console.error("Failed to fetch tracked politician:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchTracked();
+  }, [session, id]);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!session?.user?.id || !id) return;
+
+    setSaving(true);
+    try {
+      await axios.patch(
+        `/api/users/${session.user.id}/tracker/politicians/${id}`,
+        { note }
+      );
+      router.push(`/user/tracker/politicians/${id}`);
+    } catch (err) {
+      console.error("Failed to update note:", err);
+      alert("Something went wrong saving your note.");
+      setSaving(false);
+    }
+  };
+
+  if (status === "loading" || loading) return <Spinner />;
+  if (!session) return <p className="text-red-600">You must be logged in.</p>;
+
+  return (
+    <SectionWrapper>
+      <h1 className="text-2xl font-bold mb-6">Edit Note: {politicianName}</h1>
+
+      <form onSubmit={handleSubmit} className="space-y-6 max-w-xl">
+        <FormInput
+          label="Your Tracker Note"
+          type="textarea"
+          rows={6}
+          value={note}
+          onChange={(e) => setNote(e.target.value)}
+          placeholder="Why are you tracking this politician?"
+        />
+
+        <div className="flex gap-4">
+          <FormButton type="submit" disabled={saving}>
+            {saving ? "Saving..." : "Save Note"}
+          </FormButton>
+          <FormButton
+            type="button"
+            variant="secondary"
+            onClick={() => router.push(`/user/tracker/politicians/${id}`)}
+          >
+            Cancel
+          </FormButton>
+        </div>
+      </form>
+    </SectionWrapper>
+  );
+}

@@ -29,8 +29,6 @@ export async function GET(req) {
   }
 
   try {
-    console.log(filters);
-    // const bills = await Bill.find(filters || {}).populate("tags", "name");  //This throws the error
     const bills = await Bill.find(filters || {}).populate("tags", "name");
     // const bills = await Bill.find(filters || {}); //Works fine
     return NextResponse.json(bills);

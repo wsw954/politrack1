@@ -5,7 +5,7 @@ import fetch from "node-fetch";
 // Replace with your actual user ID and session token
 const userId = "68193fe0828a4de759ad6d78";
 const sessionToken =
-  "eyJhbGciOiJkaXIiLCJlbmMiOiJBMjU2R0NNIn0..1e0yfahGQOhF-sQi.GaAD284Bn5tUfEA7xC8v5ZEj1AcHKEwKihoC7Pg_dzKlDuhpfqnDkRV_0unxs2cOphTAzI53EDfHTDdbOeBG9UVJ1DU2SY1uv1JpNHQD5u9HQPMd49kyjfgLCQ8Slk-OxoVHtjXHh-VlXOZWvmRuhBZM38HBetwWh7SK38PAS_Cfgx4N_RWK2fVoe402sGQplRDJUOZbVC1xSncJevKLrrdp0BQmtWZNo5gB79gJ15p-2-N_4G4n9ys6ez11ZJxrUnWZqcGVzyowsKD4jMonLA.VkMLuT1ftuwbh7hfAEvhiQ"; // ← From browser → Notepad → Here
+  "eyJhbGciOiJkaXIiLCJlbmMiOiJBMjU2R0NNIn0..CfRiBFRsXRvMPX_O.PgjY3zJ53WbyquIlvKVipK-tbFZJ2O50jntcq12zWpLibPBYJstw79sBQxcYqSb8PXMIqHLiuEfo83QpKGzTVFYXzA37i_E8nqvk4PytYvTZAgGRelFBFWa83L-q5nb4r4nOvuGovw4UfHwUmG1_sMnw7KCpe7Kk2YSRZnofuasc-OmrGG5JDy_0j0yU_-iTm_EGtWC6G2kE3SN0fSXUZq_lLRDVto1wbioElKK_Gqnq9-swU9Bh6bO0IZtcYm8FPRpgnyHlE0biCfB2TukX8A.Sq17JJo37zaTlr35Z0gpPw"; // ← From browser → Notepad → Here
 
 const url = `http://localhost:3000/api/users/${userId}/tracker/bills`;
 

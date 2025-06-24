@@ -1,59 +1,77 @@
 // /app/api/users/[id]/bills/[itemId]/route.js
+
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth/options";
 import { dbConnect } from "@/config/db";
 import User from "@/models/User";
+import Bill from "@/models/Bill";
+import Politician from "@/models/Politician";
+import Tag from "@/models/Tag";
 import { NextResponse } from "next/server";
 
-// GET – Fetch a single tracked bill
+// GET — Fetch a single tracked bill with full bill populated
 export async function GET(req, context) {
   const session = await getServerSession(authOptions);
   if (!session)
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const { id, itemId } = await context.params;
-  if (String(session.user.id) !== String(id)) {
+  if (String(session.user.id) !== String(id))
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
-  }
 
   try {
     await dbConnect();
 
+    // Explicitly define model for tracker.bills.itemId, THEN populate nested
     const user = await User.findById(id)
       .populate({
         path: "tracker.bills.itemId",
-        strictPopulate: false,
+        model: "Bill", //THIS LINE makes the difference
+        populate: [
+          { path: "sponsor", model: "Politician" },
+          { path: "co_sponsors", model: "Politician" },
+          { path: "tags", model: "Tag" },
+        ],
       })
       .lean();
 
     if (!user)
       return NextResponse.json({ error: "User not found" }, { status: 404 });
 
-    const trackedBill = user.tracker.bills.find(
+    const tracked = user.tracker.bills.find(
       (item) => String(item.itemId?._id || item.itemId) === String(itemId)
     );
 
-    if (!trackedBill) {
+    if (!tracked)
       return NextResponse.json({ error: "Bill not tracked" }, { status: 404 });
-    }
 
-    return NextResponse.json(trackedBill, { status: 200 });
-  } catch (err) {
-    console.error("GET /bills/[itemId] error:", err);
     return NextResponse.json(
-      { error: "Internal server error" },
+      {
+        itemId: tracked.itemId?._id || tracked.itemId,
+        itemType: tracked.itemType,
+        note: tracked.note,
+        createdAt: tracked.createdAt,
+        updatedAt: tracked.updatedAt,
+        bill: tracked.itemId, // ✅ Fully populated bill document
+      },
+      { status: 200 }
+    );
+  } catch (err) {
+    console.error("GET /tracker/bills/[itemId] error:", err);
+    return NextResponse.json(
+      { error: "Internal server error", details: err.message },
       { status: 500 }
     );
   }
 }
 
-// PATCH – Update the note for a tracked bill
+// PATCH — Update the note for a tracked bill
 export async function PATCH(req, context) {
   const session = await getServerSession(authOptions);
   if (!session)
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const { id, itemId } = await context.params;
+  const { id, itemId } = context.params;
   const { note } = await req.json();
 
   if (String(session.user.id) !== String(id)) {
@@ -86,13 +104,13 @@ export async function PATCH(req, context) {
   }
 }
 
-// DELETE – Remove a tracked bill
+// DELETE — Remove a tracked bill
 export async function DELETE(req, context) {
   const session = await getServerSession(authOptions);
   if (!session)
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const { id, itemId } = await context.params;
+  const { id, itemId } = context.params;
   if (String(session.user.id) !== String(id)) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
@@ -104,7 +122,7 @@ export async function DELETE(req, context) {
     const beforeCount = user.tracker.bills.length;
 
     user.tracker.bills = user.tracker.bills.filter(
-      (item) => String(item.itemId) !== String(itemId)
+      (entry) => String(entry.itemId) !== String(itemId)
     );
 
     const afterCount = user.tracker.bills.length;

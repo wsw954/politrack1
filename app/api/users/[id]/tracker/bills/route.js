@@ -20,8 +20,12 @@ export async function GET(req, context) {
   try {
     await dbConnect();
 
+    // ✅ Key Change: Populate tracker.bills.itemId with full Bill document
     const user = await User.findById(id)
-      .populate({ path: "tracker.bills.itemId", strictPopulate: false })
+      .populate({
+        path: "tracker.bills.itemId",
+        model: "Bill",
+      })
       .lean();
 
     if (!user) {
@@ -44,7 +48,7 @@ export async function POST(req, context) {
   if (!session)
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const { id } = await context.params;
+  const { id } = context.params;
   if (String(session.user.id) !== String(id)) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
