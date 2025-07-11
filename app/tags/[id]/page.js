@@ -1,8 +1,14 @@
-// app/tags/[id]/page.js
+// /app/tags/[id]/page.js
+
 import { notFound } from "next/navigation";
 import { normalizeId } from "@/utils/normalizeId";
+import AddToTrackerButton from "@/components/user/AddToTrackerButton";
+import UnloggedTrackerPrompt from "@/components/user/UnloggedTrackerPrompt";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth/options";
 
 export default async function TagDetailPage({ params }) {
+  const session = await getServerSession(authOptions);
   const awaitedParams = await params;
   const { id } = awaitedParams;
 
@@ -15,6 +21,7 @@ export default async function TagDetailPage({ params }) {
 
   return (
     <div className="max-w-3xl mx-auto px-4 py-10">
+      {/* Tag Name */}
       <h1 className="text-3xl font-bold mb-4">
         Tag:{" "}
         <span
@@ -26,6 +33,20 @@ export default async function TagDetailPage({ params }) {
         </span>
       </h1>
 
+      {/* Track Button */}
+      <div className="mt-4 mb-10">
+        {session ? (
+          <AddToTrackerButton
+            itemId={tag._id}
+            itemType="Tag"
+            redirectTo="/user/tracker/tags"
+          />
+        ) : (
+          <UnloggedTrackerPrompt label="this tag" />
+        )}
+      </div>
+
+      {/* Keywords */}
       <div className="mb-6">
         <h2 className="text-xl font-semibold text-gray-800 mb-2">Keywords</h2>
         {tag.keywords && tag.keywords.length > 0 ? (
@@ -41,7 +62,7 @@ export default async function TagDetailPage({ params }) {
 
       <hr className="border-t border-gray-300 my-8" />
 
-      {/* Future enhancements */}
+      {/* Coming Soon */}
       <div>
         <h2 className="text-xl font-semibold text-gray-800 mb-2">
           Coming Soon

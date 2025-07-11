@@ -1,4 +1,4 @@
-// /app/api/users/[id]/bills/[itemId]/route.js
+// /app/api/users/[id]/tracker/bills/[itemId]/route.js
 
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth/options";

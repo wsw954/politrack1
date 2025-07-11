@@ -1,19 +1,22 @@
 // /app/api/bills/[id]/route.js
-import Bill from "@/models/Bill";
 import { dbConnect } from "@/config/db";
 import { NextResponse } from "next/server";
 import { requireAdmin } from "@/lib/auth/api-protect";
-import Tag from "@/models/Tag";
+
+import Bill from "@/models/Bill";
+import Politician from "@/models/Politician"; // ✅ Needed for .populate("sponsor") and .populate("co_sponsors")
+import Tag from "@/models/Tag"; // ✅ Needed for .populate("tags")
 
 export async function GET(req, { params }) {
   try {
     await dbConnect();
-    const awaitedParams = await params;
-    const { id } = awaitedParams;
+    const { id } = await params;
 
     const bill = await Bill.findById(id)
-      .populate("tags", "name")
-      .populate("sponsor", "first_name last_name chamber party");
+      .populate("sponsor", "first_name last_name chamber party")
+      .populate("co_sponsors", "first_name last_name chamber party")
+      .populate("tags", "name");
+
     if (!bill) {
       return NextResponse.json({ message: "Bill not found" }, { status: 404 });
     }
@@ -34,6 +37,7 @@ export async function PATCH(req, { params }) {
     const updated = await Bill.findByIdAndUpdate(params.id, updates, {
       new: true,
     });
+
     if (!updated) {
       return NextResponse.json({ message: "Bill not found" }, { status: 404 });
     }
@@ -53,6 +57,7 @@ export async function DELETE(req, { params }) {
     await dbConnect();
 
     const deleted = await Bill.findByIdAndDelete(params.id);
+
     if (!deleted) {
       return NextResponse.json({ message: "Bill not found" }, { status: 404 });
     }

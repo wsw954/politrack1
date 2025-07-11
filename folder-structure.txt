@@ -160,9 +160,11 @@
 │   │   └── Spinner.js
 │   └── user
 │       ├── ActivityCard.js
+│       ├── AddToTrackerButton.js
 │       ├── SettingsForm.js
 │       ├── TrackedPoliticianCard.js
 │       ├── TrackerStatCard.js
+│       ├── UnloggedTrackerPrompt.js
 │       ├── UserNav.js
 │       └── WatchlistItem.js
 ├── config

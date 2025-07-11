@@ -5,7 +5,6 @@ import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import axios from "@/lib/axiosInstance";
-
 import Spinner from "@/components/ui/Spinner";
 import SectionWrapper from "@/components/ui/SectionWrapper";
 import TagList from "@/components/bills/TagList";
@@ -16,6 +15,7 @@ import Button from "@/components/ui/Button";
 export default function TrackedBillPage() {
   const { data: session, status } = useSession();
   const { id } = useParams();
+
   const router = useRouter();
 
   const [tracked, setTracked] = useState(null);
@@ -46,6 +46,7 @@ export default function TrackedBillPage() {
     return <p className="text-red-600">Bill not found or not tracked.</p>;
 
   const { bill, note } = tracked;
+  console.log("line 49 in app/user/tracker/bills/[id]/page.js ");
 
   return (
     <SectionWrapper>

@@ -21,11 +21,11 @@ export default function GuestNavBar() {
         <Link href="/" className={linkClass("/")}>
           Home
         </Link>
-        <Link href="/politicians" className={linkClass("/politicians")}>
-          Politicians
-        </Link>
         <Link href="/bills" className={linkClass("/bills")}>
           Bills
+        </Link>
+        <Link href="/politicians" className={linkClass("/politicians")}>
+          Politicians
         </Link>
         <Link href="/tags" className={linkClass("/tags")}>
           Tags

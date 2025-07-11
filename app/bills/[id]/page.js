@@ -4,8 +4,14 @@ import TagList from "@/components/bills/TagList";
 import SponsorCard from "@/components/bills/SponsorCard";
 import { notFound } from "next/navigation";
 import { normalizeId } from "@/utils/normalizeId";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth/options";
+import Link from "next/link";
+import AddToTrackerButton from "@/components/user/AddToTrackerButton";
+import UnloggedTrackerPrompt from "@/components/user/UnloggedTrackerPrompt";
 
 export default async function BillDetailPage({ params }) {
+  const session = await getServerSession(authOptions);
   const awaitedParams = await params;
   const { id } = awaitedParams;
 
@@ -33,6 +39,19 @@ export default async function BillDetailPage({ params }) {
       >
         View Official Source
       </a>
+
+      {/* === TRACK BUTTON === */}
+      <div className="mt-4">
+        {session ? (
+          <AddToTrackerButton
+            itemId={bill._id}
+            itemType="Bill"
+            redirectTo="/user/tracker/bills"
+          />
+        ) : (
+          <UnloggedTrackerPrompt label="Bill" />
+        )}
+      </div>
 
       <section className="mt-6">
         <h2 className="text-xl font-semibold">Summary</h2>
