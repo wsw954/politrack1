@@ -32,7 +32,7 @@ const userSchema = new mongoose.Schema(
     tracker: {
       politicians: [trackedItemSchema],
       bills: [trackedItemSchema],
-      tags: [trackedTagSchema],
+      tags: [trackedItemSchema],
     },
   },
 

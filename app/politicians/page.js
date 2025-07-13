@@ -6,6 +6,7 @@ import PoliticianCard from "@/components/politicians/PoliticianCard";
 import FilterBar from "@/components/politicians/FilterBar";
 import Button from "@/components/ui/Button";
 import Link from "next/link";
+import { fetchTrackedIds } from "@/utils/fetchTrackedIds";
 
 export default function PoliticianListPage() {
   const [politicians, setPoliticians] = useState([]);
@@ -25,8 +26,8 @@ export default function PoliticianListPage() {
       setError(null);
 
       try {
+        // 1. Build filter query
         const query = new URLSearchParams();
-
         if (filters.chamber) query.append("chamber", filters.chamber);
         if (filters.name) query.append("name", filters.name);
         if (filters.party) query.append("party", filters.party);
@@ -35,15 +36,26 @@ export default function PoliticianListPage() {
         const url = `/api/politicians${
           query.toString() ? `?${query.toString()}` : ""
         }`;
+        //2. Get all Politicians
         const res = await fetch(url);
         if (!res.ok) throw new Error("Failed to fetch politicians");
+        const politicianData = await res.json();
 
-        const data = await res.json();
-        setPoliticians(data);
-        setAllPoliticians(data);
-        setLoading(false);
+        // 3. Get tracked politicians
+        const trackedIds = await fetchTrackedIds("politicians");
+
+        // 4. Merge `isTracked` status
+        const merged = politicianData.map((p) => ({
+          ...p,
+          isTracked: trackedIds.has(p._id),
+        }));
+
+        setPoliticians(merged);
+        setAllPoliticians(merged);
+        console.log(merged);
       } catch (err) {
         setError(err.message || "Something went wrong");
+      } finally {
         setLoading(false);
       }
     };
@@ -105,6 +117,7 @@ export default function PoliticianListPage() {
                       district: p.district,
                       chamber: p.chamber,
                       photo: p.photo_url.replace("/app/public", ""),
+                      isTracked: p.isTracked,
                     }}
                   />
                 </Link>

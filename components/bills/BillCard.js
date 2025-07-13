@@ -4,6 +4,7 @@
 import { normalizeId } from "@/utils/normalizeId";
 
 export default function BillCard({ bill }) {
+  const isTracked = bill.isTracked || false;
   const getStatusBadgeStyle = (status) => {
     if (!status) return "bg-gray-100 text-gray-700"; // fallback
 
@@ -29,6 +30,11 @@ export default function BillCard({ bill }) {
       <div className="flex flex-col gap-2">
         {/* Bill Title */}
         <h2 className="text-xl font-bold text-blue-700">{bill.title}</h2>
+        {isTracked && (
+          <span className="mt-2 w-fit max-w-max bg-green-100 text-green-800 text-xs font-medium px-2 py-1 rounded-full">
+            Tracked
+          </span>
+        )}
 
         {/* Bill ID */}
         <p className="text-sm text-gray-600">

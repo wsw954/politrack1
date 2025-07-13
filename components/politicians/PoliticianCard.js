@@ -10,7 +10,7 @@ export default function PoliticianCard({ politician }) {
     district,
     chamber,
     photo,
-    contact,
+    // contact,
     committee_assignments = [],
     voting_history = [],
     consistency_meter = {},
@@ -73,6 +73,11 @@ export default function PoliticianCard({ politician }) {
         <div className="mt-4 text-sm text-gray-800">
           <strong>Party Alignment:</strong> {consistency_meter.party_alignment}%
         </div>
+      )}
+      {politician.isTracked && (
+        <span className="mt-2 w-fit max-w-max bg-green-100 text-green-800 text-xs font-medium px-2 py-1 rounded-full">
+          Tracked
+        </span>
       )}
     </div>
   );

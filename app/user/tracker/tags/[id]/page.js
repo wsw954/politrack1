@@ -13,7 +13,7 @@ import SectionWrapper from "@/components/ui/SectionWrapper";
 
 export default function TrackedTagPage() {
   const { data: session, status } = useSession();
-  const { id } = useParams(); // This is [tagId]
+  const { id } = useParams();
   const router = useRouter();
 
   const [trackedTag, setTrackedTag] = useState(null);
@@ -27,6 +27,7 @@ export default function TrackedTagPage() {
         const res = await axios.get(
           `/api/users/${session.user.id}/tracker/tags/${id}`
         );
+        console.log(res.data);
         setTrackedTag(res.data);
       } catch (err) {
         console.error("Failed to fetch tracked tag:", err);
@@ -43,28 +44,30 @@ export default function TrackedTagPage() {
   if (!trackedTag)
     return <p className="text-gray-600">Tag not found or not tracked.</p>;
 
-  const { tagId, note } = trackedTag;
+  const { itemId: tag, note } = trackedTag;
 
   return (
     <SectionWrapper>
-      <h1 className="text-2xl font-bold mb-6">Tracked Tag: {tagId.name}</h1>
+      <h1 className="text-2xl font-bold mb-6">
+        Tracked Tag: {trackedTag.name}
+      </h1>
 
       <Card>
         <p className="text-lg font-semibold mb-2">Tag Info</p>
         <ul className="mb-4 text-gray-700">
           <li>
-            <strong>Name:</strong> {tagId.name}
+            <strong>Name:</strong> {tag.name}
           </li>
-          {tagId.keywords?.length > 0 && (
+          {tag.keywords?.length > 0 && (
             <li>
-              <strong>Keywords:</strong> {tagId.keywords.join(", ")}
+              <strong>Keywords:</strong> {tag.keywords.join(", ")}
             </li>
           )}
-          {tagId.color && (
+          {tag.color && (
             <li>
               <strong>Color Class:</strong>{" "}
               <code className="bg-gray-100 px-1 py-0.5 rounded text-sm">
-                {tagId.color}
+                {tag.color}
               </code>
             </li>
           )}
@@ -81,7 +84,7 @@ export default function TrackedTagPage() {
             variant="destructive"
             onClick={async () => {
               const confirmed = confirm(
-                `Are you sure you want to untrack "${tagId.name}"?`
+                `Are you sure you want to untrack "${tag.name}"?`
               );
               if (!confirmed) return;
 

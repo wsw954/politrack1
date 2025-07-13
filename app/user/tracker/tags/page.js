@@ -25,7 +25,9 @@ export default function TrackedTagsPage() {
         const res = await axios.get(
           `/api/users/${session.user.id}/tracker/tags`
         );
+        console.log(res.data);
         setTags(res.data || []);
+        console.log(tags);
       } catch (err) {
         console.error("Failed to fetch tracked tags:", err);
       } finally {
@@ -47,13 +49,13 @@ export default function TrackedTagsPage() {
         <p className="text-gray-600">You haven't tracked any tags yet.</p>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {tags.map(({ tagId, note }) => (
-            <Link key={tagId._id} href={`/user/tracker/tags/${tagId._id}`}>
+          {tags.map(({ itemId, note }) => (
+            <Link key={itemId._id} href={`/user/tracker/tags/${itemId._id}`}>
               <Card>
-                <h2 className="text-xl font-bold">{tagId.name}</h2>
-                {tagId.keywords?.length > 0 && (
+                <h2 className="text-xl font-bold">{itemId.name}</h2>
+                {itemId.keywords?.length > 0 && (
                   <p className="text-sm text-gray-600">
-                    Keywords: {tagId.keywords.join(", ")}
+                    Keywords: {itemId.keywords.join(", ")}
                   </p>
                 )}
                 {note && (

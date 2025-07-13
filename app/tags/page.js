@@ -1,10 +1,11 @@
-// /app/tags/page.js
+// app/tags/page.js
 "use client";
 
 import { useEffect, useState } from "react";
 import Button from "@/components/ui/Button";
 import Card from "@/components/ui/Card";
 import Link from "next/link";
+import { fetchTrackedIds } from "@/utils/fetchTrackedIds";
 
 export default function TagListPage() {
   const [tags, setTags] = useState([]);
@@ -12,20 +13,28 @@ export default function TagListPage() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const fetchTags = async () => {
+    const fetchData = async () => {
       try {
         const res = await fetch("/api/tags");
         if (!res.ok) throw new Error("Failed to fetch tags");
-        const data = await res.json();
-        setTags(data);
-        setLoading(false);
+        const tagData = await res.json();
+
+        const trackedIds = await fetchTrackedIds("tags");
+        console.log(trackedIds);
+        const mergedTags = tagData.map((tag) => ({
+          ...tag,
+          isTracked: trackedIds.has(tag._id),
+        }));
+
+        setTags(mergedTags);
       } catch (err) {
         setError(err.message || "Something went wrong");
+      } finally {
         setLoading(false);
       }
     };
 
-    fetchTags();
+    fetchData();
   }, []);
 
   return (
@@ -56,6 +65,11 @@ export default function TagListPage() {
                   <h2 className="text-xl font-semibold text-gray-900">
                     {tag.name}
                   </h2>
+                  {tag.isTracked && (
+                    <span className="w-fit max-w-max bg-green-100 text-green-800 text-xs font-medium px-2 py-1 rounded-full">
+                      Tracked
+                    </span>
+                  )}
                   {tag.keywords?.length > 0 && (
                     <ul className="text-sm text-gray-600 list-disc list-inside">
                       {tag.keywords.map((kw, i) => (

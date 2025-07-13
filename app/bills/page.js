@@ -7,6 +7,7 @@ import FilterBar from "@/components/bills/FilterBar";
 import Button from "@/components/ui/Button";
 import Link from "next/link";
 import { normalizeId } from "@/utils/normalizeId";
+import { fetchTrackedIds } from "@/utils/fetchTrackedIds";
 
 export default function BillListPage() {
   const [bills, setBills] = useState([]);
@@ -24,25 +25,39 @@ export default function BillListPage() {
       setLoading(true);
       setError(null);
       try {
+        // 1. Build bill filter query
         const query = new URLSearchParams();
         if (filters.title) query.append("title", filters.title);
         if (filters.tag) query.append("tag", filters.tag);
         if (filters.status) query.append("status", filters.status);
-        const url = `/api/bills${
+
+        const billsUrl = `/api/bills${
           query.toString() ? `?${query.toString()}` : ""
         }`;
+        //2. Get all bills
+        const billsRes = await fetch(billsUrl);
 
-        const res = await fetch(url);
-        if (!res.ok) throw new Error("Failed to fetch bills");
-        const data = await res.json();
-        setBills(data);
-        setAllBills(data);
+        if (!billsRes.ok) throw new Error("Failed to fetch bills");
+        const billsData = await billsRes.json();
+
+        // 3. Get tracked bills
+        const trackedIds = await fetchTrackedIds("bills");
+
+        // 4. Merge tracked info into bills
+        const mergedBills = billsData.map((bill) => ({
+          ...bill,
+          isTracked: trackedIds.has(bill._id),
+        }));
+
+        setBills(mergedBills);
+        setAllBills(mergedBills);
       } catch (err) {
         setError(err.message || "Something went wrong");
       } finally {
         setLoading(false);
       }
     };
+
     fetchData();
   }, [filters]);
 
@@ -100,6 +115,7 @@ export default function BillListPage() {
                     summary: bill.summary,
                     tags: bill.tags.map((tag) => tag.name),
                     current_stage: bill.status?.current_stage,
+                    isTracked: bill.isTracked,
                   }}
                 />
               </Link>

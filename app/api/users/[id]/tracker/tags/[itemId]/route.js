@@ -1,4 +1,4 @@
-// app/api/users/[id]/tracker/tags/[tagId]/route.js
+// app/api/users/[id]/tracker/tags/[itemId]/route.js
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth/options";
 import { dbConnect } from "@/config/db";
@@ -12,7 +12,7 @@ export async function GET(req, context) {
   if (!session)
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const { id, tagId } = await context.params;
+  const { id, itemId } = await context.params;
   if (String(session.user.id) !== String(id)) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
@@ -21,14 +21,17 @@ export async function GET(req, context) {
     await dbConnect();
 
     const user = await User.findById(id)
-      .populate({ path: "tracker.tags.tagId", strictPopulate: false })
+      .populate({
+        path: "tracker.tags.itemId", // ✅ populate full Tag document
+        model: "Tag",
+      })
       .lean();
 
     if (!user)
       return NextResponse.json({ error: "User not found" }, { status: 404 });
 
     const trackedTag = user.tracker.tags.find(
-      (item) => String(item.tagId?._id || item.tagId) === String(tagId)
+      (item) => String(item.itemId?._id || item.itemId) === String(itemId)
     );
 
     if (!trackedTag) {
@@ -37,7 +40,7 @@ export async function GET(req, context) {
 
     return NextResponse.json(trackedTag, { status: 200 });
   } catch (err) {
-    console.error("GET /tracker/tags/[tagId] error:", err);
+    console.error("GET /tracker/tags/[itemId] error:", err);
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 }
@@ -51,7 +54,7 @@ export async function PATCH(req, context) {
   if (!session)
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const { id, tagId } = context.params;
+  const { id, itemId } = context.params;
   const { note } = await req.json();
 
   if (String(session.user.id) !== String(id)) {
@@ -63,7 +66,7 @@ export async function PATCH(req, context) {
 
     const user = await User.findById(id);
     const tracked = user.tracker.tags.find(
-      (item) => String(item.tagId) === String(tagId)
+      (item) => String(item.itemId) === String(itemId)
     );
 
     if (!tracked) {
@@ -76,7 +79,7 @@ export async function PATCH(req, context) {
 
     return NextResponse.json({ message: "Note updated" }, { status: 200 });
   } catch (err) {
-    console.error("PATCH /tracker/tags/[tagId] error:", err);
+    console.error("PATCH /tracker/tags/[itemId] error:", err);
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 }
@@ -90,7 +93,7 @@ export async function DELETE(req, context) {
   if (!session)
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const { id, tagId } = context.params;
+  const { id, itemId } = context.params;
   if (String(session.user.id) !== String(id)) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
@@ -102,7 +105,7 @@ export async function DELETE(req, context) {
     const beforeCount = user.tracker.tags.length;
 
     user.tracker.tags = user.tracker.tags.filter(
-      (item) => String(item.tagId) !== String(tagId)
+      (item) => String(item.itemId) !== String(itemId)
     );
 
     const afterCount = user.tracker.tags.length;
@@ -113,7 +116,7 @@ export async function DELETE(req, context) {
     await user.save();
     return NextResponse.json({ message: "Tag untracked" }, { status: 200 });
   } catch (err) {
-    console.error("DELETE /tracker/tags/[tagId] error:", err);
+    console.error("DELETE /tracker/tags/[itemId] error:", err);
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 }

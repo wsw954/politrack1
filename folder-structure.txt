@@ -43,7 +43,7 @@
 │   │       │       │   └── route.js
 │   │       │       ├── route.js
 │   │       │       └── tags
-│   │       │           ├── [tagId]
+│   │       │           ├── [itemId]
 │   │       │           │   └── route.js
 │   │       │           └── route.js
 │   │       ├── me
@@ -261,5 +261,6 @@
 │           └── postTrackedTag.mjs
 └── utils
     ├── authHelpers.js
+    ├── fetchTrackedIds.js
     ├── normalizeId.js
     └── roleCheck.js

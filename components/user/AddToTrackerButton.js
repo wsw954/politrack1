@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import axios from "@/lib/axiosInstance";
 import Link from "next/link";
+import { isHTTPMethod } from "next/dist/server/web/http";
 
 export default function AddToTrackerButton({ itemId, itemType, redirectTo }) {
   const { data: session, status } = useSession();
@@ -41,8 +42,7 @@ export default function AddToTrackerButton({ itemId, itemType, redirectTo }) {
           ? `/api/users/${userId}/tracker/politicians`
           : `/api/users/${userId}/tracker/tags`;
 
-      const payload =
-        itemType === "Tag" ? { tagId: itemId } : { itemId, itemType };
+      const payload = { itemId, itemType };
 
       await axios.post(endpoint, payload);
       router.push(redirectTo);
@@ -67,7 +67,7 @@ export default function AddToTrackerButton({ itemId, itemType, redirectTo }) {
         disabled={loading}
         className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 disabled:opacity-50"
       >
-        {loading ? "Tracking..." : "Track This Bill"}
+        {loading ? "Tracking..." : "Track " + itemType}
       </button>
       {error && (
         <p className="mt-2 text-sm text-red-600" role="alert">

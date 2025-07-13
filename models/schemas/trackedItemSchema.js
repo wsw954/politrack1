@@ -11,7 +11,7 @@ const trackedItemSchema = new mongoose.Schema(
     itemType: {
       type: String,
       required: true,
-      enum: ["Politician", "Bill"],
+      enum: ["Politician", "Bill", "Tag"],
     },
     note: {
       type: String,

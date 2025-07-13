@@ -42,7 +42,7 @@ export default async function TagDetailPage({ params }) {
             redirectTo="/user/tracker/tags"
           />
         ) : (
-          <UnloggedTrackerPrompt label="this tag" />
+          <UnloggedTrackerPrompt label="Tag" />
         )}
       </div>
 

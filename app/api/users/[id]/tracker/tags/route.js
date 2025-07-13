@@ -12,7 +12,7 @@ export async function GET(req, context) {
   if (!session)
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const { id } = context.params;
+  const { id } = await context.params;
   if (String(session.user.id) !== String(id)) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
@@ -21,7 +21,10 @@ export async function GET(req, context) {
     await dbConnect();
 
     const user = await User.findById(id)
-      .populate({ path: "tracker.tags.tagId", strictPopulate: false })
+      .populate({
+        path: "tracker.tags.itemId", // ✅ populate full Tag document
+        model: "Tag",
+      })
       .lean();
 
     if (!user) {
@@ -49,22 +52,22 @@ export async function POST(req, context) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
 
-  const { tagId, note = "" } = await req.json();
-  if (!tagId) {
-    return NextResponse.json({ error: "Missing tagId" }, { status: 400 });
+  const { itemId, itemType, note = "" } = await req.json();
+  if (!itemId) {
+    return NextResponse.json({ error: "Missing itemId" }, { status: 400 });
   }
 
   try {
     await dbConnect();
 
-    const tag = await Tag.findById(tagId);
+    const tag = await Tag.findById(itemId);
     if (!tag) {
       return NextResponse.json({ error: "Tag not found" }, { status: 404 });
     }
 
     const user = await User.findById(id);
     const alreadyTracked = user.tracker.tags.some(
-      (entry) => String(entry.tagId) === String(tagId)
+      (entry) => String(entry.itemId) === String(itemId)
     );
 
     if (alreadyTracked) {
@@ -75,7 +78,8 @@ export async function POST(req, context) {
     }
 
     user.tracker.tags.push({
-      tagId,
+      itemId,
+      itemType,
       note,
       createdAt: new Date(),
       updatedAt: new Date(),
