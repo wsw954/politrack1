@@ -2,6 +2,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import BillCard from "@/components/bills/BillCard";
 import FilterBar from "@/components/bills/FilterBar";
 import Button from "@/components/ui/Button";
@@ -19,6 +21,9 @@ export default function BillListPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [allBills, setAllBills] = useState([]);
+
+  const { data: session, status } = useSession();
+  const router = useRouter();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -60,6 +65,15 @@ export default function BillListPage() {
 
     fetchData();
   }, [filters]);
+
+  const handleBillClick = (bill) => {
+    const id = normalizeId(bill._id);
+    if (bill.isTracked && session?.user) {
+      router.push(`/user/tracker/bills/${id}`);
+    } else {
+      router.push(`/bills/${id}`);
+    }
+  };
 
   const handleResetFilters = () => {
     setFilters({
@@ -103,9 +117,10 @@ export default function BillListPage() {
         <div className="mt-12 grid grid-cols-1 md:grid-cols-2 gap-6">
           {bills.length > 0 ? (
             bills.map((bill) => (
-              <Link
+              <div
                 key={normalizeId(bill._id)}
-                href={`/bills/${normalizeId(bill._id)}`}
+                onClick={() => handleBillClick(bill)}
+                className="cursor-pointer"
               >
                 <BillCard
                   bill={{
@@ -118,7 +133,7 @@ export default function BillListPage() {
                     isTracked: bill.isTracked,
                   }}
                 />
-              </Link>
+              </div>
             ))
           ) : (
             <p className="text-gray-500">No bills match your filters.</p>

@@ -2,6 +2,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import PoliticianCard from "@/components/politicians/PoliticianCard";
 import FilterBar from "@/components/politicians/FilterBar";
 import Button from "@/components/ui/Button";
@@ -19,6 +21,9 @@ export default function PoliticianListPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [allPoliticians, setAllPoliticians] = useState([]);
+
+  const { data: session, status } = useSession();
+  const router = useRouter();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -45,9 +50,9 @@ export default function PoliticianListPage() {
         const trackedIds = await fetchTrackedIds("politicians");
 
         // 4. Merge `isTracked` status
-        const merged = politicianData.map((p) => ({
-          ...p,
-          isTracked: trackedIds.has(p._id),
+        const merged = politicianData.map((politician) => ({
+          ...politician,
+          isTracked: trackedIds.has(politician._id),
         }));
 
         setPoliticians(merged);
@@ -70,6 +75,15 @@ export default function PoliticianListPage() {
       party: "",
       district: "",
     });
+  };
+
+  const handleCardClick = (politician) => {
+    const id = politician._id;
+    if (politician.isTracked && session?.user) {
+      router.push(`/user/tracker/politicians/${id}`);
+    } else {
+      router.push(`/politicians/${id}`);
+    }
   };
 
   return (
@@ -108,19 +122,21 @@ export default function PoliticianListPage() {
         <div className="mt-12 flex flex-col gap-4">
           {politicians.length > 0 ? (
             politicians.map((p) => (
-              <div key={p._id}>
-                <Link href={`/politicians/${p._id}`}>
-                  <PoliticianCard
-                    politician={{
-                      name: `${p.first_name} ${p.last_name}`,
-                      party: p.party,
-                      district: p.district,
-                      chamber: p.chamber,
-                      photo: p.photo_url.replace("/app/public", ""),
-                      isTracked: p.isTracked,
-                    }}
-                  />
-                </Link>
+              <div
+                key={p._id}
+                onClick={() => handleCardClick(p)}
+                className="cursor-pointer"
+              >
+                <PoliticianCard
+                  politician={{
+                    name: `${p.first_name} ${p.last_name}`,
+                    party: p.party,
+                    district: p.district,
+                    chamber: p.chamber,
+                    photo: p.photo_url.replace("/app/public", ""),
+                    isTracked: p.isTracked,
+                  }}
+                />
               </div>
             ))
           ) : (
