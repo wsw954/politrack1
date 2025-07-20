@@ -30,7 +30,7 @@ export async function GET(req) {
 
   try {
     const bills = await Bill.find(filters || {}).populate("tags", "name");
-    // const bills = await Bill.find(filters || {}); //Works fine
+
     return NextResponse.json(bills);
   } catch (error) {
     return NextResponse.json(

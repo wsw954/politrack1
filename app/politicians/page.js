@@ -57,7 +57,6 @@ export default function PoliticianListPage() {
 
         setPoliticians(merged);
         setAllPoliticians(merged);
-        console.log(merged);
       } catch (err) {
         setError(err.message || "Something went wrong");
       } finally {

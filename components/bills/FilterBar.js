@@ -18,7 +18,7 @@ export default function FilterBar({ allBills, filters, setFilters }) {
         values.add(b.status.current_stage);
       }
     });
-    return Array.from(values).sort();
+    return Array.from(values).sort((a, b) => a.localeCompare(b));
   };
 
   return (
@@ -46,13 +46,13 @@ export default function FilterBar({ allBills, filters, setFilters }) {
         </select>
       </div>
 
-      {/* Tag */}
+      {/* Tags */}
       <div className="w-full sm:w-[48%] lg:w-[25%] bg-white border rounded-lg shadow-sm p-3">
         <label
           htmlFor="tag"
           className="text-sm font-semibold mb-1 block text-gray-700"
         >
-          Tag
+          Tags
         </label>
         <select
           id="tag"
@@ -75,7 +75,7 @@ export default function FilterBar({ allBills, filters, setFilters }) {
           htmlFor="status"
           className="text-sm font-semibold mb-1 block text-gray-700"
         >
-          Current Status
+          Status
         </label>
         <select
           id="status"
@@ -89,6 +89,28 @@ export default function FilterBar({ allBills, filters, setFilters }) {
               {val}
             </option>
           ))}
+        </select>
+      </div>
+
+      {/* Sort */}
+      <div className="w-full sm:w-[48%] lg:w-[25%] bg-white border rounded-lg shadow-sm p-3">
+        <label
+          htmlFor="sort"
+          className="text-sm font-semibold mb-1 block text-gray-700"
+        >
+          Sort By
+        </label>
+        <select
+          id="sort"
+          className="w-full border rounded-md p-2"
+          value={filters.sort}
+          onChange={(e) => setFilters({ ...filters, sort: e.target.value })}
+        >
+          <option value="none">Sort (None)</option>
+          <option value="title-asc">Title (A–Z)</option>
+          <option value="title-desc">Title (Z–A)</option>
+          <option value="date-desc">Newest First</option>
+          <option value="date-asc">Oldest First</option>
         </select>
       </div>
     </div>

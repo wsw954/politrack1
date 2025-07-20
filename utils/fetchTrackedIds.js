@@ -11,7 +11,7 @@ export async function fetchTrackedIds(itemType) {
     if (!res.ok) return new Set();
 
     const data = await res.json();
-    console.log(data);
+
     return new Set(
       data
         .map((item) =>

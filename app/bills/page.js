@@ -17,14 +17,36 @@ export default function BillListPage() {
     title: "",
     tag: "",
     status: "",
+    sort: "none",
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [allBills, setAllBills] = useState([]);
 
-  const { data: session, status } = useSession();
+  const { data: session } = useSession();
   const router = useRouter();
 
+  // Fetch full bill list once for filter dropdowns
+  useEffect(() => {
+    const fetchAllBills = async () => {
+      try {
+        const res = await fetch("/api/bills");
+        const data = await res.json();
+        const trackedIds = await fetchTrackedIds("bills");
+        const merged = data.map((bill) => ({
+          ...bill,
+          isTracked: trackedIds.has(bill._id),
+        }));
+        setAllBills(merged);
+      } catch (err) {
+        console.error("Failed to fetch all bills:", err);
+      }
+    };
+
+    fetchAllBills();
+  }, []);
+
+  // Main useEffect for handling filters
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
@@ -33,7 +55,7 @@ export default function BillListPage() {
         // 1. Build bill filter query
         const query = new URLSearchParams();
         if (filters.title) query.append("title", filters.title);
-        if (filters.tag) query.append("tag", filters.tag);
+        if (filters.tag) query.append("tags", filters.tag);
         if (filters.status) query.append("status", filters.status);
 
         const billsUrl = `/api/bills${
@@ -54,8 +76,7 @@ export default function BillListPage() {
           isTracked: trackedIds.has(bill._id),
         }));
 
-        setBills(mergedBills);
-        setAllBills(mergedBills);
+        setBills(mergedBills); // store filtered result
       } catch (err) {
         setError(err.message || "Something went wrong");
       } finally {
@@ -64,7 +85,7 @@ export default function BillListPage() {
     };
 
     fetchData();
-  }, [filters]);
+  }, [filters.title, filters.tag, filters.status]);
 
   const handleBillClick = (bill) => {
     const id = normalizeId(bill._id);
@@ -80,8 +101,26 @@ export default function BillListPage() {
       title: "",
       tag: "",
       status: "",
+      sort: "none",
     });
   };
+
+  // Apply sort just before rendering
+  const sortedBills = [...bills].sort((a, b) => {
+    switch (filters.sort) {
+      case "title-asc":
+        return a.title.localeCompare(b.title);
+      case "title-desc":
+        return b.title.localeCompare(a.title);
+      case "date-asc":
+        return new Date(a.createdAt) - new Date(b.createdAt);
+      case "date-desc":
+        return new Date(b.createdAt) - new Date(a.createdAt);
+      case "none":
+      default:
+        return 0; // no sorting
+    }
+  });
 
   return (
     <div className="w-full max-w-none px-4 py-8">
@@ -115,8 +154,8 @@ export default function BillListPage() {
 
       {!loading && !error && (
         <div className="mt-12 grid grid-cols-1 md:grid-cols-2 gap-6">
-          {bills.length > 0 ? (
-            bills.map((bill) => (
+          {sortedBills.length > 0 ? (
+            sortedBills.map((bill) => (
               <div
                 key={normalizeId(bill._id)}
                 onClick={() => handleBillClick(bill)}

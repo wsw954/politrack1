@@ -110,7 +110,7 @@ export async function DELETE(req, context) {
   if (!session)
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const { id, itemId } = context.params;
+  const { id, itemId } = await context.params;
   if (String(session.user.id) !== String(id)) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }

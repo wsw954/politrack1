@@ -13,7 +13,8 @@ import { notFound } from "next/navigation";
 
 export default async function PoliticianDetailPage({ params }) {
   const session = await getServerSession(authOptions);
-  const { id } = params;
+  const awaitedParams = await params;
+  const { id } = awaitedParams;
 
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_BASE_URL}/api/politicians/${id}`,
