@@ -3,8 +3,9 @@ import { NextResponse } from "next/server";
 import dbConnect from "@/config/db";
 import Bill from "@/models/Bill";
 import Tag from "@/models/Tag";
-
+import Politician from "@/models/Politician";
 import { requireAdmin } from "@/lib/auth/api-protect";
+import mongoose from "mongoose"; // at top
 
 export async function GET(req) {
   await dbConnect();
@@ -20,8 +21,9 @@ export async function GET(req) {
     filters.title = { $regex: title, $options: "i" };
   }
 
+  //Filter using ObjectId string
   if (tag) {
-    filters.tags = { $in: [tag] };
+    filters.tags = { $in: [new mongoose.Types.ObjectId(tag)] };
   }
 
   if (status) {
@@ -29,7 +31,11 @@ export async function GET(req) {
   }
 
   try {
-    const bills = await Bill.find(filters || {}).populate("tags", "name");
+    const count = await Bill.countDocuments(filters);
+    const bills = await Bill.find(filters)
+      .populate("tags", "name") // populate tags with their names
+      .populate("sponsor", "first_name last_name")
+      .populate("co_sponsors", "first_name last_name");
 
     return NextResponse.json(bills);
   } catch (error) {

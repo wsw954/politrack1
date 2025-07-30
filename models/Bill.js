@@ -13,6 +13,7 @@ const billSchema = new mongoose.Schema(
     },
     title: { type: String, required: true },
     type: { type: String, required: true, unique: true },
+    summary: { type: String },
     sponsor: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Politician",

@@ -37,9 +37,10 @@ export default function BillListPage() {
           ...bill,
           isTracked: trackedIds.has(bill._id),
         }));
+
         setAllBills(merged);
       } catch (err) {
-        console.error("Failed to fetch all bills:", err);
+        console.error("Failed to fetch all bills", err);
       }
     };
 
@@ -55,12 +56,12 @@ export default function BillListPage() {
         // 1. Build bill filter query
         const query = new URLSearchParams();
         if (filters.title) query.append("title", filters.title);
-        if (filters.tag) query.append("tags", filters.tag);
+        if (filters.tag) query.append("tag", filters.tag); // Tag now sends _id
         if (filters.status) query.append("status", filters.status);
 
-        const billsUrl = `/api/bills${
-          query.toString() ? `?${query.toString()}` : ""
-        }`;
+        const queryString = query.toString();
+        const billsUrl = `/api/bills${queryString ? `?${queryString}` : ""}`;
+
         //2. Get all bills
         const billsRes = await fetch(billsUrl);
 
@@ -85,7 +86,7 @@ export default function BillListPage() {
     };
 
     fetchData();
-  }, [filters.title, filters.tag, filters.status]);
+  }, [filters]); // watch the entire filters object:
 
   const handleBillClick = (bill) => {
     const id = normalizeId(bill._id);

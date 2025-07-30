@@ -1,29 +1,37 @@
 // components/bills/FilterBar.js
 "use client";
 
-import { normalizeId } from "@/utils/normalizeId";
-
 export default function FilterBar({ allBills, filters, setFilters }) {
   const getOptions = (key) => {
+    if (key === "tag") {
+      const tagMap = new Map();
+
+      allBills.forEach((b) => {
+        if (Array.isArray(b.tags)) {
+          b.tags.forEach((tag) => {
+            if (tag && tag._id && tag.name) {
+              tagMap.set(tag._id.toString(), tag.name);
+            }
+          });
+        }
+      });
+
+      return Array.from(tagMap.entries()).sort((a, b) =>
+        a[1].localeCompare(b[1])
+      );
+    }
+
     const values = new Set();
     allBills.forEach((b) => {
-      if (key === "tag") {
-        b.tags.forEach((tag) => {
-          const normalized = normalizeId(tag);
-          if (normalized) values.add(normalized);
-        });
-      } else if (key === "title") {
-        values.add(b.title);
-      } else if (key === "status") {
-        values.add(b.status.current_stage);
-      }
+      if (key === "title") values.add(b.title);
+      if (key === "status") values.add(b.status.current_stage);
     });
     return Array.from(values).sort((a, b) => a.localeCompare(b));
   };
 
   return (
     <div className="flex flex-wrap gap-4 mb-6">
-      {/* Title */}
+      {/* Bill Title */}
       <div className="w-full sm:w-[48%] lg:flex-1 bg-white border rounded-lg shadow-sm p-3">
         <label
           htmlFor="title"
@@ -58,12 +66,17 @@ export default function FilterBar({ allBills, filters, setFilters }) {
           id="tag"
           className="w-full border rounded-md p-2"
           value={filters.tag}
-          onChange={(e) => setFilters({ ...filters, tag: e.target.value })}
+          onChange={(e) => {
+            const newTag = e.target.value || "";
+            if (filters.tag !== newTag) {
+              setFilters((prev) => ({ ...prev, tag: newTag }));
+            }
+          }}
         >
           <option value="">Select</option>
-          {getOptions("tag").map((val) => (
-            <option key={`tag-${val}`} value={val}>
-              {val}
+          {getOptions("tag").map(([id, name]) => (
+            <option key={`tag-${id}`} value={id.toString()}>
+              {name}
             </option>
           ))}
         </select>

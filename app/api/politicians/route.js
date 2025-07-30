@@ -48,7 +48,7 @@ export async function GET(req) {
 
   try {
     const politicians = await Politician.find(filters);
-    console.log("line 52 in API - app/api/politicians/route.js ");
+
     return NextResponse.json(politicians);
   } catch (error) {
     return NextResponse.json(
