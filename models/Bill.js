@@ -13,6 +13,11 @@ const billSchema = new mongoose.Schema(
     },
     title: { type: String, required: true },
     type: { type: String, required: true, unique: true },
+    session: {
+      type: String, // or Number if you prefer
+      required: true,
+      trim: true, // e.g., "2025"
+    },
     summary: { type: String },
     sponsor: {
       type: mongoose.Schema.Types.ObjectId,

@@ -1,40 +1,37 @@
-//components/FilterBar.js
+//components/politicians/FilterBar.js
 "use client";
 
 export default function FilterBar({ allPoliticians, filters, setFilters }) {
   const getOptions = (key) => {
+    if (key === "name") {
+      const nameMap = new Map();
+
+      allPoliticians.forEach((p) => {
+        // ✅ Create user-friendly label: Last, First
+        const displayName = `${p.last_name}, ${p.first_name}`;
+
+        // ✅ Use unique `p.name` as the filter value
+        nameMap.set(p.name, displayName);
+      });
+
+      // ✅ Sort by label (last name)
+      return Array.from(nameMap.entries()).sort((a, b) =>
+        a[1].localeCompare(b[1])
+      );
+    }
+
     const values = new Set();
     allPoliticians.forEach((p) => {
-      if (key === "name") values.add(`${p.first_name} ${p.last_name}`);
-      else values.add(p[key]);
+      if (key === "chamber") values.add(p.chamber);
+      if (key === "party") values.add(p.party);
     });
-    return Array.from(values).sort();
+
+    return Array.from(values).sort((a, b) => a.localeCompare(b));
   };
 
   return (
     <div className="flex flex-wrap gap-4 mb-6">
-      {/* Office - narrower */}
-      <div className="w-full sm:w-[48%] lg:w-[20%] bg-white border rounded-lg shadow-sm p-3">
-        <label
-          htmlFor="chamber"
-          className="text-sm font-semibold mb-1 block text-gray-700"
-        >
-          Office
-        </label>
-        <select
-          id="chamber"
-          className="w-full border rounded-md p-2"
-          value={filters.chamber}
-          onChange={(e) => setFilters({ ...filters, chamber: e.target.value })}
-        >
-          <option value="">Select</option>
-          {getOptions("chamber").map((val) => (
-            <option key={val}>{val}</option>
-          ))}
-        </select>
-      </div>
-
-      {/* Name - wide */}
+      {/* Politician Name Filter */}
       <div className="w-full sm:w-[48%] lg:flex-1 bg-white border rounded-lg shadow-sm p-3">
         <label
           htmlFor="name"
@@ -49,14 +46,41 @@ export default function FilterBar({ allPoliticians, filters, setFilters }) {
           onChange={(e) => setFilters({ ...filters, name: e.target.value })}
         >
           <option value="">Select</option>
-          {getOptions("name").map((val) => (
-            <option key={val}>{val}</option>
+
+          {/* ✅ Render dropdown: value = unique name, label = Last, First */}
+          {getOptions("name").map(([uniqueName, label]) => (
+            <option key={`name-${uniqueName}`} value={uniqueName}>
+              {label}
+            </option>
           ))}
         </select>
       </div>
 
-      {/* Party - medium */}
-      <div className="w-full sm:w-[48%] lg:w-[20%] bg-white border rounded-lg shadow-sm p-3">
+      {/* Chamber Filter */}
+      <div className="w-full sm:w-[48%] lg:w-[25%] bg-white border rounded-lg shadow-sm p-3">
+        <label
+          htmlFor="chamber"
+          className="text-sm font-semibold mb-1 block text-gray-700"
+        >
+          Chamber
+        </label>
+        <select
+          id="chamber"
+          className="w-full border rounded-md p-2"
+          value={filters.chamber}
+          onChange={(e) => setFilters({ ...filters, chamber: e.target.value })}
+        >
+          <option value="">Select</option>
+          {getOptions("chamber").map((val) => (
+            <option key={`chamber-${val}`} value={val}>
+              {val}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      {/* Party Filter */}
+      <div className="w-full sm:w-[48%] lg:w-[25%] bg-white border rounded-lg shadow-sm p-3">
         <label
           htmlFor="party"
           className="text-sm font-semibold mb-1 block text-gray-700"
@@ -71,29 +95,30 @@ export default function FilterBar({ allPoliticians, filters, setFilters }) {
         >
           <option value="">Select</option>
           {getOptions("party").map((val) => (
-            <option key={val}>{val}</option>
+            <option key={`party-${val}`} value={val}>
+              {val}
+            </option>
           ))}
         </select>
       </div>
-
-      {/* District - narrower */}
-      <div className="w-full sm:w-[48%] lg:w-[18%] bg-white border rounded-lg shadow-sm p-3">
+      {/*Sort By dropdown */}
+      <div className="w-full sm:w-[48%] lg:w-[20%] bg-white border rounded-lg shadow-sm p-3">
         <label
-          htmlFor="district"
+          htmlFor="sort"
           className="text-sm font-semibold mb-1 block text-gray-700"
         >
-          District
+          Sort By
         </label>
         <select
-          id="district"
+          id="sort"
           className="w-full border rounded-md p-2"
-          value={filters.district}
-          onChange={(e) => setFilters({ ...filters, district: e.target.value })}
+          value={filters.sort}
+          onChange={(e) => setFilters({ ...filters, sort: e.target.value })}
         >
           <option value="">Select</option>
-          {getOptions("district").map((val) => (
-            <option key={val}>{val}</option>
-          ))}
+          <option value="name-asc">Name (A–Z)</option>
+          <option value="name-desc">Name (Z–A)</option>
+          <option value="party">Party</option>
         </select>
       </div>
     </div>

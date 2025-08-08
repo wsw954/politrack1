@@ -10,45 +10,25 @@ export async function GET(req) {
   const { searchParams } = new URL(req.url);
   const filters = {};
 
+  const name = searchParams.get("name");
   const chamber = searchParams.get("chamber");
   const party = searchParams.get("party");
-  const district = searchParams.get("district");
-  const name = searchParams.get("name");
 
-  if (chamber) filters.chamber = chamber;
-  if (party) filters.party = party;
-  if (district) filters.district = district;
-
-  // NEW: match full or partial structured name (e.g. "FL-HOUSE", "FL-SENATE-004")
+  // ✅ Filter by unique politician.name field (not full name)
   if (name) {
-    filters.name = { $regex: name, $options: "i" }; // case-insensitive match
+    filters.name = name; // exact match on unique internal field
   }
 
-  const vote_topic = searchParams.get("vote_topic");
-  const voted_yes = searchParams.get("voted_yes");
-
-  if (vote_topic && voted_yes !== null) {
-    filters.voting_history = {
-      $elemMatch: {
-        topic: vote_topic,
-        vote: voted_yes === "true" ? "Yes" : { $ne: "Yes" },
-      },
-    };
+  if (chamber) {
+    filters.chamber = chamber;
   }
 
-  const minAlign = parseInt(searchParams.get("party_alignment_min") || "0");
-  const maxAlign = parseInt(searchParams.get("party_alignment_max") || "100");
-
-  if (!isNaN(minAlign) && !isNaN(maxAlign)) {
-    filters["consistency_meter.party_alignment"] = {
-      $gte: minAlign,
-      $lte: maxAlign,
-    };
+  if (party) {
+    filters.party = party;
   }
 
   try {
     const politicians = await Politician.find(filters);
-
     return NextResponse.json(politicians);
   } catch (error) {
     return NextResponse.json(

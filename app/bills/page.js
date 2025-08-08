@@ -107,6 +107,8 @@ export default function BillListPage() {
   };
 
   // Apply sort just before rendering
+  console.log("Bills before sorting:", bills);
+
   const sortedBills = [...bills].sort((a, b) => {
     switch (filters.sort) {
       case "title-asc":

@@ -13,10 +13,10 @@ import { fetchTrackedIds } from "@/utils/fetchTrackedIds";
 export default function PoliticianListPage() {
   const [politicians, setPoliticians] = useState([]);
   const [filters, setFilters] = useState({
-    chamber: "",
     name: "",
+    chamber: "",
     party: "",
-    district: "",
+    sort: "",
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -54,8 +54,21 @@ export default function PoliticianListPage() {
           ...politician,
           isTracked: trackedIds.has(politician._id),
         }));
+        //Apply client-side sorting based on filters.sort
+        const sorted = [...merged].sort((a, b) => {
+          switch (filters.sort) {
+            case "name-asc":
+              return a.last_name.localeCompare(b.last_name);
+            case "name-desc":
+              return b.last_name.localeCompare(a.last_name);
+            case "party":
+              return a.party.localeCompare(b.party);
+            default:
+              return 0; // no sorting
+          }
+        });
 
-        setPoliticians(merged);
+        setPoliticians(sorted); //Final sorted & merged list
         setAllPoliticians(merged);
       } catch (err) {
         setError(err.message || "Something went wrong");

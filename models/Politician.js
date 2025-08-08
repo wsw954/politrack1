@@ -67,14 +67,6 @@ const politicianSchema = new mongoose.Schema(
           required: true,
           enum: ["Yes", "No", "Abstain", "Absent"], // Match vote types from design
         },
-        session: {
-          type: String,
-          required: true, // e.g., "2025"
-        },
-        topic: {
-          type: String,
-          required: true, // e.g., "Education"
-        },
       },
     ],
     consistency_meter: {
