@@ -13,7 +13,7 @@ export default function Modal({ trigger, children }) {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white p-6 rounded-lg shadow-lg">
             <button
-              className="absolute top-4 right-4 text-gray-600"
+              className="absolute top-4 right-4 text-neutral-muted"
               onClick={() => setOpen(false)}
             >
               ×

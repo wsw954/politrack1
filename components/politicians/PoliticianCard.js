@@ -32,8 +32,10 @@ export default function PoliticianCard({ politician }) {
 
         {/* Info */}
         <div className="flex-1">
-          <h2 className="text-xl font-semibold text-gray-900 mb-1">{name}</h2>
-          <p className="text-sm text-gray-600">
+          <h2 className="text-xl font-semibold text-neutral-dark mb-1">
+            {name}
+          </h2>
+          <p className="text-sm text-neutral-muted">
             {chamber} • {district}
           </p>
           <p className="text-sm text-gray-700">{party}</p>
@@ -43,7 +45,7 @@ export default function PoliticianCard({ politician }) {
       {/* Optional Fields */}
       {committee_assignments.length > 0 && (
         <div className="mt-4">
-          <h3 className="text-sm font-semibold text-gray-800 mb-1">
+          <h3 className="text-sm font-semibold text-neutral-dark mb-1">
             Committees:
           </h3>
           <ul className="list-disc list-inside text-sm text-gray-700">
@@ -56,7 +58,7 @@ export default function PoliticianCard({ politician }) {
 
       {voting_history.length > 0 && (
         <div className="mt-4">
-          <h3 className="text-sm font-semibold text-gray-800 mb-1">
+          <h3 className="text-sm font-semibold text-neutral-dark mb-1">
             Voting History:
           </h3>
           <ul className="text-sm text-gray-700">
@@ -70,12 +72,12 @@ export default function PoliticianCard({ politician }) {
       )}
 
       {consistency_meter?.party_alignment !== undefined && (
-        <div className="mt-4 text-sm text-gray-800">
+        <div className="mt-4 text-sm text-neutral-dark">
           <strong>Party Alignment:</strong> {consistency_meter.party_alignment}%
         </div>
       )}
       {politician.isTracked && (
-        <span className="mt-2 w-fit max-w-max bg-green-100 text-green-800 text-xs font-medium px-2 py-1 rounded-full">
+        <span className="mt-2 w-fit max-w-max bg-accent-light text-green-800 text-xs font-medium px-2 py-1 rounded-full">
           Tracked
         </span>
       )}

@@ -42,7 +42,7 @@ export default function TrackedTagPage() {
   if (status === "loading" || loading) return <Spinner />;
   if (!session) return <p className="text-red-600">You must be logged in.</p>;
   if (!trackedTag)
-    return <p className="text-gray-600">Tag not found or not tracked.</p>;
+    return <p className="text-neutral-muted">Tag not found or not tracked.</p>;
 
   const { itemId: tag, note } = trackedTag;
 
@@ -66,7 +66,7 @@ export default function TrackedTagPage() {
           {tag.color && (
             <li>
               <strong>Color Class:</strong>{" "}
-              <code className="bg-gray-100 px-1 py-0.5 rounded text-sm">
+              <code className="bg-neutral-light px-1 py-0.5 rounded text-sm">
                 {tag.color}
               </code>
             </li>

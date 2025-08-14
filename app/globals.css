@@ -3,11 +3,10 @@
 @tailwind components;
 @tailwind utilities;
 
-;
+
 
 /* 1. Apply a modern default font */
 body {
-    font-family: 'Inter', sans-serif;
     background-color: #f9fafb;
     /* Light gray background */
     color: #111827;
@@ -27,10 +26,13 @@ a {
 }
 
 /* 3. Optional: Set default spacing for root */
-html,
-body {
-    height: 100%;
-}
+html {
+        font-size: 16px;
+        /* Tailwind's `text-base` */
+    }
+body  {
+     @apply text-base leading-relaxed;
+ }
 
 /* 4. Tailwind-compatible headings (optional tweaks) */
 h1,
@@ -48,4 +50,39 @@ h6 {
     max-width: 1200px;
     margin: 0 auto;
     padding: 1rem;
+}
+
+/* Base typography rhythm */
+@layer base {
+    html {
+        @apply text-base;
+    }
+
+    /* 16px base */
+    body {
+        @apply leading-relaxed;
+    }
+
+    /* comfortable line-height */
+
+    h1 {
+        @apply text-3xl font-bold text-neutral-dark;
+    }
+
+    h2 {
+        @apply text-2xl font-semibold text-neutral-dark;
+    }
+
+    h3 {
+        @apply text-xl font-semibold text-neutral-dark;
+    }
+
+    p {
+        @apply text-base text-neutral-muted;
+    }
+
+    /* default vertical spacing between stacked children inside sections */
+    section>*+* {
+        @apply mt-4;
+    }
 }

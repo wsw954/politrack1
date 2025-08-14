@@ -115,7 +115,7 @@ export default function PoliticianListPage() {
         <div className="flex justify-between items-center mt-4">
           <button
             onClick={handleResetFilters}
-            className="text-sm text-gray-700 hover:text-black border border-gray-300 rounded-md px-4 py-2"
+            className="text-sm text-gray-700 hover:text-black border border-neutral-light rounded-md px-4 py-2"
           >
             Reset Filters
           </button>
@@ -125,9 +125,9 @@ export default function PoliticianListPage() {
         </div>
       </div>
 
-      <hr className="border-t border-gray-300 mb-12" />
+      <hr className="border-t border-neutral-light mb-12" />
 
-      {loading && <p className="text-gray-600">Loading...</p>}
+      {loading && <p className="text-neutral-muted">Loading...</p>}
       {error && <p className="text-red-600">{error}</p>}
 
       {!loading && !error && (

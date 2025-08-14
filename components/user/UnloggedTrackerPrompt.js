@@ -21,13 +21,13 @@ export default function UnloggedTrackerPrompt({ label = "this item" }) {
           <div className="flex gap-4">
             <Link
               href="/auth/login"
-              className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+              className="bg-primary text-white px-4 py-2 rounded hover:bg-primary-dark"
             >
               Sign In
             </Link>
             <Link
               href="/auth/register"
-              className="bg-gray-100 text-gray-800 px-4 py-2 rounded border border-gray-300 hover:bg-gray-200"
+              className="bg-neutral-light text-neutral-dark px-4 py-2 rounded border border-neutral-light hover:bg-gray-200"
             >
               Register
             </Link>

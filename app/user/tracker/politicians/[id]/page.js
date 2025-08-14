@@ -48,7 +48,7 @@ export default function TrackedPoliticianPage() {
   if (!session) return <p className="text-red-600">You must be logged in.</p>;
   if (!tracked)
     return (
-      <p className="text-gray-600">Politician not found or not tracked.</p>
+      <p className="text-neutral-muted">Politician not found or not tracked.</p>
     );
 
   const { politician, note } = tracked;

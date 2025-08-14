@@ -46,7 +46,7 @@ export default function TrackedTagsPage() {
       <h1 className="text-2xl font-semibold mb-6">Tracked Tags</h1>
 
       {tags.length === 0 ? (
-        <p className="text-gray-600">You haven't tracked any tags yet.</p>
+        <p className="text-neutral-muted">You haven't tracked any tags yet.</p>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {tags.map(({ itemId, note }) => (
@@ -54,7 +54,7 @@ export default function TrackedTagsPage() {
               <Card>
                 <h2 className="text-xl font-bold">{itemId.name}</h2>
                 {itemId.keywords?.length > 0 && (
-                  <p className="text-sm text-gray-600">
+                  <p className="text-sm text-neutral-muted">
                     Keywords: {itemId.keywords.join(", ")}
                   </p>
                 )}

@@ -21,7 +21,7 @@ export default function AddToTrackerButton({ itemId, itemType, redirectTo }) {
     return (
       <Link
         href="/auth/login"
-        className="inline-block bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+        className="inline-block bg-primary text-white px-4 py-2 rounded hover:bg-primary-dark"
       >
         Sign in to Track This Bill
       </Link>

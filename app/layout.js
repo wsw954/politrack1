@@ -1,7 +1,10 @@
 // app/layout.js
 import "@/app/globals.css"; // ← This is required to activate Tailwind!
+import { Inter } from "next/font/google";
 import AuthProvider from "@/components/providers/AuthProvider";
 import NavBar from "@/components/layouts/NavBar";
+
+const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
   title: "Politrack",
@@ -10,11 +13,11 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
+    <html lang="en" className={inter.className}>
       <body>
         <AuthProvider>
           <NavBar />
-          <main className="max-w-7xl mx-auto px-4 py-6">{children}</main>
+          <main className="container py-8">{children}</main>
         </AuthProvider>
       </body>
     </html>

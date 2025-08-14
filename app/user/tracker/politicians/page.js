@@ -43,7 +43,7 @@ export default function TrackedPoliticiansPage() {
       <h1 className="text-2xl font-bold mb-6">Tracked Politicians</h1>
 
       {tracked.length === 0 ? (
-        <p className="text-gray-600">
+        <p className="text-neutral-muted">
           You aren't tracking any politicians yet.
         </p>
       ) : (

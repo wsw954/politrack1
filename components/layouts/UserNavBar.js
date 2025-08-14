@@ -12,8 +12,10 @@ export default function UserNavBar() {
   const [isTrackerOpen, setIsTrackerOpen] = useState(false);
 
   const linkClass = (path) =>
-    `hover:text-blue-600 ${
-      pathname === path ? "text-blue-600 font-bold underline" : "text-gray-800"
+    `hover:text-primary ${
+      pathname === path
+        ? "text-primary font-bold underline"
+        : "text-neutral-dark"
     }`;
 
   return (
@@ -49,7 +51,7 @@ export default function UserNavBar() {
           onMouseEnter={() => setIsTrackerOpen(true)}
           onMouseLeave={() => setIsTrackerOpen(false)}
         >
-          <button className="text-gray-800 hover:text-blue-600 font-medium">
+          <button className="text-neutral-dark hover:text-primary font-medium">
             Tracker ▾
           </button>
 
@@ -60,25 +62,26 @@ export default function UserNavBar() {
           >
             <Link
               href="/user/tracker"
-              className="block px-4 py-2 hover:bg-gray-100 text-sm text-gray-800"
+              className="block px-4 py-2 hover:bg-neutral-light text-sm text-neutral-dark"
             >
               Overview
             </Link>
             <Link
-              href="/user/tracker/politicians"
-              className="block px-4 py-2 hover:bg-gray-100 text-sm text-gray-800"
-            >
-              Tracked Politicians
-            </Link>
-            <Link
               href="/user/tracker/bills"
-              className="block px-4 py-2 hover:bg-gray-100 text-sm text-gray-800"
+              className="block px-4 py-2 hover:bg-neutral-light text-sm text-neutral-dark"
             >
               Tracked Bills
             </Link>
             <Link
+              href="/user/tracker/politicians"
+              className="block px-4 py-2 hover:bg-neutral-light text-sm text-neutral-dark"
+            >
+              Tracked Politicians
+            </Link>
+
+            <Link
               href="/user/tracker/tags"
-              className="block px-4 py-2 hover:bg-gray-100 text-sm text-gray-800"
+              className="block px-4 py-2 hover:bg-neutral-light text-sm text-neutral-dark"
             >
               Tracked Tags
             </Link>

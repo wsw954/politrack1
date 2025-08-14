@@ -27,10 +27,10 @@ export default async function HomePage() {
   return (
     <SectionWrapper>
       <div className="text-center space-y-4 mb-10">
-        <h1 className="text-4xl font-bold text-gray-900">
+        <h1 className="text-4xl font-bold text-neutral-dark">
           Welcome to Politrack
         </h1>
-        <p className="text-lg text-gray-600">
+        <p className="text-lg text-neutral-muted">
           Track how politicians vote, understand what legislation really means,
           and take action.
         </p>
@@ -41,7 +41,7 @@ export default async function HomePage() {
           <h2 className="text-xl font-semibold mb-2 text-center">
             View Politicians
           </h2>
-          <p className="text-sm text-gray-600 mb-4 text-center">
+          <p className="text-sm text-neutral-muted mb-4 text-center">
             Explore voting records, profiles, and political affiliations.
           </p>
           <Link href="/politicians">
@@ -51,7 +51,7 @@ export default async function HomePage() {
 
         <Card>
           <h2 className="text-xl font-semibold mb-2 text-center">View Bills</h2>
-          <p className="text-sm text-gray-600 mb-4 text-center">
+          <p className="text-sm text-neutral-muted mb-4 text-center">
             See summaries of key legislation and follow their progress.
           </p>
           <Link href="/bills">
@@ -62,7 +62,7 @@ export default async function HomePage() {
           <h2 className="text-xl font-semibold mb-2 text-center">
             Explore Tags
           </h2>
-          <p className="text-sm text-gray-600 mb-4 text-center">
+          <p className="text-sm text-neutral-muted mb-4 text-center">
             Dive into issues like Housing, Education, or Gun Policy to see
             related bills and voting patterns.
           </p>

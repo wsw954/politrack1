@@ -20,7 +20,7 @@ export default function AdminManagePoliticians() {
         <h1 className="text-2xl font-bold text-blue-800">
           Admin Manage Politicians
         </h1>
-        <p className="text-gray-600">
+        <p className="text-neutral-muted">
           Welcome, <span className="font-medium">{session.user.name}</span>!
         </p>
         <Button onClick={handleSignOut}>Sign Out</Button>

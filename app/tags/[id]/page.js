@@ -48,7 +48,9 @@ export default async function TagDetailPage({ params }) {
 
       {/* Keywords */}
       <div className="mb-6">
-        <h2 className="text-xl font-semibold text-gray-800 mb-2">Keywords</h2>
+        <h2 className="text-xl font-semibold text-neutral-dark mb-2">
+          Keywords
+        </h2>
         {tag.keywords && tag.keywords.length > 0 ? (
           <ul className="list-disc pl-6 text-gray-700">
             {tag.keywords.map((kw) => (
@@ -60,11 +62,11 @@ export default async function TagDetailPage({ params }) {
         )}
       </div>
 
-      <hr className="border-t border-gray-300 my-8" />
+      <hr className="border-t border-neutral-light my-8" />
 
       {/* Coming Soon */}
       <div>
-        <h2 className="text-xl font-semibold text-gray-800 mb-2">
+        <h2 className="text-xl font-semibold text-neutral-dark mb-2">
           Coming Soon
         </h2>
         <ul className="list-disc pl-6 text-gray-500">

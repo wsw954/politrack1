@@ -12,7 +12,7 @@ export default function VotingHistory({ votingHistory }) {
       case "No":
         return "bg-red-500";
       case "Abstain":
-        return "bg-yellow-400";
+        return "bg-accent-light";
       case "Absent":
         return "bg-gray-400";
       default:
@@ -33,7 +33,7 @@ export default function VotingHistory({ votingHistory }) {
           {votingHistory.map((vote, index) => (
             <div key={index} className="mb-8 flex items-start">
               {/* Dot */}
-              <div className="flex items-center justify-center w-4 h-4 bg-blue-500 rounded-full relative z-10 mt-1"></div>
+              <div className="flex items-center justify-center w-4 h-4 bg-primary-light rounded-full relative z-10 mt-1"></div>
 
               {/* Vote details */}
               <div className="ml-6">

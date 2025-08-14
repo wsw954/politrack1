@@ -6,20 +6,20 @@ import { normalizeId } from "@/utils/normalizeId";
 export default function BillCard({ bill }) {
   const isTracked = bill.isTracked || false;
   const getStatusBadgeStyle = (status) => {
-    if (!status) return "bg-gray-100 text-gray-700"; // fallback
+    if (!status) return "bg-neutral-light text-gray-700"; // fallback
 
     const normalizedStatus = status.toLowerCase();
 
     if (normalizedStatus.includes("committee"))
       return "bg-yellow-100 text-yellow-800";
     if (normalizedStatus.includes("passed"))
-      return "bg-green-100 text-green-800";
+      return "bg-accent-light text-green-800";
     if (normalizedStatus.includes("governor"))
       return "bg-blue-100 text-blue-800";
     if (normalizedStatus.includes("law")) return "bg-green-200 text-green-900";
     if (normalizedStatus.includes("veto")) return "bg-red-100 text-red-800";
 
-    return "bg-gray-100 text-gray-700"; // default
+    return "bg-neutral-light text-gray-700"; // default
   };
 
   // ✅ Normalize bill._id inside the component
@@ -31,26 +31,26 @@ export default function BillCard({ bill }) {
         {/* Bill Title */}
         <h2 className="text-xl font-bold text-blue-700">{bill.title}</h2>
         {isTracked && (
-          <span className="mt-2 w-fit max-w-max bg-green-100 text-green-800 text-xs font-medium px-2 py-1 rounded-full">
+          <span className="mt-2 w-fit max-w-max bg-accent-light text-green-800 text-xs font-medium px-2 py-1 rounded-full">
             Tracked
           </span>
         )}
 
         {/* Bill ID */}
-        <p className="text-sm text-gray-600">
+        <p className="text-sm text-neutral-muted">
           <span className="font-semibold">Bill Number:</span> {bill.number}
         </p>
 
         {/* Summary */}
         <p className="text-sm text-gray-700">
-          <span className="font-semibold text-gray-600">Summary:</span>{" "}
+          <span className="font-semibold text-neutral-muted">Summary:</span>{" "}
           {bill.summary?.trim() ? bill.summary : "No summary available."}
         </p>
 
         {/* Tags */}
         {bill.tags && bill.tags.length > 0 && (
           <p className="text-sm text-gray-700">
-            <span className="font-semibold text-gray-600">Tags:</span>{" "}
+            <span className="font-semibold text-neutral-muted">Tags:</span>{" "}
             {bill.tags.map(normalizeId).join(", ")}
           </p>
         )}
@@ -58,7 +58,7 @@ export default function BillCard({ bill }) {
         {/* Current Status with Badge */}
         {bill.current_stage && (
           <div className="mt-2">
-            <span className="text-sm font-semibold text-gray-600">
+            <span className="text-sm font-semibold text-neutral-muted">
               Current Status:
             </span>{" "}
             <span

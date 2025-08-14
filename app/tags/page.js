@@ -64,9 +64,9 @@ export default function TagListPage() {
         </p>
       </div>
 
-      <hr className="border-t border-gray-300 mb-12" />
+      <hr className="border-t border-neutral-light mb-12" />
 
-      {loading && <p className="text-gray-600">Loading...</p>}
+      {loading && <p className="text-neutral-muted">Loading...</p>}
       {error && <p className="text-red-600">{error}</p>}
 
       {!loading && !error && (
@@ -79,16 +79,16 @@ export default function TagListPage() {
             >
               <Card className="hover:shadow-md transition-shadow">
                 <div className="flex flex-col gap-2">
-                  <h2 className="text-xl font-semibold text-gray-900">
+                  <h2 className="text-xl font-semibold text-neutral-dark">
                     {tag.name}
                   </h2>
                   {tag.isTracked && (
-                    <span className="w-fit max-w-max bg-green-100 text-green-800 text-xs font-medium px-2 py-1 rounded-full">
+                    <span className="w-fit max-w-max bg-accent-light text-green-800 text-xs font-medium px-2 py-1 rounded-full">
                       Tracked
                     </span>
                   )}
                   {tag.keywords?.length > 0 && (
-                    <ul className="text-sm text-gray-600 list-disc list-inside">
+                    <ul className="text-sm text-neutral-muted list-disc list-inside">
                       {tag.keywords.map((kw, i) => (
                         <li key={i}>{kw}</li>
                       ))}

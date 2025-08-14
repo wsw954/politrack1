@@ -33,7 +33,7 @@ export default function SponsorCard({ sponsor }) {
         <h3 className="text-lg font-semibold">
           {sponsor.first_name} {sponsor.last_name}
         </h3>
-        <p className="text-sm text-gray-600">
+        <p className="text-sm text-neutral-muted">
           {sponsor.chamber} • {sponsor.party}
         </p>
       </div>

@@ -28,12 +28,12 @@ export default function PasswordInput({
           value={value}
           onChange={onChange}
           required={required}
-          className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500"
+          className="w-full px-3 py-2 border border-neutral-light rounded-md shadow-sm focus:outline-none focus:ring focus:border-primary"
         />
         <button
           type="button"
           onClick={() => setShow((prev) => !prev)}
-          className="absolute right-3 top-1/2 transform -translate-y-1/2 text-sm text-blue-600"
+          className="absolute right-3 top-1/2 transform -translate-y-1/2 text-sm text-primary"
         >
           {show ? "Hide" : "Show"}
         </button>

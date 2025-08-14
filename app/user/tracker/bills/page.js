@@ -47,7 +47,7 @@ export default function TrackedBillsPage() {
       <h1 className="text-2xl font-bold mb-6">Tracked Bills</h1>
 
       {tracked.length === 0 ? (
-        <p className="text-gray-600">You aren’t tracking any bills yet.</p>
+        <p className="text-neutral-muted">You aren’t tracking any bills yet.</p>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {tracked.map(({ itemId, note }, index) => {

@@ -52,13 +52,13 @@ export default function TrackedBillPage() {
     <SectionWrapper>
       <h1 className="text-3xl font-bold mb-2">{bill.title}</h1>
 
-      <p className="text-gray-600 text-sm mb-1">
+      <p className="text-neutral-muted text-sm mb-1">
         Last Updated: {bill.updatedAt || "Unknown"}
       </p>
 
       <a
         href={bill.source_url}
-        className="text-blue-600 underline text-sm"
+        className="text-primary underline text-sm"
         target="_blank"
         rel="noopener noreferrer"
       >

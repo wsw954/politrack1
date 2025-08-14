@@ -11,8 +11,10 @@ export default function GuestNavBar() {
     pathname === "/auth/login" || pathname === "/auth/register";
 
   const linkClass = (path) =>
-    `hover:text-blue-600 ${
-      pathname === path ? "text-blue-600 font-bold underline" : "text-gray-800"
+    `hover:text-primary ${
+      pathname === path
+        ? "text-primary font-bold underline"
+        : "text-neutral-dark"
     }`;
 
   return (
