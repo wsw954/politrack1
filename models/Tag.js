@@ -17,7 +17,7 @@ const tagSchema = new mongoose.Schema(
     ],
     color: {
       type: String,
-      trim: true, // optional for UI (e.g., "bg-blue-100 text-blue-800")
+      trim: true, // optional for UI (e.g., "bg-primary-light text-primary-dark")
     },
   },
   { timestamps: true }

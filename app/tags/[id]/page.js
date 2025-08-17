@@ -52,13 +52,13 @@ export default async function TagDetailPage({ params }) {
           Keywords
         </h2>
         {tag.keywords && tag.keywords.length > 0 ? (
-          <ul className="list-disc pl-6 text-gray-700">
+          <ul className="list-disc pl-6 text-neutral-dark">
             {tag.keywords.map((kw) => (
               <li key={kw}>{kw}</li>
             ))}
           </ul>
         ) : (
-          <p className="text-gray-500">No keywords listed.</p>
+          <p className="text-neutral-muted">No keywords listed.</p>
         )}
       </div>
 
@@ -69,7 +69,7 @@ export default async function TagDetailPage({ params }) {
         <h2 className="text-xl font-semibold text-neutral-dark mb-2">
           Coming Soon
         </h2>
-        <ul className="list-disc pl-6 text-gray-500">
+        <ul className="list-disc pl-6 text-neutral-muted">
           <li>List of related bills</li>
           <li>Politicians who voted on those bills</li>
           <li>User tracker status for this tag</li>

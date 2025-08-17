@@ -16,7 +16,7 @@ export default function PasswordInput({
     <div>
       <label
         htmlFor={name}
-        className="block text-sm font-medium text-gray-700 mb-1"
+        className="block text-sm font-medium text-neutral-dark mb-1"
       >
         {label}
       </label>

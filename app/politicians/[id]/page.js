@@ -28,7 +28,7 @@ export default async function PoliticianDetailPage({ params }) {
   const politician = await res.json();
 
   return (
-    <div className="w-full max-w-3xl mx-auto px-4 py-8">
+    <section className="py-8 space-y-6">
       {/* Name */}
       <h1 className="text-3xl font-bold mb-8 text-center">
         {politician.first_name} {politician.last_name}
@@ -59,16 +59,16 @@ export default async function PoliticianDetailPage({ params }) {
       </div>
 
       {/* Sections */}
-      <hr className="my-8" />
+      <hr className="my-8 border-t border-neutral-light" />
       <ContactInfo contact={politician.contact} />
       <CommitteeList committees={politician.committee_assignments} />
       <VotingHistory votingHistory={politician.voting_history} />
       <ConsistencyMeter consistency={politician.consistency_meter} />
 
       {/* Footer */}
-      <p className="text-sm text-gray-500 text-center mt-8">
+      <p className="text-sm text-neutral-muted text-center mt-8">
         Last updated: {politician.last_updated}
       </p>
-    </div>
+    </section>
   );
 }

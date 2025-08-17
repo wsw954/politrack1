@@ -46,7 +46,7 @@ export default function AdminNavBar() {
       <div className="flex items-center space-x-4 text-sm">
         <button
           onClick={() => signOut({ callbackUrl: "/auth/login" })}
-          className="text-red-600 hover:underline"
+          className="text-danger hover:underline"
         >
           Sign Out
         </button>

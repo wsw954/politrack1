@@ -43,7 +43,7 @@ export default function TrackedBillPage() {
 
   if (status === "loading" || loading) return <Spinner />;
   if (!tracked)
-    return <p className="text-red-600">Bill not found or not tracked.</p>;
+    return <p className="text-danger">Bill not found or not tracked.</p>;
 
   const { bill, note } = tracked;
   console.log("line 49 in app/user/tracker/bills/[id]/page.js ");
@@ -113,7 +113,7 @@ export default function TrackedBillPage() {
       {/* Tracker Note */}
       <section className="mt-10">
         <h2 className="text-xl font-semibold">Your Tracker Note</h2>
-        <p className="italic text-gray-700 border-l-4 border-blue-400 pl-4 mt-2">
+        <p className="italic text-neutral-dark border-l-4 border-blue-400 pl-4 mt-2">
           {note || "No note added."}
         </p>
 

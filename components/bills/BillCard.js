@@ -5,33 +5,28 @@ import { normalizeId } from "@/utils/normalizeId";
 
 export default function BillCard({ bill }) {
   const isTracked = bill.isTracked || false;
+
   const getStatusBadgeStyle = (status) => {
-    if (!status) return "bg-neutral-light text-gray-700"; // fallback
-
-    const normalizedStatus = status.toLowerCase();
-
-    if (normalizedStatus.includes("committee"))
-      return "bg-yellow-100 text-yellow-800";
-    if (normalizedStatus.includes("passed"))
-      return "bg-accent-light text-green-800";
-    if (normalizedStatus.includes("governor"))
-      return "bg-blue-100 text-blue-800";
-    if (normalizedStatus.includes("law")) return "bg-green-200 text-green-900";
-    if (normalizedStatus.includes("veto")) return "bg-red-100 text-red-800";
-
-    return "bg-neutral-light text-gray-700"; // default
+    if (!status) return "bg-neutral-light text-neutral-dark";
+    const s = status.toLowerCase();
+    if (s.includes("committee")) return "bg-warning-light text-warning-dark";
+    if (s.includes("passed")) return "bg-success-light text-success-dark";
+    if (s.includes("governor")) return "bg-info-light text-info-dark";
+    if (s.includes("law")) return "bg-success-light text-success-dark";
+    if (s.includes("veto")) return "bg-danger-light text-danger-dark";
+    return "bg-neutral-light text-neutral-dark";
   };
 
   // ✅ Normalize bill._id inside the component
   const billId = normalizeId(bill._id || bill.id);
 
   return (
-    <div className="border border-gray-200 rounded-lg p-6 shadow-sm hover:shadow-md transition">
+    <div className="border border-neutral-light rounded-lg p-6 shadow-sm hover:shadow-md transition">
       <div className="flex flex-col gap-2">
         {/* Bill Title */}
-        <h2 className="text-xl font-bold text-blue-700">{bill.title}</h2>
+        <h2 className="text-xl font-bold text-primary">{bill.title}</h2>
         {isTracked && (
-          <span className="mt-2 w-fit max-w-max bg-accent-light text-green-800 text-xs font-medium px-2 py-1 rounded-full">
+          <span className="mt-2 w-fit max-w-max bg-accent-light text-accent-dark text-xs font-medium px-2 py-1 rounded-full">
             Tracked
           </span>
         )}
@@ -42,14 +37,14 @@ export default function BillCard({ bill }) {
         </p>
 
         {/* Summary */}
-        <p className="text-sm text-gray-700">
+        <p className="text-sm text-neutral-dark">
           <span className="font-semibold text-neutral-muted">Summary:</span>{" "}
           {bill.summary?.trim() ? bill.summary : "No summary available."}
         </p>
 
         {/* Tags */}
         {bill.tags && bill.tags.length > 0 && (
-          <p className="text-sm text-gray-700">
+          <p className="text-sm text-neutral-dark">
             <span className="font-semibold text-neutral-muted">Tags:</span>{" "}
             {bill.tags.map(normalizeId).join(", ")}
           </p>

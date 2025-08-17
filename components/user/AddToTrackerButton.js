@@ -7,7 +7,6 @@ import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import axios from "@/lib/axiosInstance";
 import Link from "next/link";
-import { isHTTPMethod } from "next/dist/server/web/http";
 
 export default function AddToTrackerButton({ itemId, itemType, redirectTo }) {
   const { data: session, status } = useSession();
@@ -21,9 +20,10 @@ export default function AddToTrackerButton({ itemId, itemType, redirectTo }) {
     return (
       <Link
         href="/auth/login"
-        className="inline-block bg-primary text-white px-4 py-2 rounded hover:bg-primary-dark"
+        className="inline-block bg-primary text-white px-4 py-2 rounded
+                   hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-primary/30"
       >
-        Sign in to Track This Bill
+        {`Sign in to Track This ${itemType}`}
       </Link>
     );
   }
@@ -56,7 +56,9 @@ export default function AddToTrackerButton({ itemId, itemType, redirectTo }) {
 
   // Auth still loading
   if (status === "loading") {
-    return <p className="text-sm text-gray-500">Checking user status...</p>;
+    return (
+      <p className="text-sm text-neutral-muted">Checking user status...</p>
+    );
   }
 
   // Authenticated → show functional track button
@@ -65,12 +67,14 @@ export default function AddToTrackerButton({ itemId, itemType, redirectTo }) {
       <button
         onClick={handleTrack}
         disabled={loading}
-        className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 disabled:opacity-50"
+        className="bg-accent text-white px-4 py-2 rounded
+                   hover:bg-accent-dark disabled:opacity-50 disabled:cursor-not-allowed
+                   focus:outline-none focus:ring-2 focus:ring-primary/30"
       >
         {loading ? "Tracking..." : "Track " + itemType}
       </button>
       {error && (
-        <p className="mt-2 text-sm text-red-600" role="alert">
+        <p className="mt-2 text-sm text-danger" role="alert" aria-live="polite">
           {error}
         </p>
       )}

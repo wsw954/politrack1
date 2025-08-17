@@ -123,12 +123,12 @@ export default function BillListPage() {
   });
 
   return (
-    <div className="w-full max-w-none px-4 py-8">
+    <div className="w-full">
       <h1 className="text-3xl font-bold text-center mb-6">
         Browse Florida Bills
       </h1>
 
-      <div className="bg-white border border-gray-200 rounded-xl shadow-sm p-6 mb-12">
+      <div className="bg-white border border-neutral-light rounded-xl shadow-sm p-6 mb-12">
         <FilterBar
           allBills={allBills}
           filters={filters}
@@ -137,7 +137,7 @@ export default function BillListPage() {
         <div className="flex justify-between items-center mt-4">
           <button
             onClick={handleResetFilters}
-            className="text-sm text-gray-700 hover:text-black border border-neutral-light rounded-md px-4 py-2"
+            className="text-sm text-neutral-dark hover:text-primary border border-neutral-light rounded-md px-4 py-2"
           >
             Reset Filters
           </button>
@@ -150,7 +150,7 @@ export default function BillListPage() {
       <hr className="border-t border-neutral-light mb-12" />
 
       {loading && <p className="text-neutral-muted">Loading...</p>}
-      {error && <p className="text-red-600">{error}</p>}
+      {error && <p className="text-danger">{error}</p>}
 
       {!loading && !error && (
         <div className="mt-12 grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -175,7 +175,7 @@ export default function BillListPage() {
               </div>
             ))
           ) : (
-            <p className="text-gray-500">No bills match your filters.</p>
+            <p className="text-neutral-muted">No bills match your filters.</p>
           )}
         </div>
       )}

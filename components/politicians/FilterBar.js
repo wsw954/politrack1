@@ -30,18 +30,18 @@ export default function FilterBar({ allPoliticians, filters, setFilters }) {
   };
 
   return (
-    <div className="flex flex-wrap gap-4 mb-6">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
       {/* Politician Name Filter */}
-      <div className="w-full sm:w-[48%] lg:flex-1 bg-white border rounded-lg shadow-sm p-3">
+      <div className="col-span-2 sm:col-span-2 lg:col-span-4 bg-white border border-neutral-light rounded-lg shadow-sm p-3">
         <label
           htmlFor="name"
-          className="text-sm font-semibold mb-1 block text-gray-700"
+          className="text-sm font-semibold mb-1 block text-neutral-dark"
         >
           Name
         </label>
         <select
           id="name"
-          className="w-full border rounded-md p-2"
+          className="w-full border border-neutral-light rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-primary/30"
           value={filters.name}
           onChange={(e) => setFilters({ ...filters, name: e.target.value })}
         >
@@ -57,16 +57,16 @@ export default function FilterBar({ allPoliticians, filters, setFilters }) {
       </div>
 
       {/* Chamber Filter */}
-      <div className="w-full sm:w-[48%] lg:w-[25%] bg-white border rounded-lg shadow-sm p-3">
+      <div className="col-span-2 sm:col-span-2 lg:col-span-1 bg-white border border-neutral-light rounded-lg shadow-sm p-3">
         <label
           htmlFor="chamber"
-          className="text-sm font-semibold mb-1 block text-gray-700"
+          className="text-sm font-semibold mb-1 block text-neutral-dark"
         >
           Chamber
         </label>
         <select
           id="chamber"
-          className="w-full border rounded-md p-2"
+          className="w-full border border-neutral-light rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-primary/30"
           value={filters.chamber}
           onChange={(e) => setFilters({ ...filters, chamber: e.target.value })}
         >
@@ -80,16 +80,16 @@ export default function FilterBar({ allPoliticians, filters, setFilters }) {
       </div>
 
       {/* Party Filter */}
-      <div className="w-full sm:w-[48%] lg:w-[25%] bg-white border rounded-lg shadow-sm p-3">
+      <div className="col-span-2 sm:col-span-2 lg:col-span-1 bg-white border border-neutral-light rounded-lg shadow-sm p-3">
         <label
           htmlFor="party"
-          className="text-sm font-semibold mb-1 block text-gray-700"
+          className="text-sm font-semibold mb-1 block text-neutral-dark"
         >
           Party
         </label>
         <select
           id="party"
-          className="w-full border rounded-md p-2"
+          className="w-full border border-neutral-light rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-primary/30"
           value={filters.party}
           onChange={(e) => setFilters({ ...filters, party: e.target.value })}
         >
@@ -102,16 +102,16 @@ export default function FilterBar({ allPoliticians, filters, setFilters }) {
         </select>
       </div>
       {/*Sort By dropdown */}
-      <div className="w-full sm:w-[48%] lg:w-[20%] bg-white border rounded-lg shadow-sm p-3">
+      <div className="col-span-2 sm:col-span-2 lg:col-span-1 bg-white border border-neutral-light rounded-lg shadow-sm p-3">
         <label
           htmlFor="sort"
-          className="text-sm font-semibold mb-1 block text-gray-700"
+          className="text-sm font-semibold mb-1 block text-neutral-dark"
         >
           Sort By
         </label>
         <select
           id="sort"
-          className="w-full border rounded-md p-2"
+          className="w-full border border-neutral-light rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-primary/30"
           value={filters.sort}
           onChange={(e) => setFilters({ ...filters, sort: e.target.value })}
         >

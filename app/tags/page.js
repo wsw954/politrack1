@@ -56,8 +56,8 @@ export default function TagListPage() {
         Browse Tags (Issues)
       </h1>
 
-      <div className="bg-white border border-gray-200 rounded-xl shadow-sm p-6 mb-12">
-        <p className="text-gray-700 text-sm">
+      <div className="bg-white border border-neutral-light rounded-xl shadow-sm p-6 mb-12">
+        <p className="text-neutral-dark text-sm">
           Tags represent major issue areas like Education, Housing, or the
           Environment. Use them to explore related bills and see how politicians
           vote on the issues you care about.
@@ -67,7 +67,7 @@ export default function TagListPage() {
       <hr className="border-t border-neutral-light mb-12" />
 
       {loading && <p className="text-neutral-muted">Loading...</p>}
-      {error && <p className="text-red-600">{error}</p>}
+      {error && <p className="text-danger">{error}</p>}
 
       {!loading && !error && (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
@@ -83,7 +83,7 @@ export default function TagListPage() {
                     {tag.name}
                   </h2>
                   {tag.isTracked && (
-                    <span className="w-fit max-w-max bg-accent-light text-green-800 text-xs font-medium px-2 py-1 rounded-full">
+                    <span className="w-fit max-w-max bg-accent-light text-accent-dark text-xs font-medium px-2 py-1 rounded-full">
                       Tracked
                     </span>
                   )}

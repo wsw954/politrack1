@@ -40,7 +40,7 @@ export default function TrackedBillsPage() {
   }, [session]);
 
   if (status === "loading" || loading) return <Spinner />;
-  if (!session) return <p className="text-red-600">You must be logged in.</p>;
+  if (!session) return <p className="text-danger">You must be logged in.</p>;
 
   return (
     <SectionWrapper>
@@ -68,7 +68,7 @@ export default function TrackedBillsPage() {
                     }}
                   />
                   {note && (
-                    <p className="italic text-sm text-gray-700 border-l-4 border-blue-400 pl-4">
+                    <p className="italic text-sm text-neutral-dark border-l-4 border-blue-400 pl-4">
                       {note}
                     </p>
                   )}

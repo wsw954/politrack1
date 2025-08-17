@@ -11,23 +11,28 @@ export default function UnloggedTrackerPrompt({ label = "this item" }) {
       {!showOptions ? (
         <button
           onClick={() => setShowOptions(true)}
-          className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
+          className="bg-accent text-white px-4 py-2 rounded
+                     hover:bg-accent-dark focus:outline-none focus:ring-2 focus:ring-primary/30"
         >
           Track {label}
         </button>
       ) : (
         <>
-          <p className="text-sm text-gray-700 mb-2">Want to track {label}?</p>
+          <p className="text-sm text-neutral-dark mb-2">
+            Want to track {label}?
+          </p>
           <div className="flex gap-4">
             <Link
               href="/auth/login"
-              className="bg-primary text-white px-4 py-2 rounded hover:bg-primary-dark"
+              className="bg-primary text-white px-4 py-2 rounded
+                         hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-primary/30"
             >
               Sign In
             </Link>
             <Link
               href="/auth/register"
-              className="bg-neutral-light text-neutral-dark px-4 py-2 rounded border border-neutral-light hover:bg-gray-200"
+              className="bg-neutral-light text-neutral-dark px-4 py-2 rounded border border-neutral-light
+                         hover:bg-neutral-light focus:outline-none focus:ring-2 focus:ring-primary/20"
             >
               Register
             </Link>

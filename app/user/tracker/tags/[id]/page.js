@@ -40,7 +40,7 @@ export default function TrackedTagPage() {
   }, [session, id]);
 
   if (status === "loading" || loading) return <Spinner />;
-  if (!session) return <p className="text-red-600">You must be logged in.</p>;
+  if (!session) return <p className="text-danger">You must be logged in.</p>;
   if (!trackedTag)
     return <p className="text-neutral-muted">Tag not found or not tracked.</p>;
 
@@ -54,7 +54,7 @@ export default function TrackedTagPage() {
 
       <Card>
         <p className="text-lg font-semibold mb-2">Tag Info</p>
-        <ul className="mb-4 text-gray-700">
+        <ul className="mb-4 text-neutral-dark">
           <li>
             <strong>Name:</strong> {tag.name}
           </li>

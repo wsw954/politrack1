@@ -1,7 +1,7 @@
 // /components/bills/StatusTimeline.js
 export default function StatusTimeline({ timeline = [], current = "" }) {
   if (!timeline.length)
-    return <p className="text-gray-500">No timeline available.</p>;
+    return <p className="text-neutral-muted">No timeline available.</p>;
 
   return (
     <ol className="relative border-l border-neutral-light pl-4 mt-2">
@@ -9,11 +9,13 @@ export default function StatusTimeline({ timeline = [], current = "" }) {
         const isCurrent = event.stage === current;
         return (
           <li key={index} className="mb-6 ml-2">
-            <div className="absolute w-3 h-3 bg-primary-light rounded-full -left-1.5 border border-white"></div>
-            <time className="block text-sm text-gray-500">{event.date}</time>
+            <div className="absolute w-3 h-3 bg-primary-light rounded-full -left-1.5 border border-neutral-light"></div>
+            <time className="block text-sm text-neutral-muted">
+              {event.date}
+            </time>
             <p
               className={`font-medium ${
-                isCurrent ? "text-blue-700" : "text-neutral-dark"
+                isCurrent ? "text-primary" : "text-neutral-dark"
               }`}
             >
               {event.stage}{" "}

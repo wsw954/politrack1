@@ -45,7 +45,7 @@ export default function TrackedPoliticianPage() {
   }, [session, id]);
 
   if (status === "loading" || loading) return <Spinner />;
-  if (!session) return <p className="text-red-600">You must be logged in.</p>;
+  if (!session) return <p className="text-danger">You must be logged in.</p>;
   if (!tracked)
     return (
       <p className="text-neutral-muted">Politician not found or not tracked.</p>
@@ -89,7 +89,7 @@ export default function TrackedPoliticianPage() {
       {/* Tracker Note Section (moved to bottom) */}
       <Card className="mt-12">
         <p className="text-lg font-semibold mb-2">Tracker Note</p>
-        <p className="italic text-gray-700">{note || "No note added."}</p>
+        <p className="italic text-neutral-dark">{note || "No note added."}</p>
 
         <div className="mt-6 flex gap-4">
           <Button
@@ -121,7 +121,7 @@ export default function TrackedPoliticianPage() {
         </div>
       </Card>
 
-      <p className="text-sm text-gray-500 text-center mt-8">
+      <p className="text-sm text-neutral-muted text-center mt-8">
         Last updated: {new Date(politician.updatedAt).toLocaleDateString()}
       </p>
     </SectionWrapper>

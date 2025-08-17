@@ -1,3 +1,4 @@
-export default function Layout({ children }) {
+//components/layouts/UserLayout.js
+export default function UserLayout({ children }) {
   return <>{children}</>;
 }

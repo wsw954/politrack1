@@ -1,5 +1,5 @@
 // app/layout.js
-import "@/app/globals.css"; // ← This is required to activate Tailwind!
+import "@/app/globals.css";
 import { Inter } from "next/font/google";
 import AuthProvider from "@/components/providers/AuthProvider";
 import NavBar from "@/components/layouts/NavBar";

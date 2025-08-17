@@ -24,7 +24,7 @@ export default async function BillDetailPage({ params }) {
   const bill = await res.json();
 
   return (
-    <main className="max-w-4xl mx-auto px-4 py-10">
+    <section className="py-6 space-y-6">
       <h1 className="text-3xl font-bold mb-2">{bill.title}</h1>
 
       <p className="text-neutral-muted text-sm mb-1">
@@ -91,6 +91,6 @@ export default async function BillDetailPage({ params }) {
         <h2 className="text-xl font-semibold">Sponsor</h2>
         <SponsorCard sponsor={bill.sponsor} />
       </section>
-    </main>
+    </section>
   );
 }

@@ -12,7 +12,7 @@ export default function TrackedPoliticianCard({ politician, note }) {
 
       {/* Tracker Note */}
       {note && (
-        <div className="border-l-4 border-blue-400 pl-4 text-sm text-gray-700 italic">
+        <div className="border-l-4 border-blue-400 pl-4 text-sm text-neutral-dark italic">
           {note}
         </div>
       )}

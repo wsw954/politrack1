@@ -40,6 +40,11 @@ module.exports = {
           dark: "#111827",
           muted: "#6b7280", // Tailwind gray-600
         },
+        // Status / feedback tokens
+        info: { light: "#dbeafe", dark: "#1e40af" }, // blue-100 / blue-800
+        success: { light: "#dcfce7", dark: "#166534" }, // green-100 / green-700
+        warning: { light: "#fef9c3", dark: "#854d0e" }, // yellow-100 / amber-800
+        danger: { light: "#fee2e2", dark: "#991b1b" }, // red-100 / red-800
       },
       spacing: {
         section: "3rem", // p-12

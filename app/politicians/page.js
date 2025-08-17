@@ -99,13 +99,13 @@ export default function PoliticianListPage() {
   };
 
   return (
-    <div className="w-full max-w-none px-4 py-8">
+    <section className="py-8 space-y-6">
       <h1 className="text-3xl font-bold text-center mb-6">
         Browse Florida Politicians
       </h1>
 
       {/* Filter panel */}
-      <div className="bg-white border border-gray-200 rounded-xl shadow-sm p-6 mb-12">
+      <div className="bg-white border border-neutral-light rounded-xl shadow-sm p-6 mb-12">
         <FilterBar
           allPoliticians={allPoliticians}
           filters={filters}
@@ -115,7 +115,7 @@ export default function PoliticianListPage() {
         <div className="flex justify-between items-center mt-4">
           <button
             onClick={handleResetFilters}
-            className="text-sm text-gray-700 hover:text-black border border-neutral-light rounded-md px-4 py-2"
+            className="text-sm text-neutral-dark hover:text-primary border border-neutral-light rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary/30"
           >
             Reset Filters
           </button>
@@ -128,7 +128,7 @@ export default function PoliticianListPage() {
       <hr className="border-t border-neutral-light mb-12" />
 
       {loading && <p className="text-neutral-muted">Loading...</p>}
-      {error && <p className="text-red-600">{error}</p>}
+      {error && <p className="text-danger">{error}</p>}
 
       {!loading && !error && (
         <div className="mt-12 flex flex-col gap-4">
@@ -152,10 +152,12 @@ export default function PoliticianListPage() {
               </div>
             ))
           ) : (
-            <p className="text-gray-500">No politicians match your filters.</p>
+            <p className="text-neutral-muted">
+              No politicians match your filters.
+            </p>
           )}
         </div>
       )}
-    </div>
+    </section>
   );
 }

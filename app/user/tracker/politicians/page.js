@@ -36,7 +36,7 @@ export default function TrackedPoliticiansPage() {
   }, [session]);
 
   if (status === "loading" || loading) return <Spinner />;
-  if (!session) return <p className="text-red-600">You must be logged in.</p>;
+  if (!session) return <p className="text-danger">You must be logged in.</p>;
 
   return (
     <SectionWrapper>
