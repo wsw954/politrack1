@@ -19,22 +19,32 @@ export default async function TagDetailPage({ params }) {
 
   const tag = await res.json();
 
+  // optional: whitelist tag.color to known safe classes
+  const allowedChipClasses = new Set([
+    "bg-primary-dark",
+    "bg-primary",
+    "bg-accent-dark",
+    "bg-accent",
+  ]);
+  const chipClass =
+    (typeof tag.color === "string" && allowedChipClasses.has(tag.color)
+      ? tag.color
+      : "bg-primary-dark") + " text-white";
+
   return (
-    <div className="max-w-3xl mx-auto px-4 py-10">
+    <section className="py-8 space-y-6">
       {/* Tag Name */}
-      <h1 className="text-3xl font-bold mb-4">
+      <h1 className="text-3xl font-bold">
         Tag:{" "}
         <span
-          className={`inline-block px-3 py-1 rounded-full font-semibold text-white ${
-            tag.color || "bg-gray-600"
-          }`}
+          className={`inline-block px-3 py-1 rounded-full font-semibold ${chipClass}`}
         >
           {tag.name}
         </span>
       </h1>
 
       {/* Track Button */}
-      <div className="mt-4 mb-10">
+      <div className="mt-2">
         {session ? (
           <AddToTrackerButton
             itemId={tag._id}
@@ -47,12 +57,10 @@ export default async function TagDetailPage({ params }) {
       </div>
 
       {/* Keywords */}
-      <div className="mb-6">
-        <h2 className="text-xl font-semibold text-neutral-dark mb-2">
-          Keywords
-        </h2>
-        {tag.keywords && tag.keywords.length > 0 ? (
-          <ul className="list-disc pl-6 text-neutral-dark">
+      <div>
+        <h2 className="text-xl font-semibold mb-2">Keywords</h2>
+        {Array.isArray(tag.keywords) && tag.keywords.length > 0 ? (
+          <ul className="list-disc list-inside text-neutral-dark">
             {tag.keywords.map((kw) => (
               <li key={kw}>{kw}</li>
             ))}
@@ -62,19 +70,17 @@ export default async function TagDetailPage({ params }) {
         )}
       </div>
 
-      <hr className="border-t border-neutral-light my-8" />
+      <hr className="my-8 border-t border-neutral-light" />
 
       {/* Coming Soon */}
       <div>
-        <h2 className="text-xl font-semibold text-neutral-dark mb-2">
-          Coming Soon
-        </h2>
-        <ul className="list-disc pl-6 text-neutral-muted">
+        <h2 className="text-xl font-semibold mb-2">Coming Soon</h2>
+        <ul className="list-disc list-inside text-neutral-muted">
           <li>List of related bills</li>
           <li>Politicians who voted on those bills</li>
           <li>User tracker status for this tag</li>
         </ul>
       </div>
-    </div>
+    </section>
   );
 }

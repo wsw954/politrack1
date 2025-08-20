@@ -3,9 +3,7 @@
 
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
-import Button from "@/components/ui/Button";
-import Card from "@/components/ui/Card";
+import TagCard from "@/components/tags/TagCard";
 import Link from "next/link";
 import { fetchTrackedIds } from "@/utils/fetchTrackedIds";
 
@@ -14,8 +12,7 @@ export default function TagListPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const { data: session, status } = useSession();
-  const router = useRouter();
+  const { data: session } = useSession();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -41,22 +38,11 @@ export default function TagListPage() {
     fetchData();
   }, []);
 
-  const handleTagClick = (tag) => {
-    const id = encodeURIComponent(tag._id);
-    if (tag.isTracked && session?.user) {
-      router.push(`/user/tracker/tags/${id}`);
-    } else {
-      router.push(`/tags/${id}`);
-    }
-  };
-
   return (
-    <div className="w-full max-w-none px-4 py-8">
-      <h1 className="text-3xl font-bold text-center mb-6">
-        Browse Tags (Issues)
-      </h1>
+    <section className="py-8 space-y-6">
+      <h1 className="text-3xl font-bold text-center">Browse Tags (Issues)</h1>
 
-      <div className="bg-white border border-neutral-light rounded-xl shadow-sm p-6 mb-12">
+      <div className="bg-white border border-neutral-light rounded-xl shadow-sm p-6">
         <p className="text-neutral-dark text-sm">
           Tags represent major issue areas like Education, Housing, or the
           Environment. Use them to explore related bills and see how politicians
@@ -64,42 +50,32 @@ export default function TagListPage() {
         </p>
       </div>
 
-      <hr className="border-t border-neutral-light mb-12" />
+      <hr className="border-t border-neutral-light" />
 
       {loading && <p className="text-neutral-muted">Loading...</p>}
       {error && <p className="text-danger">{error}</p>}
 
       {!loading && !error && (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-          {tags.map((tag) => (
-            <div
-              key={tag._id}
-              onClick={() => handleTagClick(tag)}
-              className="cursor-pointer"
-            >
-              <Card className="hover:shadow-md transition-shadow">
-                <div className="flex flex-col gap-2">
-                  <h2 className="text-xl font-semibold text-neutral-dark">
-                    {tag.name}
-                  </h2>
-                  {tag.isTracked && (
-                    <span className="w-fit max-w-max bg-accent-light text-accent-dark text-xs font-medium px-2 py-1 rounded-full">
-                      Tracked
-                    </span>
-                  )}
-                  {tag.keywords?.length > 0 && (
-                    <ul className="text-sm text-neutral-muted list-disc list-inside">
-                      {tag.keywords.map((kw, i) => (
-                        <li key={i}>{kw}</li>
-                      ))}
-                    </ul>
-                  )}
-                </div>
-              </Card>
-            </div>
-          ))}
+          {tags.map((tag) => {
+            const id = encodeURIComponent(tag._id);
+            const href =
+              tag.isTracked && session?.user
+                ? `/user/tracker/tags/${id}`
+                : `/tags/${id}`;
+
+            return (
+              <Link
+                key={tag._id}
+                href={href}
+                className="block focus:outline-none focus:ring-2 focus:ring-primary/30 rounded"
+              >
+                <TagCard tag={tag} />
+              </Link>
+            );
+          })}
         </div>
       )}
-    </div>
+    </section>
   );
 }

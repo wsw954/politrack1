@@ -57,7 +57,7 @@ export default function UserNavBar() {
             onMouseEnter={() => setIsTrackerOpen(true)}
             onMouseLeave={() => setIsTrackerOpen(false)}
           >
-            <button className="text-neutral-dark hover:text-primary font-medium">
+            <button className="text-neutral-dark hover:text-primary font-medium focus:outline-none focus:ring-2 focus:ring-primary/30 rounded">
               Tracker ▾
             </button>
 

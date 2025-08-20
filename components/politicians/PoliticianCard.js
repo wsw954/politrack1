@@ -14,6 +14,7 @@ export default function PoliticianCard({ politician }) {
     committee_assignments = [],
     voting_history = [],
     consistency_meter = {},
+    isTracked,
   } = politician;
 
   // Normalize X handle (may be "@Handle" or null)
@@ -126,7 +127,7 @@ export default function PoliticianCard({ politician }) {
           <strong>Party Alignment:</strong> {consistency_meter.party_alignment}%
         </div>
       )}
-      {politician.isTracked && (
+      {isTracked && (
         <span className="mt-2 w-fit max-w-max bg-accent-light text-accent-dark text-xs font-medium px-2 py-1 rounded-full">
           Tracked
         </span>

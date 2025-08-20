@@ -11,6 +11,10 @@ export default function FormInput({
   rows = 4,
   placeholder = "",
 }) {
+  const baseField =
+    "w-full px-3 py-2 border border-neutral-light rounded-md " +
+    "focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary";
+
   return (
     <div>
       <label
@@ -29,7 +33,7 @@ export default function FormInput({
           required={required}
           rows={rows}
           placeholder={placeholder}
-          className="w-full px-3 py-2 border border-neutral-light rounded-md shadow-sm focus:outline-none focus:ring focus:border-primary"
+          className={baseField}
         />
       ) : (
         <input
@@ -40,7 +44,7 @@ export default function FormInput({
           onChange={onChange}
           required={required}
           placeholder={placeholder}
-          className="w-full px-3 py-2 border border-neutral-light rounded-md shadow-sm focus:outline-none focus:ring focus:border-primary"
+          className={baseField}
         />
       )}
     </div>

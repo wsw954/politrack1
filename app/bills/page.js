@@ -35,7 +35,7 @@ export default function BillListPage() {
         const trackedIds = await fetchTrackedIds("bills");
         const merged = data.map((bill) => ({
           ...bill,
-          isTracked: trackedIds.has(bill._id),
+          isTracked: trackedIds.has(bill._id), //Mark the users tracked bills
         }));
 
         setAllBills(merged);

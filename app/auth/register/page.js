@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import FormInput from "@/components/ui/FormInput";
 import FormButton from "@/components/ui/FormButton";
 import FormError from "@/components/ui/FormError";
+import Card from "@/components/ui/Card";
 import { signIn } from "next-auth/react";
 
 export default function RegisterPage() {
@@ -56,46 +57,56 @@ export default function RegisterPage() {
     }
   };
   return (
-    <div className="max-w-md mx-auto mt-12 p-6 border rounded shadow">
-      <h2 className="text-2xl font-bold mb-6 text-center">Register</h2>
-      {error && <FormError message={error} />}
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <FormInput
-          label="Name"
-          name="name"
-          value={form.name}
-          onChange={handleChange}
-          required
-        />
-        <FormInput
-          label="Email"
-          type="email"
-          name="email"
-          value={form.email}
-          onChange={handleChange}
-          required
-        />
-        <div>
-          <FormInput
-            label="Password"
-            type={showPassword ? "text" : "password"}
-            name="password"
-            value={form.password}
-            onChange={handleChange}
-            required
-          />
-          <button
-            type="button"
-            onClick={() => setShowPassword((prev) => !prev)}
-            className="text-sm text-primary hover:underline mt-1 ml-1"
-          >
-            {showPassword ? "Hide password" : "Show password"}
-          </button>
-        </div>
-        <FormButton type="submit" loading={loading}>
-          Register
-        </FormButton>
-      </form>
-    </div>
+    <section className="py-16">
+      <div className="max-w-md mx-auto">
+        <Card className="w-full space-y-6">
+          <h2 className="text-2xl font-bold text-center">Register</h2>
+
+          {error && <FormError message={error} />}
+
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <FormInput
+              label="Name"
+              name="name"
+              value={form.name}
+              onChange={handleChange}
+              required
+            />
+
+            <FormInput
+              label="Email"
+              type="email"
+              name="email"
+              value={form.email}
+              onChange={handleChange}
+              required
+            />
+
+            <div>
+              <FormInput
+                label="Password"
+                type={showPassword ? "text" : "password"}
+                name="password"
+                value={form.password}
+                onChange={handleChange}
+                required
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword((prev) => !prev)}
+                className="text-sm text-primary hover:underline mt-1 ml-1
+                           focus:outline-none focus:ring-2 focus:ring-primary/30 rounded"
+              >
+                {showPassword ? "Hide password" : "Show password"}
+              </button>
+            </div>
+
+            <FormButton type="submit" loading={loading}>
+              Register
+            </FormButton>
+          </form>
+        </Card>
+      </div>
+    </section>
   );
 }

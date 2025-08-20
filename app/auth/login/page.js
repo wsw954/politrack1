@@ -53,41 +53,46 @@ export default function LoginPage() {
   };
 
   return (
-    <main className="min-h-screen flex items-center justify-center bg-gray-50 p-6">
-      <Card className="max-w-md w-full space-y-6">
-        <h2 className="text-2xl font-bold text-center text-blue-800">
-          Sign In
-        </h2>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <FormInput
-            label="Email"
-            name="email"
-            type="email"
-            value={form.email}
-            onChange={handleChange}
-            required
-          />
-          <div>
+    <section className="py-16">
+      <div className="max-w-md mx-auto">
+        <Card className="w-full space-y-6">
+          {/* Let global h2 tokens apply (text-neutral-dark); remove raw blue */}
+          <h2 className="text-2xl font-bold text-center">Sign In</h2>
+
+          <form onSubmit={handleSubmit} className="space-y-4">
             <FormInput
-              label="Password"
-              type={showPassword ? "text" : "password"}
-              name="password"
-              value={form.password}
+              label="Email"
+              name="email"
+              type="email"
+              value={form.email}
               onChange={handleChange}
               required
             />
-            <button
-              type="button"
-              onClick={() => setShowPassword((prev) => !prev)}
-              className="text-sm text-primary hover:underline mt-1 ml-1"
-            >
-              {showPassword ? "Hide password" : "Show password"}
-            </button>
-          </div>
-          <FormError message={error} />
-          <FormButton loading={loading}>Login</FormButton>
-        </form>
-      </Card>
-    </main>
+
+            <div>
+              <FormInput
+                label="Password"
+                type={showPassword ? "text" : "password"}
+                name="password"
+                value={form.password}
+                onChange={handleChange}
+                required
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword((prev) => !prev)}
+                className="text-sm text-primary hover:underline mt-1 ml-1
+                           focus:outline-none focus:ring-2 focus:ring-primary/30 rounded"
+              >
+                {showPassword ? "Hide password" : "Show password"}
+              </button>
+            </div>
+
+            <FormError message={error} />
+            <FormButton loading={loading}>Login</FormButton>
+          </form>
+        </Card>
+      </div>
+    </section>
   );
 }
