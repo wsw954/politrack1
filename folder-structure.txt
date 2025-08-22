@@ -168,7 +168,10 @@
 │       ├── TrackerStatCard.js
 │       ├── UnloggedTrackerPrompt.js
 │       ├── UserNav.js
-│       └── WatchlistItem.js
+│       ├── WatchlistItem.js
+│       └── tracker
+│           └── bills
+│               └── FilterBar.js
 ├── config
 │   └── db.js
 ├── eslint.config.mjs

@@ -9,10 +9,12 @@ import { NextResponse } from "next/server";
 // GET: Return list of tracked bills
 export async function GET(req, context) {
   const session = await getServerSession(authOptions);
-  if (!session)
+  if (!session) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
 
-  const { id } = await context.params;
+  //Dot await params
+  const { id } = context.params;
   if (String(session.user.id) !== String(id)) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
@@ -20,11 +22,31 @@ export async function GET(req, context) {
   try {
     await dbConnect();
 
-    // ✅ Key Change: Populate tracker.bills.itemId with full Bill document
+    // Populate the tracked bills, and inside each bill populate:
+    // - tags (only name is needed for the FilterBar)
+    // - sponsor/co_sponsors (optional, but handy for cards)
     const user = await User.findById(id)
+      .select("tracker.bills") // return only what we need
       .populate({
         path: "tracker.bills.itemId",
         model: "Bill",
+        select:
+          "number title session summary status tags sponsor co_sponsors createdAt",
+        populate: [
+          { path: "tags", model: "Tag", select: "name" },
+          {
+            path: "sponsor",
+            model: "Politician",
+            select: "first_name last_name party",
+          },
+          {
+            path: "co_sponsors",
+            model: "Politician",
+            select: "first_name last_name party",
+          },
+        ],
+        // If you use strict refs elsewhere, you can relax it:
+        // strictPopulate: false,
       })
       .lean();
 
@@ -32,6 +54,7 @@ export async function GET(req, context) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
+    // Return the tracker array as-is; bills now have tags: [{ _id, name }]
     return NextResponse.json(user.tracker.bills, { status: 200 });
   } catch (err) {
     console.error("GET /tracker/bills error:", err);

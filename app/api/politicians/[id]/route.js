@@ -13,7 +13,14 @@ export async function GET(req, { params }) {
       return NextResponse.json({ message: "ID is required" }, { status: 400 });
     }
 
-    const politician = await Politician.findById(id);
+    const politician = await Politician.findById(id)
+      // populate each voting_history item’s bill_id with the bill’s basic fields
+      .populate({
+        path: "voting_history.bill_id",
+        model: "Bill",
+        select: "_id title number session",
+      })
+      .lean();
     if (!politician) {
       return NextResponse.json(
         { message: "Politician not found" },
