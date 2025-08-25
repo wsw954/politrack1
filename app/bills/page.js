@@ -89,10 +89,12 @@ export default function BillListPage() {
   }, [filters]); // watch the entire filters object:
 
   const handleBillClick = (bill) => {
+    console.log(bill);
     const id = normalizeId(bill._id);
     if (bill.isTracked && session?.user) {
       router.push(`/user/tracker/bills/${id}`);
     } else {
+      console.log(id);
       router.push(`/bills/${id}`);
     }
   };

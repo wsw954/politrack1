@@ -1,5 +1,6 @@
 // /app/api/politicians/[id]/route.js
 import Politician from "@/models/Politician";
+import Bill from "@/models/Bill";
 import { dbConnect } from "@/config/db";
 import { NextResponse } from "next/server";
 import { requireAdmin } from "@/lib/auth/api-protect";
@@ -21,6 +22,7 @@ export async function GET(req, { params }) {
         select: "_id title number session",
       })
       .lean();
+
     if (!politician) {
       return NextResponse.json(
         { message: "Politician not found" },

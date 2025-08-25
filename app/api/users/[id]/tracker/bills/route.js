@@ -14,7 +14,7 @@ export async function GET(req, context) {
   }
 
   //Dot await params
-  const { id } = context.params;
+  const { id } = await context.params;
   if (String(session.user.id) !== String(id)) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }

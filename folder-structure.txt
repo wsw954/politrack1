@@ -170,8 +170,11 @@
 │       ├── UserNav.js
 │       ├── WatchlistItem.js
 │       └── tracker
-│           └── bills
-│               └── FilterBar.js
+│           ├── bills
+│           │   └── FilterBar.js
+│           └── politicians
+│               ├── FilterBar.js
+│               └── TrackedPoliticianCard.js
 ├── config
 │   └── db.js
 ├── eslint.config.mjs

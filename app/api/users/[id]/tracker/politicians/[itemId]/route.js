@@ -3,6 +3,8 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth/options";
 import { dbConnect } from "@/config/db";
 import User from "@/models/User";
+import Politician from "@/models/Politician";
+import Bill from "@/models/Bill";
 import { NextResponse } from "next/server";
 
 // ✅ GET – Fetch a single tracked politician with full Politician document
@@ -11,7 +13,7 @@ export async function GET(req, context) {
   if (!session)
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const { id, itemId } = await context.params;
+  const { id, itemId } = await context.params; // user id, politician id
 
   if (String(session.user.id) !== String(id)) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
@@ -20,44 +22,56 @@ export async function GET(req, context) {
   try {
     await dbConnect();
 
-    // ✅ FIXED: Explicitly populate 'itemId' with Politician model
-    const user = await User.findById(id)
-      .populate({
-        path: "tracker.politicians.itemId",
-        model: "Politician",
-      })
-      .lean();
+    /*   if (!mongoose.isValidObjectId(itemId)) {
+      return NextResponse.json(
+        { error: "Invalid politician id" },
+        { status: 400 }
+      );
+    } */
 
-    if (!user) {
+    // 1) Find the tracker entry (note, createdAt, etc.)
+    const user = await User.findById(id).select("tracker.politicians").lean();
+
+    if (!user)
       return NextResponse.json({ error: "User not found" }, { status: 404 });
+
+    const entry = (user.tracker?.politicians || []).find(
+      (p) => String(p.itemId) === String(itemId)
+    );
+    if (!entry) {
+      return NextResponse.json({ error: "Not tracked" }, { status: 404 });
     }
 
-    // ✅ MATCHED: Locate the specific tracked item
-    const tracked = user.tracker.politicians.find(
-      (item) => String(item.itemId?._id || item.itemId) === String(itemId)
-    );
-
-    if (!tracked) {
+    // 2) Fetch the politician and populate the voting history with bill meta
+    const politician = await Politician.findById(itemId)
+      .select(
+        "first_name last_name party chamber district photo_url contact committee_assignments voting_history consistency_meter updatedAt"
+      )
+      .populate({
+        path: "voting_history.bill_id",
+        model: Bill,
+        select: "_id title number session",
+      })
+      .lean();
+    console.log("Line 56 in API tracked Pol");
+    console.log(politician);
+    if (!politician) {
       return NextResponse.json(
-        { error: "Politician not tracked" },
+        { error: "Politician not found" },
         { status: 404 }
       );
     }
 
-    // ✅ UPDATED: Send both tracker metadata and full Politician doc
+    // 3) Return a consistent shape the page expects
     return NextResponse.json(
       {
-        itemId: tracked.itemId?._id || tracked.itemId,
-        itemType: tracked.itemType,
-        note: tracked.note,
-        createdAt: tracked.createdAt,
-        updatedAt: tracked.updatedAt,
-        politician: tracked.itemId, // Full populated document
+        politician, // includes populated voting_history.bill_id
+        note: entry.note || "", // tracker note
       },
       { status: 200 }
     );
   } catch (err) {
-    console.error("GET /tracker/politicians/[itemId] error:", err);
+    console.error("GET tracked politician error:", err);
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 }

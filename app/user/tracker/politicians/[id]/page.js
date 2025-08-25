@@ -7,123 +7,97 @@ import { useParams, useRouter } from "next/navigation";
 import axios from "@/lib/axiosInstance";
 
 import Spinner from "@/components/ui/Spinner";
-import Card from "@/components/ui/Card";
-import Button from "@/components/ui/Button";
-import SectionWrapper from "@/components/ui/SectionWrapper";
-
-import PoliticianCard from "@/components/politicians/PoliticianCard";
 import ContactInfo from "@/components/politicians/ContactInfo";
 import CommitteeList from "@/components/politicians/CommitteeList";
 import VotingHistory from "@/components/politicians/VotingHistory";
 import ConsistencyMeter from "@/components/politicians/ConsistencyMeter";
+import TrackedPoliticianCard from "@/components/user/tracker/politicians/TrackedPoliticianCard";
 
 export default function TrackedPoliticianPage() {
   const { data: session, status } = useSession();
-  const { id } = useParams(); // [politicianId]
+  const { id } = useParams();
   const router = useRouter();
+  const [payload, setPayload] = useState(null); // { politician, tracked? or note? }
 
-  const [tracked, setTracked] = useState(null);
+  const [data, setData] = useState(null); // { politician, note }
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     if (!session?.user?.id || !id) return;
+    let ignore = false;
 
-    const fetchTracked = async () => {
+    (async () => {
+      setLoading(true);
+      setError("");
       try {
         const res = await axios.get(
           `/api/users/${session.user.id}/tracker/politicians/${id}`
         );
-        setTracked(res.data);
+        if (!ignore) setPayload(res.data);
       } catch (err) {
         console.error("Failed to fetch tracked politician:", err);
+        if (!ignore) setError("Failed to load tracked politician.");
       } finally {
-        setLoading(false);
+        if (!ignore) setLoading(false);
       }
-    };
+    })();
 
-    fetchTracked();
-  }, [session, id]);
+    return () => {
+      ignore = true;
+    };
+  }, [session?.user?.id, id]);
 
   if (status === "loading" || loading) return <Spinner />;
   if (!session) return <p className="text-danger">You must be logged in.</p>;
-  if (!tracked)
-    return (
-      <p className="text-neutral-muted">Politician not found or not tracked.</p>
-    );
+  if (error) return <p className="text-danger">{error}</p>;
+  if (!payload) return <p className="text-neutral-muted">Not found.</p>;
 
-  const { politician, note } = tracked;
+  const { politician } = payload;
   const name = `${politician.first_name} ${politician.last_name}`;
-  const photo =
-    politician.photo_url?.replace("/app/public", "") ||
-    "/politicians/images/default.jpg";
+
+  const tracked = payload.tracked ?? {
+    note: payload.note ?? "",
+    // If your endpoint doesn’t return tracked timestamps yet, omit them
+    // and the card will just show the note.
+    createdAt: payload.createdAt, // optional, if provided
+    updatedAt: payload.updatedAt, // optional, if provided
+  };
+
+  const handleEditNote = () => {
+    router.push(`/user/tracker/politicians/${id}/edit`);
+  };
+
+  const handleUntrack = async () => {
+    if (!confirm(`Untrack "${name}"?`)) return;
+    try {
+      await axios.delete(
+        `/api/users/${session.user.id}/tracker/politicians/${id}`
+      );
+      router.push("/user/tracker/politicians");
+    } catch (err) {
+      console.error(err);
+      alert("Failed to untrack politician.");
+    }
+  };
 
   return (
-    <SectionWrapper>
-      {/* Name */}
-      <h1 className="text-3xl font-bold mb-8 text-center">
-        Tracked Politician: {name}
-      </h1>
+    <section className="py-8 space-y-6">
+      <h1 className="text-3xl font-bold text-center">{name}</h1>
 
-      {/* Profile Overview */}
-      <PoliticianCard
-        politician={{
-          name,
-          party: politician.party,
-          district: politician.district,
-          chamber: politician.chamber,
-          photo,
-          contact: politician.contact,
-          committee_assignments: politician.committee_assignments,
-          voting_history: politician.voting_history,
-          consistency_meter: politician.consistency_meter,
-        }}
+      <TrackedPoliticianCard
+        politician={politician}
+        tracked={tracked}
+        onEditNote={handleEditNote}
+        onUntrack={handleUntrack}
       />
 
-      {/* Profile Details */}
-      <hr className="my-10" />
+      <hr className="my-4 border-t border-neutral-light" />
+
       <ContactInfo contact={politician.contact} />
       <CommitteeList committees={politician.committee_assignments} />
       <VotingHistory votingHistory={politician.voting_history} />
       <ConsistencyMeter consistency={politician.consistency_meter} />
-
-      {/* Tracker Note Section (moved to bottom) */}
-      <Card className="mt-12">
-        <p className="text-lg font-semibold mb-2">Tracker Note</p>
-        <p className="italic text-neutral-dark">{note || "No note added."}</p>
-
-        <div className="mt-6 flex gap-4">
-          <Button
-            onClick={() => router.push(`/user/tracker/politicians/${id}/edit`)}
-          >
-            Edit Note
-          </Button>
-          <Button
-            variant="destructive"
-            onClick={async () => {
-              const confirmed = confirm(
-                `Are you sure you want to untrack "${name}"?`
-              );
-              if (!confirmed) return;
-
-              try {
-                await axios.delete(
-                  `/api/users/${session.user.id}/tracker/politicians/${id}`
-                );
-                router.push("/user/tracker/politicians");
-              } catch (err) {
-                alert("Failed to untrack politician.");
-                console.error(err);
-              }
-            }}
-          >
-            Untrack Politician
-          </Button>
-        </div>
-      </Card>
-
-      <p className="text-sm text-neutral-muted text-center mt-8">
-        Last updated: {new Date(politician.updatedAt).toLocaleDateString()}
-      </p>
-    </SectionWrapper>
+    </section>
   );
 }

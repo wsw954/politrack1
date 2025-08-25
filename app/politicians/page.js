@@ -8,6 +8,7 @@ import PoliticianCard from "@/components/politicians/PoliticianCard";
 import FilterBar from "@/components/politicians/FilterBar";
 import Button from "@/components/ui/Button";
 import Link from "next/link";
+import { normalizeId } from "@/utils/normalizeId";
 import { fetchTrackedIds } from "@/utils/fetchTrackedIds";
 
 export default function PoliticianListPage() {
@@ -90,10 +91,11 @@ export default function PoliticianListPage() {
   };
 
   const handleCardClick = (politician) => {
-    const id = politician._id;
+    const id = normalizeId(politician._id);
     if (politician.isTracked && session?.user) {
       router.push(`/user/tracker/politicians/${id}`);
     } else {
+      console.log(id);
       router.push(`/politicians/${id}`);
     }
   };
@@ -135,7 +137,7 @@ export default function PoliticianListPage() {
           {politicians.length > 0 ? (
             politicians.map((p) => (
               <div
-                key={p._id}
+                key={normalizeId(p._id)}
                 onClick={() => handleCardClick(p)}
                 className="cursor-pointer"
               >

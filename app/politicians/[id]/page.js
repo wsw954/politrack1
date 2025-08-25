@@ -7,25 +7,46 @@ import VotingHistory from "@/components/politicians/VotingHistory";
 import ConsistencyMeter from "@/components/politicians/ConsistencyMeter";
 import AddToTrackerButton from "@/components/user/AddToTrackerButton";
 import UnloggedTrackerPrompt from "@/components/user/UnloggedTrackerPrompt";
+import { normalizeId } from "@/utils/normalizeId";
+import { notFound } from "next/navigation";
+import { headers } from "next/headers";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth/options";
-import { notFound } from "next/navigation";
 
 export default async function PoliticianDetailPage({ params }) {
   const session = await getServerSession(authOptions);
-  const awaitedParams = await params;
-  const { id } = awaitedParams;
+  // const awaitedParams = await params;
+  // const { id } = params;
+  const { id } = await params;
 
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_BASE_URL}/api/politicians/${id}`,
-    {
-      cache: "no-store",
-    }
-  );
+  // Build a safe base URL for SSR (no NEXT_PUBLIC_BASE_URL dependency)
+  const headersList = await headers();
+  const host = headersList.get("host");
+  const protocol = process.env.VERCEL ? "https" : "http";
+  const url = `${protocol}://${host}/api/politicians/${normalizeId(id)}`;
 
-  if (!res.ok) return notFound();
+  // const res = await fetch(
+  //   `${process.env.NEXT_PUBLIC_BASE_URL}/api/politicians/${normalizeId(id)}`
+  // );
+
+  // if (!res.ok) return notFound();
+
+  // one-shot fetch with a tiny retry for transient 5xx
+  const fetchOnce = () => fetch(url, { cache: "no-store" });
+  let res = await fetchOnce();
+  if (!res.ok && res.status >= 500) {
+    await new Promise((r) => setTimeout(r, 120));
+    res = await fetchOnce();
+  }
+
+  if (res.status === 404) return notFound();
+  if (!res.ok) throw new Error(`Failed to load politician: ${res.status}`);
 
   const politician = await res.json();
+
+  const safePhoto =
+    (politician.photo_url || "").replace?.("/app/public", "") ||
+    "/politicians/images/default.jpg";
 
   return (
     <section className="py-8 space-y-6">
@@ -41,7 +62,7 @@ export default async function PoliticianDetailPage({ params }) {
           party: politician.party,
           district: politician.district,
           chamber: politician.chamber,
-          photo: politician.photo_url.replace("/app/public", ""),
+          photo: safePhoto,
         }}
       />
 
