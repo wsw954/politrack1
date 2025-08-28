@@ -17,8 +17,8 @@ export default function TrackedBillsIndexPage() {
   const { data: session, status } = useSession();
   const router = useRouter();
 
-  const [allTrackedBills, setAllTrackedBills] = useState([]); // single source of truth
-  const [loading, setLoading] = useState(true);
+  const [allTrackedBills, setAllTrackedBills] = useState(null); // single source of truth
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
   // Mirrors /app/bills/page.js, plus tracker-only "hasNote"
@@ -61,9 +61,10 @@ export default function TrackedBillsIndexPage() {
 
         setAllTrackedBills(merged);
       } catch (err) {
-        if (err.name !== "CanceledError" && err.message !== "canceled") {
+        if (err?.code !== "ERR_CANCELED" && err?.name !== "CanceledError") {
           console.error("Error fetching tracked bills:", err);
           setError("Failed to load tracked bills.");
+          setAllTrackedBills([]);
         }
       } finally {
         setLoading(false);
@@ -129,7 +130,8 @@ export default function TrackedBillsIndexPage() {
     router.push(`/user/tracker/bills/${id}`);
   };
 
-  if (status === "loading" || loading) return <Spinner />;
+  if (status === "loading" || loading || allTrackedBills === null)
+    return <Spinner />;
   if (!session) return <p className="text-danger">You must be logged in.</p>;
   if (error) return <p className="text-danger">{error}</p>;
 

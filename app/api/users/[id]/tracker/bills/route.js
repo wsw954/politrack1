@@ -4,6 +4,8 @@ import { authOptions } from "@/lib/auth/options";
 import { dbConnect } from "@/config/db";
 import User from "@/models/User";
 import Bill from "@/models/Bill";
+import Politician from "@/models/Politician";
+import Tag from "@/models/Tag";
 import { NextResponse } from "next/server";
 
 // GET: Return list of tracked bills
@@ -14,7 +16,7 @@ export async function GET(req, context) {
   }
 
   //Dot await params
-  const { id } = await context.params;
+  const { id } = context.params;
   if (String(session.user.id) !== String(id)) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
@@ -29,19 +31,19 @@ export async function GET(req, context) {
       .select("tracker.bills") // return only what we need
       .populate({
         path: "tracker.bills.itemId",
-        model: "Bill",
+        model: Bill,
         select:
           "number title session summary status tags sponsor co_sponsors createdAt",
         populate: [
-          { path: "tags", model: "Tag", select: "name" },
+          { path: "tags", model: Tag, select: "name" },
           {
             path: "sponsor",
-            model: "Politician",
+            model: Politician,
             select: "first_name last_name party",
           },
           {
             path: "co_sponsors",
-            model: "Politician",
+            model: Politician,
             select: "first_name last_name party",
           },
         ],

@@ -19,7 +19,7 @@ const provisionSchema = new mongoose.Schema(
       default: "standard", // could be "definition", "appropriation", etc.
     },
   },
-  { _id: false }
+  { _id: true }
 );
 
 export default provisionSchema;
