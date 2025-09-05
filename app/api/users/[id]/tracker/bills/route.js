@@ -33,7 +33,7 @@ export async function GET(req, context) {
         path: "tracker.bills.itemId",
         model: Bill,
         select:
-          "number title session summary status tags sponsor co_sponsors createdAt",
+          "number title session summary status tags sponsor co_sponsors provisions createdAt",
         populate: [
           { path: "tags", model: Tag, select: "name" },
           {
@@ -67,18 +67,24 @@ export async function GET(req, context) {
   }
 }
 
-// POST: Track a new bill
+// POST: Track a new bill (seed optional annotations)
 export async function POST(req, context) {
   const session = await getServerSession(authOptions);
   if (!session)
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const { id } = await context.params;
+  const { id } = context.params;
   if (String(session.user.id) !== String(id)) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
 
-  const { itemId, note = "" } = await req.json();
+  const {
+    itemId,
+    generalNotes = "",
+    links = [],
+    attachments = [],
+    labels = [],
+  } = await req.json();
   if (!itemId) {
     return NextResponse.json({ error: "Missing itemId" }, { status: 400 });
   }
@@ -106,7 +112,11 @@ export async function POST(req, context) {
     user.tracker.bills.push({
       itemId,
       itemType: "Bill",
-      note,
+      generalNotes,
+      links,
+      attachments,
+      labels,
+      provisionAnnotations: [],
       createdAt: new Date(),
       updatedAt: new Date(),
     });
