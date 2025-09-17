@@ -35,6 +35,9 @@
 │   │       │   └── tracker
 │   │       │       ├── bills
 │   │       │       │   ├── [itemId]
+│   │       │       │   │   ├── provisions
+│   │       │       │   │   │   └── [provId]
+│   │       │       │   │   │       └── route.js
 │   │       │       │   │   └── route.js
 │   │       │       │   └── route.js
 │   │       │       ├── politicians
@@ -115,6 +118,13 @@
 │               │   └── page.js
 │               └── page.js
 ├── components
+│   ├── annotation
+│   │   ├── AttachmentGallery.js
+│   │   ├── GeneralNotesEditor.js
+│   │   ├── InlineCountBadges.js
+│   │   ├── LabelsChips.js
+│   │   ├── LinkList.js
+│   │   └── Section.js
 │   ├── bills
 │   │   ├── BillCard.js
 │   │   ├── BillForm.js
@@ -145,6 +155,8 @@
 │   │   └── VotingRecordTable.js
 │   ├── providers
 │   │   └── AuthProvider.js
+│   ├── provisions
+│   │   └── ProvisionsDrawer.js
 │   ├── tags
 │   │   └── TagCard.js
 │   ├── ui
@@ -157,6 +169,7 @@
 │   │   ├── FormInput.js
 │   │   ├── Input.js
 │   │   ├── Modal.js
+│   │   ├── PageHeader.js
 │   │   ├── PasswordInput.js
 │   │   ├── SectionWrapper.js
 │   │   └── Spinner.js
@@ -186,7 +199,9 @@
 │   │   ├── useRequireAuth.js
 │   │   ├── useRequireGuest.js
 │   │   └── useRequireRole.js
-│   └── axiosInstance.js
+│   ├── axiosInstance.js
+│   ├── trackerClient.js
+│   └── useUserId.js
 ├── models
 │   ├── Bill.js
 │   ├── Politician.js

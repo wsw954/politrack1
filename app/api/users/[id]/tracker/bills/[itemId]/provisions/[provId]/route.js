@@ -3,6 +3,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth/options";
 import { dbConnect } from "@/config/db";
 import { NextResponse } from "next/server";
+import mongoose from "mongoose";
 import User from "@/models/User";
 import Bill from "@/models/Bill";
 
@@ -104,82 +105,124 @@ export async function PATCH(req, { params }) {
     await dbConnect();
 
     const base = "tracker.bills";
-    const filterBill = { _id: userId, [`${base}.itemId`]: billId };
+    const provisionObjectId = mongoose.Types.ObjectId.createFromHexString(
+      String(provId)
+    );
 
-    // Ensure the provision annotation entry exists
-    await User.updateOne(filterBill, {
-      $setOnInsert: {},
-      $push: {
-        [`${base}.$.provisionAnnotations`]: {
-          provisionId: provId,
-          anchorPath: anchorPath || null,
-          generalNotes: "",
-          links: [],
-          attachments: [],
-          labels: [],
-          updatedAt: new Date(),
+    // ------------------------------------------------------------
+    // FIX #2: Only create the provision annotation entry if missing
+    // (previous code always $push'ed, causing duplicates) :contentReference[oaicite:2]{index=2}
+    // ------------------------------------------------------------
+    const exists = await User.findOne(
+      {
+        _id: userId,
+        [`${base}.itemId`]: billId,
+        [`${base}.provisionAnnotations`]: {
+          $elemMatch: { provisionId: provisionObjectId },
         },
       },
-    });
+      { _id: 1 }
+    ).lean();
 
-    const filterProv = {
-      _id: userId,
-      [`${base}.itemId`]: billId,
-      [`${base}.provisionAnnotations.provisionId`]: provId,
-    };
+    if (!exists) {
+      await User.updateOne(
+        { _id: userId, [`${base}.itemId`]: billId },
+        {
+          $push: {
+            [`${base}.$.provisionAnnotations`]: {
+              provisionId: provisionObjectId,
+              anchorPath: anchorPath || null,
+              generalNotes: "",
+              links: [],
+              attachments: [],
+              labels: [],
+              updatedAt: new Date(),
+            },
+          },
+        }
+      );
+    }
 
+    // ------------------------------------------------------------
+    // FIX #1: Use arrayFilters to target the nested elements,
+    // instead of double `$` positional operators. Your old draft
+    // used paths like `${base}.$.provisionAnnotations.$.links`, which
+    // rely on two anonymous positionals and are invalid. :contentReference[oaicite:3]{index=3}
+    // ------------------------------------------------------------
+    const billObjectId = mongoose.Types.ObjectId.createFromHexString(
+      String(billId)
+    );
+    const arrayFilters = [
+      { "bill.itemId": billObjectId },
+      { "prov.provisionId": provisionObjectId },
+    ];
+
+    // Build $set
     const setOps = {
-      [`${base}.$.provisionAnnotations.$.updatedAt`]: new Date(),
+      [`${base}.$[bill].provisionAnnotations.$[prov].updatedAt`]: new Date(),
     };
     if (typeof generalNotes === "string") {
-      setOps[`${base}.$.provisionAnnotations.$.generalNotes`] = generalNotes;
+      setOps[`${base}.$[bill].provisionAnnotations.$[prov].generalNotes`] =
+        generalNotes;
     }
     if (anchorPath) {
-      setOps[`${base}.$.provisionAnnotations.$.anchorPath`] = anchorPath;
+      setOps[`${base}.$[bill].provisionAnnotations.$[prov].anchorPath`] =
+        anchorPath;
     }
 
     const update = { $set: setOps };
+
+    // Build $push
     if (addLinks.length) {
       update.$push = {
-        [`${base}.$.provisionAnnotations.$.links`]: { $each: addLinks },
+        [`${base}.$[bill].provisionAnnotations.$[prov].links`]: {
+          $each: addLinks,
+        },
       };
     }
     if (addAttachments.length) {
-      (update.$push ??= {})[`${base}.$.provisionAnnotations.$.attachments`] = {
-        $each: addAttachments,
-      };
+      (update.$push ??= {})[
+        `${base}.$[bill].provisionAnnotations.$[prov].attachments`
+      ] = { $each: addAttachments };
     }
     if (addLabels.length) {
-      (update.$push ??= {})[`${base}.$.provisionAnnotations.$.labels`] = {
-        $each: addLabels,
-      };
+      (update.$push ??= {})[
+        `${base}.$[bill].provisionAnnotations.$[prov].labels`
+      ] = { $each: addLabels };
     }
 
+    // Build $pull
     if (removeLinkIds.length) {
       update.$pull = {
-        [`${base}.$.provisionAnnotations.$.links`]: {
+        [`${base}.$[bill].provisionAnnotations.$[prov].links`]: {
           _id: { $in: removeLinkIds },
         },
       };
     }
     if (removeAttachmentIds.length) {
-      (update.$pull ??= {})[`${base}.$.provisionAnnotations.$.attachments`] = {
-        _id: { $in: removeAttachmentIds },
-      };
+      (update.$pull ??= {})[
+        `${base}.$[bill].provisionAnnotations.$[prov].attachments`
+      ] = { _id: { $in: removeAttachmentIds } };
     }
     if (removeLabelIds.length) {
-      (update.$pull ??= {})[`${base}.$.provisionAnnotations.$.labels`] = {
-        _id: { $in: removeLabelIds },
-      };
+      (update.$pull ??= {})[
+        `${base}.$[bill].provisionAnnotations.$[prov].labels`
+      ] = { _id: { $in: removeLabelIds } };
     }
 
-    const res = await User.updateOne(filterProv, update);
+    const res = await User.updateOne(
+      { _id: userId, [`${base}.itemId`]: billId },
+      update,
+      { arrayFilters }
+    );
+
     if (!res.matchedCount) {
       return NextResponse.json(
         { error: "Tracked bill/provision not found" },
         { status: 404 }
       );
     }
+
     return NextResponse.json({ ok: true }, { status: 200 });
   } catch (err) {
     console.error("PATCH provision annotation error:", err);
