@@ -9,13 +9,12 @@ import Politician from "@/models/Politician";
 import Tag from "@/models/Tag";
 import { NextResponse } from "next/server";
 
-// GET — Fetch a single tracked bill (optionally join provisions)
-export async function GET(req, { params }) {
+export async function GET(req, context) {
   const session = await getServerSession(authOptions);
   if (!session)
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const { id: userId, itemId: billId } = params;
+  const { id: userId, itemId: billId } = await context.params;
   if (String(session.user.id) !== String(userId)) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
@@ -26,46 +25,73 @@ export async function GET(req, { params }) {
     const includeProvisions =
       new URL(req.url).searchParams.get("includeProvisions") === "1";
 
+    // 1) Find the single tracked subdoc
     const user = await User.findOne(
       { _id: userId, "tracker.bills.itemId": billId },
       { "tracker.bills.$": 1 }
     ).lean();
 
     if (!user?.tracker?.bills?.length) {
-      return NextResponse.json(
-        { error: "Tracked bill not found" },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: "Not tracked" }, { status: 404 });
     }
 
     const tracked = user.tracker.bills[0];
-    if (!includeProvisions) return NextResponse.json(tracked, { status: 200 });
 
-    const bill = await Bill.findById(billId, { provisions: 1 }).lean();
-    const byId = new Map(
-      (bill?.provisions ?? []).map((p) => [String(p._id), p])
-    );
+    // 2) Load the bill with the fields your UI needs
+    const billProjection = {
+      title: 1,
+      number: 1,
+      session: 1,
+      status: 1,
+      summary: 1,
+      tags: 1,
+      sponsors: 1,
+      ...(includeProvisions ? { provisions: 1 } : {}),
+    };
 
-    const provisions = (tracked.provisionAnnotations ?? []).map((ann) => ({
-      provisionId: ann.provisionId,
-      anchorPath: ann.anchorPath,
-      provision: byId.get(String(ann.provisionId)) || null,
-      generalNotes: ann.generalNotes,
-      links: ann.links,
-      attachments: ann.attachments,
-      labels: ann.labels,
-      updatedAt: ann.updatedAt,
-    }));
+    const bill = await Bill.findById(billId, billProjection)
+      .populate([
+        { path: "tags", select: "name color slug", options: { lean: true } },
+        {
+          path: "sponsor",
+          select: "first_name last_name party chamber photo_url",
+          options: { lean: true },
+        },
+      ])
+      .lean();
+    console.log(bill);
+    if (!bill)
+      return NextResponse.json({ error: "Bill not found" }, { status: 404 });
 
+    // 3) Optionally join each provision annotation with the provision object
+    let provisionAnnotations = tracked.provisionAnnotations || [];
+    if (includeProvisions && Array.isArray(bill.provisions)) {
+      const indexById = new Map(bill.provisions.map((p) => [String(p._id), p]));
+      provisionAnnotations = provisionAnnotations.map((pa) => ({
+        ...pa,
+        provision: indexById.get(String(pa.provisionId)) || null,
+      }));
+    }
+
+    // 4) Shape the response for your page
     return NextResponse.json(
       {
-        itemId: tracked.itemId,
-        itemType: tracked.itemType,
-        generalNotes: tracked.generalNotes,
-        links: tracked.links,
-        attachments: tracked.attachments,
-        labels: tracked.labels,
-        provisionAnnotations: provisions,
+        itemId: {
+          _id: String(bill._id),
+          title: bill.title,
+          number: bill.number,
+          session: bill.session,
+          status: bill.status,
+          summary: bill.summary,
+          tags: bill.tags,
+          sponsor: bill.sponsor,
+          ...(includeProvisions ? { provisions: bill.provisions } : {}),
+        },
+        generalNotes: tracked.generalNotes || "",
+        links: tracked.links || [],
+        attachments: tracked.attachments || [],
+        labels: tracked.labels || [],
+        provisionAnnotations,
         createdAt: tracked.createdAt,
         updatedAt: tracked.updatedAt,
       },

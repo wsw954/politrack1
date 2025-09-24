@@ -123,7 +123,7 @@
 │   │   ├── GeneralNotesEditor.js
 │   │   ├── InlineCountBadges.js
 │   │   ├── LabelsChips.js
-│   │   ├── LinkList.js
+│   │   ├── LinksList.js
 │   │   └── Section.js
 │   ├── bills
 │   │   ├── BillCard.js

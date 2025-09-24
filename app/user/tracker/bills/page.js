@@ -1,209 +1,159 @@
 // app/user/tracker/bills/page.js
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
-import { useSession } from "next-auth/react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-
-import axios from "@/lib/axiosInstance";
-import Spinner from "@/components/ui/Spinner";
-import Button from "@/components/ui/Button";
-import BillCard from "@/components/bills/BillCard";
+import { useUserId } from "@/lib/useUserId";
+import { getTrackedBills } from "@/lib/trackerClient";
 import { normalizeId } from "@/utils/normalizeId";
-import TrackerBillsFilterBar from "@/components/user/tracker/bills/FilterBar";
+import BillCard from "@/components/bills/BillCard";
+import InlineCountBadges from "@/components/annotation/InlineCountBadges";
 
 export default function TrackedBillsIndexPage() {
-  const { data: session, status } = useSession();
+  const { userId, status } = useUserId();
+  const [items, setItems] = useState([]);
   const router = useRouter();
 
-  const [allTrackedBills, setAllTrackedBills] = useState(null); // single source of truth
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [err, setErr] = useState(null);
 
-  // Mirrors /app/bills/page.js, plus tracker-only "hasNote"
-  const [filters, setFilters] = useState({
-    title: "",
-    tag: "",
-    status: "",
-    hasNote: "any", // "any" | "yes" | "no"
-    sort: "none",
-  });
+  const handleBillClick = (idLike) => {
+    const id = normalizeId(idLike);
+    if (id) router.push(`/user/tracker/bills/${id}`);
+  };
 
   useEffect(() => {
-    if (!session?.user?.id) return;
-    const controller = new AbortController();
+    if (status === "loading") return;
+    if (!userId) {
+      setLoading(false);
+      return;
+    }
 
+    let abort = false;
     (async () => {
-      setLoading(true);
-      setError(null);
       try {
-        // Only tracked bills; API now returns itemId.tags as [{ _id, name }]
-        const res = await axios.get(
-          `/api/users/${session.user.id}/tracker/bills`,
-          { signal: controller.signal }
-        );
-
-        const items = Array.isArray(res.data) ? res.data : [];
-
-        // Flatten into bill objects and attach tracker metadata (note)
-        const merged = items
-          .map((it) => {
-            const bill = it?.itemId;
-            if (!bill) return null;
-            return {
-              ...bill,
-              note: it.note || "",
-              // no need to compute isTracked — this page is ONLY tracked
-            };
-          })
-          .filter(Boolean);
-
-        setAllTrackedBills(merged);
-      } catch (err) {
-        if (err?.code !== "ERR_CANCELED" && err?.name !== "CanceledError") {
-          console.error("Error fetching tracked bills:", err);
-          setError("Failed to load tracked bills.");
-          setAllTrackedBills([]);
-        }
+        setLoading(true);
+        setErr(null);
+        const data = await getTrackedBills(userId); // returns tracker.bills array
+        if (!abort) setItems(Array.isArray(data) ? data : []);
+      } catch (e) {
+        if (!abort) setErr(e.message || "Failed to load tracked bills");
       } finally {
-        setLoading(false);
+        if (!abort) setLoading(false);
       }
     })();
 
-    return () => controller.abort();
-  }, [session?.user?.id]);
+    return () => {
+      abort = true;
+    };
+  }, [userId, status]);
 
-  // Compute filtered+sorted list without extra state/effect
-  const filteredSorted = useMemo(() => {
-    const next = (allTrackedBills || []).filter((b) => {
-      if (filters.title && b.title !== filters.title) return false;
-
-      if (filters.tag) {
-        const hasTag =
-          Array.isArray(b.tags) &&
-          b.tags.some(
-            (t) => t && (t._id?.toString?.() || t._id) === filters.tag
-          );
-        if (!hasTag) return false;
-      }
-
-      if (filters.status && b.status?.current_stage !== filters.status)
-        return false;
-
-      if (filters.hasNote === "yes" && !b.note?.trim()) return false;
-      if (filters.hasNote === "no" && b.note?.trim()) return false;
-
-      return true;
-    });
-
-    next.sort((a, b) => {
-      switch (filters.sort) {
-        case "title-asc":
-          return (a.title || "").localeCompare(b.title || "");
-        case "title-desc":
-          return (b.title || "").localeCompare(a.title || "");
-        case "date-asc":
-          return new Date(a.createdAt || 0) - new Date(b.createdAt || 0);
-        case "date-desc":
-          return new Date(b.createdAt || 0) - new Date(a.createdAt || 0);
-        case "none":
-        default:
-          return 0;
-      }
-    });
-
-    return next;
-  }, [filters, allTrackedBills]);
-
-  const handleResetFilters = () =>
-    setFilters({
-      title: "",
-      tag: "",
-      status: "",
-      hasNote: "any",
-      sort: "none",
-    });
-
-  const handleBillClick = (bill) => {
-    const id = normalizeId(bill._id);
-    router.push(`/user/tracker/bills/${id}`);
-  };
-
-  if (status === "loading" || loading || allTrackedBills === null)
-    return <Spinner />;
-  if (!session) return <p className="text-danger">You must be logged in.</p>;
-  if (error) return <p className="text-danger">{error}</p>;
+  if (status === "loading")
+    return (
+      <div className="p-4 text-sm text-gray-600">Checking your session…</div>
+    );
+  if (!userId)
+    return (
+      <div className="p-4 text-sm text-gray-600">
+        Please sign in to view your tracked bills.
+      </div>
+    );
 
   return (
-    <div className="w-full">
-      <h1 className="text-3xl font-bold text-center mb-6">
-        Your Tracked Bills
-      </h1>
+    <section className="py-8 space-y-6">
+      {/* match /app/bills/layout.js spacing */}
+      {/* :contentReference[oaicite:3]{index=3} */}
+      <header className="space-y-2">
+        <h1 className="text-3xl font-bold text-neutral-dark">Tracked Bills</h1>
+        <p className="text-base text-neutral-muted">
+          Your saved legislation and notes.
+        </p>
+      </header>
 
-      <div className="bg-white border border-neutral-light rounded-xl shadow-sm p-6 mb-12">
-        <TrackerBillsFilterBar
-          allBills={allTrackedBills}
-          filters={filters}
-          setFilters={setFilters}
-        />
+      <hr className="border-t border-neutral-light" />
+      {/* visual rhythm like untracked list */}
+      {/* :contentReference[oaicite:4]{index=4} */}
 
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mt-4">
-          <button
-            onClick={handleResetFilters}
-            className="text-sm text-neutral-dark hover:text-primary border border-neutral-light rounded-md px-4 py-2"
-          >
-            Reset Filters
-          </button>
-
-          <div className="flex gap-2">
-            <Link href="/bills">
-              <Button variant="secondary">Browse All Bills</Button>
-            </Link>
-            <Link href="/bills/advancedSearch">
-              <Button>Advanced Search</Button>
-            </Link>
-          </div>
+      {loading ? (
+        <p className="text-neutral-muted">Loading...</p>
+      ) : err ? (
+        <p className="text-danger">{err}</p>
+      ) : items.length === 0 ? (
+        <div className="rounded-2xl border p-6 bg-white text-sm text-gray-600">
+          You haven’t tracked any bills yet.
         </div>
-      </div>
-
-      <hr className="border-t border-neutral-light mb-12" />
-
-      {filteredSorted.length > 0 ? (
+      ) : (
         <div className="mt-12 grid grid-cols-1 md:grid-cols-2 gap-6">
-          {filteredSorted.map((bill) => {
-            const id = normalizeId(bill._id);
+          {/* same grid as untracked */}
+          {/* :contentReference[oaicite:5]{index=5} */}
+          {items.map((it) => {
+            const bill = typeof it.itemId === "object" ? it.itemId : null;
+            const billId = normalizeId(bill?._id || it.itemId);
+            const notes = it.generalNotes || "";
+            const linksCount = (it.links || []).length;
+            const attachmentsCount = (it.attachments || []).length;
+            const labelsCount = (it.labels || []).length;
+
             return (
               <div
-                key={id}
-                onClick={() => handleBillClick(bill)}
+                key={billId}
                 className="cursor-pointer"
+                onClick={() => handleBillClick(billId)}
               >
+                {/* Reuse your BillCard visual language */}
                 <BillCard
                   bill={{
-                    id,
-                    number: bill.number,
-                    title: bill.title,
-                    summary: bill.summary,
-                    tags: bill.tags?.map((t) => t.name),
-                    current_stage: bill.status?.current_stage,
-                    isTracked: true, // purely for consistent Card UI
+                    id: billId,
+                    number: bill?.number,
+                    title: bill?.title || "Untitled Bill",
+                    summary: bill?.summary,
+                    tags: Array.isArray(bill?.tags)
+                      ? bill.tags.map((t) => t.name || t)
+                      : [],
+                    current_stage: bill?.status?.current_stage,
+                    isTracked: true, // these are tracked by definition
                   }}
                 />
-                {bill.note?.trim() && (
-                  <p className="mt-2 italic text-sm text-neutral-dark border-l-4 border-blue-400 pl-4">
-                    {bill.note}
-                  </p>
-                )}
+
+                {/* Annotations footer: counts + snippet + actions */}
+                <div className="mt-3 flex flex-col gap-2">
+                  <InlineCountBadges
+                    links={linksCount}
+                    attachments={attachmentsCount}
+                    labels={labelsCount}
+                  />
+                  {notes ? (
+                    <p className="text-sm text-neutral-dark">
+                      <span className="font-semibold text-neutral-muted">
+                        Note:
+                      </span>{" "}
+                      {notes.slice(0, 160)}
+                      {notes.length > 160 ? "…" : ""}
+                    </p>
+                  ) : null}
+                  <div className="flex gap-2">
+                    <Link
+                      className="rounded-lg border px-3 py-1 text-sm"
+                      href={`/user/tracker/bills/${billId}`}
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      View
+                    </Link>
+                    <Link
+                      className="rounded-lg border px-3 py-1 text-sm"
+                      href={`/user/tracker/bills/${billId}/edit`}
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      Edit
+                    </Link>
+                  </div>
+                </div>
               </div>
             );
           })}
         </div>
-      ) : (
-        <p className="text-neutral-muted">
-          No tracked bills match your filters.
-        </p>
       )}
-    </div>
+    </section>
   );
 }
