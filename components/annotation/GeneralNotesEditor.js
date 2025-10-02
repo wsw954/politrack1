@@ -8,12 +8,14 @@ import { useEffect, useState } from "react";
  * - onChange: (newText) => void
  * - readOnly?: boolean
  * - maxLength?: number
+ * - autoSave?: boolean
  */
 export default function GeneralNotesEditor({
   value,
   onChange,
   readOnly = false,
   maxLength = 10000,
+  autoSave = false,
 }) {
   const [text, setText] = useState(value || "");
   useEffect(() => {
@@ -30,20 +32,26 @@ export default function GeneralNotesEditor({
         className="w-full min-h-[140px] rounded-xl border p-3"
         value={text}
         maxLength={maxLength}
-        onChange={(e) => setText(e.target.value)}
+        onChange={(e) => {
+          const v = e.target.value;
+          setText(v);
+          if (autoSave && typeof onChange === "function") onChange(v);
+        }}
         placeholder="Add your context, reminders, or takeaways…"
       />
       <div className="text-xs text-gray-500">
         {text.length}/{maxLength}
       </div>
-      <div className="flex justify-end">
-        <button
-          className="rounded-lg border px-3 py-1 text-sm"
-          onClick={() => onChange(text)}
-        >
-          Save
-        </button>
-      </div>
+      {!autoSave && (
+        <div className="flex justify-end">
+          <button
+            className="rounded-lg border px-3 py-1 text-sm"
+            onClick={() => onChange(text)}
+          >
+            Save
+          </button>
+        </div>
+      )}
     </div>
   );
 }

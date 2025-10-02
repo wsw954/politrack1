@@ -113,17 +113,11 @@ export default function ViewTrackedBillPage() {
       </div>
 
       <div className="grid gap-6">
-        <Section
-          title="General Notes"
-          hint="Your overall thoughts or reminders about this bill."
-        >
+        <Section title="General Notes">
           <GeneralNotesEditor value={notes} readOnly onChange={() => {}} />
         </Section>
 
-        <Section
-          title="Annotations Summary"
-          hint="A quick snapshot of your saved context for this bill."
-        >
+        <Section title="Annotations Summary">
           <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
             <InlineCountBadges
               links={summary.linksCount}

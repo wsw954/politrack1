@@ -2,6 +2,7 @@
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth/options";
 import { dbConnect } from "@/config/db";
+import mongoose from "mongoose";
 import User from "@/models/User";
 import Bill from "@/models/Bill";
 import Politician from "@/models/Politician";
@@ -70,60 +71,124 @@ export async function GET(req, context) {
 // POST: Track a new bill (seed optional annotations)
 export async function POST(req, context) {
   const session = await getServerSession(authOptions);
-  if (!session)
+  if (!session) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-
-  const { id } = context.params;
-  if (String(session.user.id) !== String(id)) {
-    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
 
-  const {
-    itemId,
-    generalNotes = "",
-    links = [],
-    attachments = [],
-    labels = [],
-  } = await req.json();
-  if (!itemId) {
-    return NextResponse.json({ error: "Missing itemId" }, { status: 400 });
+  const { id: userId } = await context.params;
+  if (String(session.user.id) !== String(userId)) {
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
 
   try {
     await dbConnect();
 
-    const bill = await Bill.findById(itemId);
-    if (!bill) {
+    const body = await req.json();
+
+    // --- read payload (support both new and old shapes) ---
+    const itemId = body.itemId;
+    const annotations = body.annotations || {};
+
+    const generalNotes =
+      typeof annotations.generalNotes === "string"
+        ? annotations.generalNotes
+        : typeof body.generalNotes === "string"
+        ? body.generalNotes
+        : "";
+
+    const addLinks = Array.isArray(annotations.addLinks)
+      ? annotations.addLinks
+      : Array.isArray(body.links)
+      ? body.links
+      : [];
+
+    const addLabels = Array.isArray(annotations.addLabels)
+      ? annotations.addLabels
+      : Array.isArray(body.labels)
+      ? body.labels
+      : [];
+
+    // --- basic validation ---
+    if (!itemId) {
+      return NextResponse.json({ error: "Missing itemId" }, { status: 400 });
+    }
+    if (!mongoose.isValidObjectId(itemId)) {
+      return NextResponse.json({ error: "Invalid bill id" }, { status: 400 });
+    }
+
+    // ensure bill exists
+    const billExists = await Bill.exists({ _id: itemId });
+    if (!billExists) {
       return NextResponse.json({ error: "Bill not found" }, { status: 404 });
     }
 
-    const user = await User.findById(id);
-    const alreadyTracked = user.tracker.bills.some(
-      (entry) => String(entry.itemId) === String(itemId)
-    );
-
-    if (alreadyTracked) {
+    // prevent duplicates
+    const dup = await User.exists({
+      _id: userId,
+      "tracker.bills.itemId": itemId,
+    });
+    if (dup) {
       return NextResponse.json(
         { error: "Bill already tracked" },
-        { status: 400 }
+        { status: 409 }
       );
     }
 
-    user.tracker.bills.push({
-      itemId,
-      itemType: "Bill",
+    // --- sanitize arrays (keep only allowed fields) ---
+    const safeLinks = addLinks
+      .filter((l) => l && typeof l.url === "string" && l.url.trim())
+      .map((l) => ({
+        url: String(l.url).trim(),
+        title: typeof l.title === "string" ? l.title : undefined,
+        note: typeof l.note === "string" ? l.note : undefined,
+      }));
+
+    const safeLabels = addLabels
+      .filter((x) => x && typeof x.label === "string" && x.label.trim())
+      .map((x) => ({
+        label: String(x.label).trim(),
+        note: typeof x.note === "string" ? x.note : undefined,
+      }));
+
+    const now = new Date();
+    const newTracked = {
+      itemId: mongoose.Types.ObjectId.createFromHexString(String(itemId)),
+      itemType: "Bill", // keep for parity with your existing subdocs
       generalNotes,
-      links,
-      attachments,
-      labels,
+      links: safeLinks,
+      attachments: [], // MVP: none on create
+      labels: safeLabels,
       provisionAnnotations: [],
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    });
+      createdAt: now,
+      updatedAt: now,
+    };
 
-    await user.save();
+    // atomic push
+    const res = await User.updateOne(
+      { _id: userId },
+      { $push: { "tracker.bills": newTracked } }
+    );
 
-    return NextResponse.json({ message: "Bill tracked" }, { status: 201 });
+    if (!res.modifiedCount) {
+      return NextResponse.json(
+        { error: "Unable to track bill" },
+        { status: 500 }
+      );
+    }
+
+    return NextResponse.json(
+      {
+        ok: true,
+        itemId: String(itemId),
+        created: {
+          generalNotes: newTracked.generalNotes,
+          linksCount: newTracked.links.length,
+          labelsCount: newTracked.labels.length,
+        },
+        message: "Bill tracked",
+      },
+      { status: 201 }
+    );
   } catch (err) {
     console.error("POST /tracker/bills error:", err);
     return NextResponse.json(

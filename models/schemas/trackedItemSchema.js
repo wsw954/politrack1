@@ -74,7 +74,6 @@ const trackedItemSchema = new mongoose.Schema(
     itemType: {
       type: String,
       required: true,
-      // You said we’re focusing on Bills & Politicians now; leaving "Tag" here is fine for future use.
       enum: ["Politician", "Bill", "Tag"],
     },
 

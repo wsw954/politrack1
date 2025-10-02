@@ -4,24 +4,39 @@ import { NextResponse } from "next/server";
 import { requireAdmin } from "@/lib/auth/api-protect";
 
 import Bill from "@/models/Bill";
-import Politician from "@/models/Politician"; // ✅ Needed for .populate("sponsor") and .populate("co_sponsors")
-import Tag from "@/models/Tag"; // ✅ Needed for .populate("tags")
+import Politician from "@/models/Politician";
+import Tag from "@/models/Tag";
 
 export async function GET(req, { params }) {
   try {
     await dbConnect();
     const { id } = await params;
 
-    const bill = await Bill.findById(id)
+    const bill = await Bill.findById(id, {
+      provisions: 1,
+      number: 1,
+      title: 1,
+      type: 1,
+      session: 1,
+      sponsor: 1,
+      co_sponsors: 1,
+      tags: 1,
+      status: 1,
+      effective_date: 1,
+    })
       .populate("sponsor", "first_name last_name chamber party")
       .populate("co_sponsors", "first_name last_name chamber party")
-      .populate("tags", "name");
-
+      .populate("tags", "name")
+      .lean();
     if (!bill) {
       return NextResponse.json({ message: "Bill not found" }, { status: 404 });
     }
 
-    return NextResponse.json(bill, { status: 200 });
+    // Add count without returning full provisions array
+    const provisionCount = bill.provisions ? bill.provisions.length : 0;
+    delete bill.provisions;
+
+    return NextResponse.json({ ...bill, provisionCount }, { status: 200 });
   } catch (error) {
     console.error("❌ API ERROR:", error);
     return NextResponse.json({ message: "Server Error" }, { status: 500 });

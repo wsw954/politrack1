@@ -8,6 +8,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth/options";
 import Link from "next/link";
 import AddToTrackerButton from "@/components/user/AddToTrackerButton";
+import ViewProvisionsButton from "@/components/provisions/ViewProvisionsButton";
 import UnloggedTrackerPrompt from "@/components/user/UnloggedTrackerPrompt";
 
 export default async function BillDetailPage({ params }) {
@@ -22,7 +23,8 @@ export default async function BillDetailPage({ params }) {
   if (!res.ok) return notFound();
 
   const bill = await res.json();
-
+  console.log(id);
+  console.log(bill._id);
   return (
     <section className="py-6 space-y-6">
       <h1 className="text-3xl font-bold mb-2">{bill.title}</h1>
@@ -52,21 +54,16 @@ export default async function BillDetailPage({ params }) {
           <UnloggedTrackerPrompt label="Bill" />
         )}
       </div>
+      <div className="mt-4">
+        <ViewProvisionsButton
+          billId={bill._id}
+          provisionCount={bill.provisionCount}
+        />
+      </div>
 
       <section className="mt-6">
         <h2 className="text-xl font-semibold">Summary</h2>
         <p className="mt-2">{bill.summary || "No summary available."}</p>
-      </section>
-
-      <section className="mt-6">
-        <h2 className="text-xl font-semibold">Key Provisions</h2>
-        <ul className="list-disc list-inside mt-2 space-y-1">
-          {bill.provisions.map((prov, index) => (
-            <li key={index}>
-              <strong>{prov.heading}</strong>: {prov.summary || "No summary."}
-            </li>
-          ))}
-        </ul>
       </section>
 
       <section className="mt-6">

@@ -31,13 +31,35 @@ export async function GET(req) {
   }
 
   try {
-    const count = await Bill.countDocuments(filters);
-    const bills = await Bill.find(filters)
+    const bills = await Bill.find(filters, {
+      number: 1,
+      title: 1,
+      type: 1,
+      session: 1,
+      sponsor: 1,
+      co_sponsors: 1,
+      tags: 1,
+      status: 1,
+      effective_date: 1,
+      source_url: 1,
+      updatedAt: 1,
+      "provisions._id": 1, // << lightweight handle for provisionCount
+    })
       .populate("tags", "name") // populate tags with their names
       .populate("sponsor", "first_name last_name")
-      .populate("co_sponsors", "first_name last_name");
+      .populate("co_sponsors", "first_name last_name")
+      .lean();
 
-    return NextResponse.json(bills);
+    // Add provisionCount and omit the provisions array from the list payload
+    const result = bills.map((b) => {
+      const provisionCount = Array.isArray(b.provisions)
+        ? b.provisions.length
+        : 0;
+      const { provisions, ...rest } = b;
+      return { ...rest, provisionCount };
+    });
+
+    return NextResponse.json(result);
   } catch (error) {
     return NextResponse.json(
       { error: "Failed to fetch bills", details: error.message },

@@ -13,7 +13,7 @@ export async function GET(_req, { params }) {
   if (!session)
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const { id: userId } = params;
+  const { id: userId } = await params;
   if (String(session.user.id) !== String(userId)) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }

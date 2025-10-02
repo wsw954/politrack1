@@ -12,7 +12,7 @@ const billSchema = new mongoose.Schema(
       trim: true,
     },
     title: { type: String, required: true },
-    type: { type: String, required: true, unique: true },
+    type: { type: String, required: true, trim: true },
     session: {
       type: String, // or Number if you prefer
       required: true,

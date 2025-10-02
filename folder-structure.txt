@@ -20,6 +20,9 @@
 │   │   │       └── route.js
 │   │   ├── bills
 │   │   │   ├── [id]
+│   │   │   │   ├── provisions
+│   │   │   │   │   ├── [pid]
+│   │   │   │   │   └── route.js
 │   │   │   │   └── route.js
 │   │   │   └── route.js
 │   │   ├── politicians
@@ -63,7 +66,11 @@
 │   │   ├── [id]
 │   │   │   ├── edit
 │   │   │   │   └── page.js
-│   │   │   └── page.js
+│   │   │   ├── page.js
+│   │   │   └── provisions
+│   │   │       ├── [pid]
+│   │   │       │   └── page.js
+│   │   │       └── page.js
 │   │   ├── layout.js
 │   │   ├── new
 │   │   │   └── page.js
@@ -102,7 +109,8 @@
 │           │   ├── [id]
 │           │   │   ├── edit
 │           │   │   │   └── page.js
-│           │   │   └── page.js
+│           │   │   ├── page.js
+│           │   │   └── provisions
 │           │   └── page.js
 │           ├── page.js
 │           ├── politicians
@@ -156,7 +164,8 @@
 │   ├── providers
 │   │   └── AuthProvider.js
 │   ├── provisions
-│   │   └── ProvisionsDrawer.js
+│   │   ├── ProvisionsDrawer.js
+│   │   └── ViewProvisionsButton.js
 │   ├── tags
 │   │   └── TagCard.js
 │   ├── ui
@@ -175,6 +184,7 @@
 │   │   └── Spinner.js
 │   └── user
 │       ├── ActivityCard.js
+│       ├── AddAnnotationsDialog.js
 │       ├── AddToTrackerButton.js
 │       ├── SettingsForm.js
 │       ├── TrackedPoliticianCard.js
@@ -233,6 +243,8 @@
 │   │       └── frank_wilson.jpg
 │   ├── vercel.svg
 │   └── window.svg
+├── scripts
+│   └── addProvisionIds.mjs
 ├── store
 │   ├── index.js
 │   └── slices
@@ -242,11 +254,13 @@
 ├── tailwind.config.js
 ├── testUtilFiles
 │   ├── bills
+│   │   ├── Bills2Schema.js
 │   │   ├── deleteBill.mjs
 │   │   ├── getAllBills.mjs
 │   │   ├── getBillById.mjs
 │   │   ├── patchBill.mjs
-│   │   └── postNewBill.mjs
+│   │   ├── postNewBill.mjs
+│   │   └── provisionsSchema2.js
 │   ├── hashpassword.mjs
 │   ├── politicians
 │   │   ├── deletePolitician.mjs

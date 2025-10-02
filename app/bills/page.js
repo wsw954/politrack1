@@ -89,12 +89,10 @@ export default function BillListPage() {
   }, [filters]); // watch the entire filters object:
 
   const handleBillClick = (bill) => {
-    console.log(bill);
     const id = normalizeId(bill._id);
     if (bill.isTracked && session?.user) {
       router.push(`/user/tracker/bills/${id}`);
     } else {
-      console.log(id);
       router.push(`/bills/${id}`);
     }
   };
@@ -172,6 +170,7 @@ export default function BillListPage() {
                     tags: bill.tags.map((tag) => tag.name),
                     current_stage: bill.status?.current_stage,
                     isTracked: bill.isTracked,
+                    provisionCount: bill.provisionCount ?? 0,
                   }}
                 />
               </div>
