@@ -30,11 +30,14 @@ const trimAllStringValues = (input) => {
  */
 const legalTextItemSchema = new Schema(
   {
-    section: { type: String, trim: true, required: true }, // e.g. "784.046(1)(a)"
+    section: { type: String, trim: true }, // e.g. "784.046(1)(a)"
     statute_ref: { type: String, trim: true }, // optional
     title: { type: String, trim: true }, // optional
     text: { type: String, trim: true, required: true }, // required
-    source_page: { type: Number }, // optional
+    source_page: {
+      type: Number,
+      set: (v) => (v === "" || v == null ? undefined : Number(v)),
+    }, // optional
 
     // Flexible bucket for additional string properties
     // Example usage in a document:
@@ -43,7 +46,11 @@ const legalTextItemSchema = new Schema(
       type: Map,
       of: {
         type: String,
-        set: trimIfString, // ensure every value is trimmed
+        set: (v) => {
+          if (typeof v !== "string") return v;
+          const t = v.trim();
+          return t.length ? t : undefined; // drops empty strings
+        },
       },
       default: undefined, // omit if empty
     },

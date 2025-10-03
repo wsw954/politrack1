@@ -22,6 +22,7 @@
 │   │   │   ├── [id]
 │   │   │   │   ├── provisions
 │   │   │   │   │   ├── [pid]
+│   │   │   │   │   │   └── route.js
 │   │   │   │   │   └── route.js
 │   │   │   │   └── route.js
 │   │   │   └── route.js
@@ -164,6 +165,8 @@
 │   ├── providers
 │   │   └── AuthProvider.js
 │   ├── provisions
+│   │   ├── LegalTextItem.js
+│   │   ├── ProvisionCard.js
 │   │   ├── ProvisionsDrawer.js
 │   │   └── ViewProvisionsButton.js
 │   ├── tags
@@ -254,13 +257,11 @@
 ├── tailwind.config.js
 ├── testUtilFiles
 │   ├── bills
-│   │   ├── Bills2Schema.js
 │   │   ├── deleteBill.mjs
 │   │   ├── getAllBills.mjs
 │   │   ├── getBillById.mjs
 │   │   ├── patchBill.mjs
-│   │   ├── postNewBill.mjs
-│   │   └── provisionsSchema2.js
+│   │   └── postNewBill.mjs
 │   ├── hashpassword.mjs
 │   ├── politicians
 │   │   ├── deletePolitician.mjs

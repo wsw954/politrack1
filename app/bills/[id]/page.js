@@ -23,8 +23,6 @@ export default async function BillDetailPage({ params }) {
   if (!res.ok) return notFound();
 
   const bill = await res.json();
-  console.log(id);
-  console.log(bill._id);
   return (
     <section className="py-6 space-y-6">
       <h1 className="text-3xl font-bold mb-2">{bill.title}</h1>

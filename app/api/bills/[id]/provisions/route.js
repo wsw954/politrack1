@@ -13,8 +13,9 @@ export async function GET(req, { params }) {
       "provisions.section_number": 1,
       "provisions.heading": 1, // optional but useful for lists
       "provisions.summary": 1,
-      "provisions.type": 1,
+      "provisions.why_it_matters": 1,
       "provisions.tags": 1,
+      "provisions.type": 1,
       "provisions.legal_text._id": 1, // tiny; lets us count without big text
     }) // populate provision-level tags to show names in the list
       .populate({ path: "provisions.tags", select: "name" })
@@ -28,8 +29,9 @@ export async function GET(req, { params }) {
       section_number: p.section_number,
       heading: p.heading, // remove if you truly only want section_number/summary/type/tags
       summary: p.summary ?? "",
-      type: p.type ?? "standard",
+      why_it_matters: p.why_it_matters,
       tags: Array.isArray(p.tags) ? p.tags.map((t) => t?.name ?? t) : [],
+      type: p.type ?? "standard",
       legalTextCount: Array.isArray(p.legal_text) ? p.legal_text.length : 0,
     }));
 

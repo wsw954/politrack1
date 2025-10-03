@@ -24,13 +24,6 @@ export default function ProvisionCard({ provision }) {
       </h2>
       {heading && <p className="text-sm text-neutral-dark mt-1">{heading}</p>}
 
-      {/* Legal text count */}
-      <div className="mt-2">
-        <span className="inline-flex items-center rounded-full px-2 py-1 text-xs font-semibold bg-info-light text-info-dark">
-          Legal Text Items: {legalTextCount ?? 0}
-        </span>
-      </div>
-
       {/* Summary */}
       <p className="mt-3 text-sm text-neutral-dark">
         <span className="font-semibold text-neutral-muted">Summary:</span>{" "}
@@ -59,6 +52,13 @@ export default function ProvisionCard({ provision }) {
           <span className="font-semibold text-neutral-muted">Type:</span> {type}
         </p>
       )}
+
+      {/* Legal text count */}
+      <div className="mt-2">
+        <span className="inline-flex items-center rounded-full px-2 py-1 text-xs font-semibold bg-info-light text-info-dark">
+          Legal Text Items: {legalTextCount ?? 0}
+        </span>
+      </div>
     </div>
   );
 }

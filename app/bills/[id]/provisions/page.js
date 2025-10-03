@@ -4,6 +4,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useParams } from "next/navigation";
+import Link from "next/link";
 import ProvisionCard from "@/components/provisions/ProvisionCard";
 
 export default function ProvisionsListPage() {
@@ -45,9 +46,13 @@ export default function ProvisionsListPage() {
         <div className="mt-12 grid grid-cols-1 md:grid-cols-2 gap-6">
           {provisions.length > 0 ? (
             provisions.map((prov) => (
-              <div key={prov._id} className="cursor-pointer">
+              <Link
+                key={prov._id}
+                className="cursor-pointer"
+                href={`/bills/${id}/provisions/${prov._id}`}
+              >
                 <ProvisionCard provision={prov} />
-              </div>
+              </Link>
             ))
           ) : (
             <p className="text-neutral-muted">
