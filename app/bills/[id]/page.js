@@ -6,7 +6,6 @@ import { notFound } from "next/navigation";
 import { normalizeId } from "@/utils/normalizeId";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth/options";
-import Link from "next/link";
 import AddToTrackerButton from "@/components/user/AddToTrackerButton";
 import ViewProvisionsButton from "@/components/provisions/ViewProvisionsButton";
 import UnloggedTrackerPrompt from "@/components/user/UnloggedTrackerPrompt";
@@ -25,8 +24,10 @@ export default async function BillDetailPage({ params }) {
   const bill = await res.json();
   return (
     <section className="py-6 space-y-6">
-      <h1 className="text-3xl font-bold mb-2">{bill.title}</h1>
-
+      <h3 className="text-3xl font-bold mb-2">{bill.title}</h3>
+      <p className="text-sm text-gray-800">
+        <span className="font-medium">Bill Number:</span> {bill.number}
+      </p>
       <p className="text-neutral-muted text-sm mb-1">
         Last Updated: {bill.updatedAt || "Unknown"}
       </p>
@@ -51,12 +52,6 @@ export default async function BillDetailPage({ params }) {
         ) : (
           <UnloggedTrackerPrompt label="Bill" />
         )}
-      </div>
-      <div className="mt-4">
-        <ViewProvisionsButton
-          billId={bill._id}
-          provisionCount={bill.provisionCount}
-        />
       </div>
 
       <section className="mt-6">
@@ -86,6 +81,12 @@ export default async function BillDetailPage({ params }) {
         <h2 className="text-xl font-semibold">Sponsor</h2>
         <SponsorCard sponsor={bill.sponsor} />
       </section>
+      <div className="mt-4">
+        <ViewProvisionsButton
+          billId={bill._id}
+          provisionCount={bill.provisionCount}
+        />
+      </div>
     </section>
   );
 }

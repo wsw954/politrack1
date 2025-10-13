@@ -6,6 +6,7 @@ import Tag from "@/models/Tag";
 import Politician from "@/models/Politician";
 import { requireAdmin } from "@/lib/auth/api-protect";
 import mongoose from "mongoose"; // at top
+import FilterBar from "@/components/bills/FilterBar";
 
 export async function GET(req) {
   await dbConnect();
@@ -22,7 +23,7 @@ export async function GET(req) {
   }
 
   //Filter using ObjectId string
-  if (tag) {
+  if (tag && mongoose.Types.ObjectId.isValid(tag)) {
     filters.tags = { $in: [new mongoose.Types.ObjectId(tag)] };
   }
 
@@ -44,14 +45,14 @@ export async function GET(req) {
       source_url: 1,
       updatedAt: 1,
       "provisions._id": 1, // << lightweight handle for provisionCount
+      summary: 1,
     })
       .populate("tags", "name") // populate tags with their names
       .populate("sponsor", "first_name last_name")
-      .populate("co_sponsors", "first_name last_name")
       .lean();
 
     // Add provisionCount and omit the provisions array from the list payload
-    const result = bills.map((b) => {
+    const result = (bills ?? []).map((b) => {
       const provisionCount = Array.isArray(b.provisions)
         ? b.provisions.length
         : 0;

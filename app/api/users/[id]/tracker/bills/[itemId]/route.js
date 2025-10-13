@@ -59,7 +59,7 @@ export async function GET(req, context) {
         },
       ])
       .lean();
-    console.log(bill);
+
     if (!bill)
       return NextResponse.json({ error: "Bill not found" }, { status: 404 });
 

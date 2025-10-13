@@ -7,7 +7,7 @@ import { useUserId } from "@/lib/useUserId";
 import { getTrackedBill } from "@/lib/trackerClient";
 import SponsorCard from "@/components/bills/SponsorCard";
 import BillCard from "@/components/bills/BillCard";
-import PageHeader from "@/components/ui/PageHeader";
+import ViewProvisionsButton from "@/components/provisions/ViewProvisionsButton";
 import Section from "@/components/annotation/Section";
 import GeneralNotesEditor from "@/components/annotation/GeneralNotesEditor";
 import InlineCountBadges from "@/components/annotation/InlineCountBadges";
@@ -57,6 +57,7 @@ export default function ViewTrackedBillPage() {
   const attachments = data?.attachments || [];
   const labels = data?.labels || [];
   const provisionAnns = data?.provisionAnnotations || [];
+  const provisionsCount = provisionAnns.length;
 
   // ✅ useMemo is now called on EVERY render (even while loading)
   const summary = useMemo(() => {
@@ -64,9 +65,9 @@ export default function ViewTrackedBillPage() {
       linksCount: links.length,
       attachmentsCount: attachments.length,
       labelsCount: labels.length,
-      provisionsAnnotatedCount: provisionAnns.length,
+      provisionsAnnotatedCount: provisionsCount,
     };
-  }, [links, attachments, labels, provisionAnns]);
+  }, [links, attachments, labels, provisionsCount]);
 
   // ---- render states (these are fine AFTER all hooks above) ----
   if (status === "loading")
@@ -87,11 +88,6 @@ export default function ViewTrackedBillPage() {
 
   return (
     <section className="py-8 space-y-6">
-      <PageHeader
-        title={bill.title || "Tracked Bill"}
-        subtitle={[bill.number, bill.session].filter(Boolean).join(" • ")}
-      />
-
       <div className="rounded-2xl border p-4 bg-white">
         <BillCard
           bill={{
@@ -104,8 +100,16 @@ export default function ViewTrackedBillPage() {
               : [],
             current_stage: bill?.status?.current_stage,
             isTracked: true,
+            provisionCount: bill?.provisions?.length,
           }}
         />
+        <div className="mt-4">
+          <ViewProvisionsButton
+            billId={billId}
+            provisionCount={bill?.provisions?.length ?? provisionsCount}
+          />
+        </div>
+
         <section className="mt-6">
           <h2 className="text-xl font-semibold">Sponsor</h2>
           <SponsorCard sponsor={bill.sponsor} />

@@ -31,7 +31,21 @@ export default function BillListPage() {
     const fetchAllBills = async () => {
       try {
         const res = await fetch("/api/bills");
+        if (!res.ok) {
+          const errJson = await res.json().catch(() => ({}));
+          console.error("Failed to fetch all bills", errJson);
+          setError("Failed to fetch bills");
+          setAllBills([]);
+          return;
+        }
         const data = await res.json();
+
+        if (!Array.isArray(data)) {
+          console.error("Unexpected bills payload", data);
+          setError("Failed to fetch bills");
+          setAllBills([]);
+          return;
+        }
         const trackedIds = await fetchTrackedIds("bills");
         const merged = data.map((bill) => ({
           ...bill,
@@ -167,7 +181,7 @@ export default function BillListPage() {
                     number: bill.number,
                     title: bill.title,
                     summary: bill.summary,
-                    tags: bill.tags.map((tag) => tag.name),
+                    tags: (bill.tags ?? []).map((tag) => tag.name),
                     current_stage: bill.status?.current_stage,
                     isTracked: bill.isTracked,
                     provisionCount: bill.provisionCount ?? 0,
