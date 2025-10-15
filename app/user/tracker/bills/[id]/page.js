@@ -1,19 +1,22 @@
 //app/user/tracker/bills/[id]/page.js
+
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
-import { useParams } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useParams, useRouter } from "next/navigation";
 import { useUserId } from "@/lib/useUserId";
 import { getTrackedBill } from "@/lib/trackerClient";
-import SponsorCard from "@/components/bills/SponsorCard";
 import BillCard from "@/components/bills/BillCard";
 import ViewProvisionsButton from "@/components/provisions/ViewProvisionsButton";
+import SponsorCard from "@/components/bills/SponsorCard";
 import Section from "@/components/annotation/Section";
-import GeneralNotesEditor from "@/components/annotation/GeneralNotesEditor";
-import InlineCountBadges from "@/components/annotation/InlineCountBadges";
+import AnchorJumpBar from "@/components/ui/AnchorJumpBar";
+import ProvisionSummary from "@/components/provisions/ProvisionSummary";
+import BillAnnotationsCard from "@/components/annotation/BillAnnotationsCard";
 
 export default function ViewTrackedBillPage() {
   const params = useParams();
+  const router = useRouter();
   const billId = params?.id;
   const { userId, status } = useUserId();
 
@@ -27,16 +30,15 @@ export default function ViewTrackedBillPage() {
       setLoading(false);
       return;
     }
-
     let abort = false;
     (async () => {
       try {
         setLoading(true);
         setErr(null);
+        // includeProvisions so ProvisionSummary can show names/sections
         const res = await getTrackedBill(userId, billId, {
           includeProvisions: true,
         });
-
         if (!abort) setData(res);
       } catch (e) {
         if (!abort) setErr(e.message || "Failed to load tracked bill");
@@ -44,50 +46,45 @@ export default function ViewTrackedBillPage() {
         if (!abort) setLoading(false);
       }
     })();
-
     return () => {
       abort = true;
     };
   }, [userId, status, billId]);
 
-  // ---- derive values with safe defaults (so hooks can run every render) ----
+  // Derived (safe) values
   const bill = data?.itemId || {};
   const notes = data?.generalNotes || "";
   const links = data?.links || [];
   const attachments = data?.attachments || [];
   const labels = data?.labels || [];
   const provisionAnns = data?.provisionAnnotations || [];
-  const provisionsCount = provisionAnns.length;
 
-  // ✅ useMemo is now called on EVERY render (even while loading)
-  const summary = useMemo(() => {
-    return {
-      linksCount: links.length,
-      attachmentsCount: attachments.length,
-      labelsCount: labels.length,
-      provisionsAnnotatedCount: provisionsCount,
-    };
-  }, [links, attachments, labels, provisionsCount]);
-
-  // ---- render states (these are fine AFTER all hooks above) ----
-  if (status === "loading")
+  // Render states
+  if (status === "loading") {
     return (
       <div className="p-4 text-sm text-gray-600">Checking your session…</div>
     );
-  if (!userId)
+  }
+  if (!userId) {
     return (
       <div className="p-4 text-sm text-gray-600">
         Please sign in to view this page.
       </div>
     );
-  if (loading)
+  }
+  if (loading) {
     return <div className="p-4 text-sm text-gray-600">Loading bill…</div>;
-  if (err) return <div className="p-4 text-sm text-red-600">{err}</div>;
-  if (!data)
+  }
+  if (err) {
+    return <div className="p-4 text-sm text-red-600">{err}</div>;
+  }
+  if (!data) {
     return <div className="p-4 text-sm text-gray-600">Bill not found.</div>;
+  }
 
   return (
     <section className="py-8 space-y-6">
+      {/* Header card with bill meta */}
       <div className="rounded-2xl border p-4 bg-white">
         <BillCard
           bill={{
@@ -105,45 +102,52 @@ export default function ViewTrackedBillPage() {
         />
         <div className="mt-4">
           <ViewProvisionsButton
-            billId={billId}
-            provisionCount={bill?.provisions?.length ?? provisionsCount}
+            billId={bill._id}
+            provisionCount={bill?.provisions?.length}
           />
         </div>
 
+        {/* Sponsor (compact) */}
         <section className="mt-6">
-          <h2 className="text-xl font-semibold">Sponsor</h2>
+          <h2 className="text-lg font-semibold">Sponsor</h2>
           <SponsorCard sponsor={bill.sponsor} />
         </section>
       </div>
 
-      <div className="grid gap-6">
-        <Section title="General Notes">
-          <GeneralNotesEditor value={notes} readOnly onChange={() => {}} />
-        </Section>
+      {/* Jump bar to sections inside the annotations card & provisions summary */}
+      <AnchorJumpBar
+        items={[
+          { id: "notes", label: "Notes" },
+          { id: "links", label: "Links" },
+          { id: "labels", label: "Labels" },
+          { id: "attachments", label: "Attachments" },
+          { id: "provisions", label: "Provisions" },
+        ]}
+      />
 
-        <Section title="Annotations Summary">
-          <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-            <InlineCountBadges
-              links={summary.linksCount}
-              attachments={summary.attachmentsCount}
-              labels={summary.labelsCount}
-            />
-            <div className="text-xs text-gray-600">
-              {summary.provisionsAnnotatedCount} provision
-              {summary.provisionsAnnotatedCount === 1 ? "" : "s"} annotated
-            </div>
-          </div>
+      {/* Whole-bill Annotations, wrapped in a card with its own Edit button */}
+      <BillAnnotationsCard
+        notes={notes}
+        links={links}
+        labels={labels}
+        attachments={attachments}
+        editHref={`/user/tracker/bills/${billId}/edit`}
+      />
 
-          <div className="mt-3">
-            <a
-              href={`/user/tracker/bills/${billId}/edit`}
-              className="inline-block rounded-lg border px-3 py-1 text-sm"
-            >
-              Manage annotations
-            </a>
-          </div>
-        </Section>
-      </div>
+      {/* Provision summary + CTA */}
+      <Section title="">
+        <ProvisionSummary bill={bill} provisionAnns={provisionAnns} />
+        <div className="mt-3">
+          <button
+            className="rounded-lg border px-3 py-1 text-sm"
+            onClick={() =>
+              router.push(`/user/tracker/bills/${billId}/provisions`)
+            }
+          >
+            Annotated Provisions
+          </button>
+        </div>
+      </Section>
     </section>
   );
 }

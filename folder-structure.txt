@@ -108,6 +108,8 @@
 │       └── tracker
 │           ├── bills
 │           │   ├── [id]
+│           │   │   ├── annotations
+│           │   │   │   └── page.js
 │           │   │   ├── edit
 │           │   │   │   └── page.js
 │           │   │   ├── page.js
@@ -129,6 +131,7 @@
 ├── components
 │   ├── annotation
 │   │   ├── AttachmentGallery.js
+│   │   ├── BillAnnotationsCard.js
 │   │   ├── GeneralNotesEditor.js
 │   │   ├── InlineCountBadges.js
 │   │   ├── LabelsChips.js
@@ -167,11 +170,14 @@
 │   ├── provisions
 │   │   ├── LegalTextItem.js
 │   │   ├── ProvisionCard.js
+│   │   ├── ProvisionSummary.js
 │   │   ├── ProvisionsDrawer.js
 │   │   └── ViewProvisionsButton.js
 │   ├── tags
 │   │   └── TagCard.js
 │   ├── ui
+│   │   ├── Accordion.js
+│   │   ├── AnchorJumpBar.js
 │   │   ├── Button.js
 │   │   ├── Card.js
 │   │   ├── Dropdown.js

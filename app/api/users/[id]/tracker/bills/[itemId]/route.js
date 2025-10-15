@@ -46,7 +46,7 @@ export async function GET(req, context) {
       summary: 1,
       tags: 1,
       sponsors: 1,
-      ...(includeProvisions ? { provisions: 1 } : {}),
+      provisions: 1, // always load to compute count; we’ll omit array unless requested,
     };
 
     const bill = await Bill.findById(billId, billProjection)
@@ -74,6 +74,10 @@ export async function GET(req, context) {
     }
 
     // 4) Shape the response for your page
+    const provisionCount = Array.isArray(bill.provisions)
+      ? bill.provisions.length
+      : 0;
+
     return NextResponse.json(
       {
         itemId: {
@@ -85,6 +89,7 @@ export async function GET(req, context) {
           summary: bill.summary,
           tags: bill.tags,
           sponsor: bill.sponsor,
+          provisionCount,
           ...(includeProvisions ? { provisions: bill.provisions } : {}),
         },
         generalNotes: tracked.generalNotes || "",
