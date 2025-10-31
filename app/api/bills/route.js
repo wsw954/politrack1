@@ -1,86 +1,132 @@
-//app/api/bills/route.js
+// /app/api/bills/route.js
 import { NextResponse } from "next/server";
 import dbConnect from "@/config/db";
 import Bill from "@/models/Bill";
-import Tag from "@/models/Tag";
-import Politician from "@/models/Politician";
 import { requireAdmin } from "@/lib/auth/api-protect";
-import mongoose from "mongoose"; // at top
-import FilterBar from "@/components/bills/FilterBar";
 
+// Helpers
+function parseNumber(value, fallback) {
+  const n = Number(value);
+  return Number.isFinite(n) && n > 0 ? n : fallback;
+}
+
+function parseSort(sortStr) {
+  // Accepts e.g. "-updatedAt", "session", "-session,title"
+  // Returns a Mongo sort object: { updatedAt: -1 } etc.
+  if (!sortStr) return { updatedAt: -1 };
+  const parts = String(sortStr)
+    .split(",")
+    .map((s) => s.trim())
+    .filter(Boolean);
+  const sort = {};
+  for (const p of parts) {
+    if (p.startsWith("-")) sort[p.slice(1)] = -1;
+    else sort[p] = 1;
+  }
+  return Object.keys(sort).length ? sort : { updatedAt: -1 };
+}
+
+// GET /api/bills  -> List bills (lean payload + provisionCount), with pagination & sorting
 export async function GET(req) {
-  await dbConnect();
-
-  const { searchParams } = new URL(req.url);
-  const filters = {};
-
-  const title = searchParams.get("title");
-  const tag = searchParams.get("tag");
-  const status = searchParams.get("status");
-
-  if (title) {
-    filters.title = { $regex: title, $options: "i" };
-  }
-
-  //Filter using ObjectId string
-  if (tag && mongoose.Types.ObjectId.isValid(tag)) {
-    filters.tags = { $in: [new mongoose.Types.ObjectId(tag)] };
-  }
-
-  if (status) {
-    filters["status.current_stage"] = status;
-  }
-
   try {
-    const bills = await Bill.find(filters, {
-      number: 1,
-      title: 1,
-      type: 1,
-      session: 1,
-      sponsor: 1,
-      co_sponsors: 1,
-      tags: 1,
-      status: 1,
-      effective_date: 1,
-      source_url: 1,
-      updatedAt: 1,
-      "provisions._id": 1, // << lightweight handle for provisionCount
-      summary: 1,
-    })
-      .populate("tags", "name") // populate tags with their names
-      .populate("sponsor", "first_name last_name")
-      .lean();
+    await dbConnect();
 
-    // Add provisionCount and omit the provisions array from the list payload
-    const result = (bills ?? []).map((b) => {
-      const provisionCount = Array.isArray(b.provisions)
-        ? b.provisions.length
-        : 0;
-      const { provisions, ...rest } = b;
-      return { ...rest, provisionCount };
-    });
+    const url = new URL(req.url);
+    const page = parseNumber(url.searchParams.get("page"), 1);
+    const limit = parseNumber(url.searchParams.get("limit"), 20);
+    const sort = parseSort(url.searchParams.get("sort")); // default: -updatedAt
 
-    return NextResponse.json(result);
-  } catch (error) {
+    // If you later add filters (session, status, text search), build a "match" object here
+    const match = {};
+
+    const pipeline = [
+      { $match: match },
+      { $sort: sort },
+      {
+        $project: {
+          _id: 1,
+          billNumber: 1,
+          title: 1,
+          session: 1,
+          status: 1,
+          updatedAt: 1,
+          // Compute count without returning the full provisions array
+          provisionCount: {
+            $size: { $ifNull: ["$provisions", []] },
+          },
+        },
+      },
+      {
+        $facet: {
+          data: [{ $skip: (page - 1) * limit }, { $limit: limit }],
+          total: [{ $count: "count" }],
+        },
+      },
+    ];
+
+    const [result] = await Bill.aggregate(pipeline);
+    const data = result?.data ?? [];
+    const total = result?.total?.[0]?.count ?? 0;
+    const pages = Math.max(1, Math.ceil(total / limit));
+
     return NextResponse.json(
-      { error: "Failed to fetch bills", details: error.message },
+      {
+        meta: { page, limit, total, pages, sort },
+        data,
+      },
+      { status: 200 }
+    );
+  } catch (err) {
+    console.error("GET /api/bills error:", err);
+    return NextResponse.json(
+      { message: "Failed to fetch bills." },
       { status: 500 }
     );
   }
 }
 
+// POST /api/bills  -> Create a bill (admin/seed path). Keep minimal validation here; your model enforces the rest.
 export async function POST(req) {
   try {
     await requireAdmin(req);
     await dbConnect();
-    const data = await req.json();
-    const newBill = new Bill(data);
-    const saved = await newBill.save();
-    return NextResponse.json(saved, { status: 201 });
-  } catch (err) {
+
+    const body = await req.json();
+
+    // Minimal guardrails; rely on your Mongoose schema for deeper validation
+    if (!body?.billNumber || !body?.title) {
+      return NextResponse.json(
+        { message: "billNumber and title are required." },
+        { status: 400 }
+      );
+    }
+
+    const doc = await Bill.create(body);
+
+    // Return a lean confirmation payload
     return NextResponse.json(
-      { error: err.message || "Unauthorized" },
-      { status: 403 }
+      {
+        message: "Bill created.",
+        data: {
+          _id: doc._id,
+          billNumber: doc.billNumber,
+          title: doc.title,
+        },
+      },
+      { status: 201 }
+    );
+  } catch (err) {
+    console.error("POST /api/bills error:", err);
+    // Simple duplicate handling example if your schema has unique billNumber
+    if (err?.code === 11000) {
+      return NextResponse.json(
+        { message: "A bill with this unique field already exists." },
+        { status: 409 }
+      );
+    }
+    return NextResponse.json(
+      { message: "Failed to create bill." },
+      { status: 500 }
     );
   }
 }

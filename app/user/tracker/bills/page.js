@@ -113,6 +113,7 @@ export default function TrackedBillsIndexPage() {
                       : [],
                     current_stage: bill?.status?.current_stage,
                     isTracked: true, // these are tracked by definition
+                    provisionCount: bill?.provisionCount ?? 0,
                   }}
                 />
 

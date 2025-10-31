@@ -1,4 +1,4 @@
-// app/bills/[id]/provisions/[pid]/page.js
+// /app/bills/[id]/provisions/[pid]/page.js
 "use client";
 
 import { useEffect, useState } from "react";
@@ -7,16 +7,21 @@ import Link from "next/link";
 import LegalTextItem from "@/components/provisions/LegalTextItem";
 
 export default function ProvisionDetailPage() {
-  const { id: id, pid } = useParams();
+  const { id, pid } = useParams();
 
   const [prov, setProv] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [loadingLT, setLoadingLT] = useState(false); // loading legal text on demand
   const [error, setError] = useState(null);
   const [showLegalText, setShowLegalText] = useState(false);
+  const [hasLoadedLT, setHasLoadedLT] = useState(false);
 
+  // Initial lean fetch (no legal_text)
   useEffect(() => {
     if (!id || !pid) return;
-    const load = async () => {
+    (async () => {
+      setLoading(true);
+      setError(null);
       try {
         const res = await fetch(`/api/bills/${id}/provisions/${pid}`);
         if (!res.ok) throw new Error("Failed to fetch provision");
@@ -28,9 +33,35 @@ export default function ProvisionDetailPage() {
       } finally {
         setLoading(false);
       }
-    };
-    load();
+    })();
   }, [id, pid]);
+
+  // Toggle + lazy load legal text once
+  const toggleLegalText = async () => {
+    const next = !showLegalText;
+    setShowLegalText(next);
+
+    if (next && prov && !hasLoadedLT) {
+      setLoadingLT(true);
+      try {
+        const res = await fetch(
+          `/api/bills/${id}/provisions/${pid}?with=legalText`
+        );
+        if (!res.ok) throw new Error("Failed to load legal text");
+        const full = await res.json();
+        setProv((prev) => ({
+          ...(prev || {}),
+          legal_text: full.legal_text || [],
+        }));
+        setHasLoadedLT(true);
+      } catch (e) {
+        console.error(e);
+        // Keep UI open; user can retry by collapsing/expanding
+      } finally {
+        setLoadingLT(false);
+      }
+    }
+  };
 
   return (
     <section className="w-full py-6 space-y-6">
@@ -88,12 +119,14 @@ export default function ProvisionDetailPage() {
             </div>
           )}
 
-          {/* Tags */}
+          {/* Tags (API returns names) */}
           {Array.isArray(prov.tags) && prov.tags.length > 0 && (
             <div className="mt-4">
               <p className="text-sm font-semibold text-neutral-muted">Tags</p>
               <p className="text-sm text-neutral-dark">
-                {prov.tags.map((t) => t.name ?? t).join(", ")}
+                {prov.tags
+                  .map((t) => (typeof t === "string" ? t : t?.name))
+                  .join(", ")}
               </p>
             </div>
           )}
@@ -106,14 +139,15 @@ export default function ProvisionDetailPage() {
             </div>
           )}
 
-          {/* Legal text expandable */}
+          {/* Legal text expandable (lazy-loaded) */}
           <div className="mt-6">
             <button
-              onClick={() => setShowLegalText(!showLegalText)}
+              onClick={toggleLegalText}
               className="w-full flex items-center justify-between px-4 py-2 bg-neutral-light rounded hover:bg-neutral-dark/10"
             >
               <span className="text-sm font-semibold text-neutral-dark">
-                Legal Text Items ({prov.legal_text?.length ?? 0})
+                Legal Text Items (
+                {prov.legalTextCount ?? prov.legal_text?.length ?? 0})
               </span>
               <span className="text-sm text-primary">
                 {showLegalText ? "▲ Hide" : "▼ Show"}
@@ -122,9 +156,16 @@ export default function ProvisionDetailPage() {
 
             {showLegalText && (
               <div className="mt-4 space-y-4">
-                {(prov.legal_text ?? []).map((item) => (
-                  <LegalTextItem key={item._id} item={item} />
-                ))}
+                {loadingLT && (
+                  <p className="text-neutral-muted">Loading legal text…</p>
+                )}
+                {!loadingLT &&
+                  (prov.legal_text ?? []).map((item) => (
+                    <LegalTextItem key={item._id} item={item} />
+                  ))}
+                {!loadingLT && (prov.legal_text ?? []).length === 0 && (
+                  <p className="text-neutral-muted">No legal text items.</p>
+                )}
               </div>
             )}
           </div>

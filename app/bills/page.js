@@ -1,7 +1,7 @@
 //app/bills/page.js
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import BillCard from "@/components/bills/BillCard";
@@ -11,8 +11,24 @@ import Link from "next/link";
 import { normalizeId } from "@/utils/normalizeId";
 import { fetchTrackedIds } from "@/utils/fetchTrackedIds";
 
+// Map UI sort keys -> API sort string (comma-separated keys; prepend "-" for desc)
+const SORT_MAP = {
+  none: "-updatedAt",
+  "title-asc": "title",
+  "title-desc": "-title",
+  "date-asc": "createdAt",
+  "date-desc": "-createdAt",
+};
+
 export default function BillListPage() {
-  const [bills, setBills] = useState([]);
+  const [bills, setBills] = useState([]); // current page data
+  const [meta, setMeta] = useState({
+    page: 1,
+    pages: 1,
+    limit: 20,
+    total: 0,
+    sort: {},
+  });
   const [filters, setFilters] = useState({
     title: "",
     tag: "",
@@ -21,87 +37,122 @@ export default function BillListPage() {
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  // For FilterBar dropdowns (if it needs a broad list)
   const [allBills, setAllBills] = useState([]);
 
   const { data: session } = useSession();
   const router = useRouter();
 
-  // Fetch full bill list once for filter dropdowns
+  // Build API params for the main list fetch
+  const apiParams = useMemo(() => {
+    const params = new URLSearchParams();
+    // NOTE: current /api/bills implementation ignores these filters for now,
+    // but we keep them wired so when you add filter logic, the UI "just works".
+    if (filters.title) params.set("title", filters.title);
+    if (filters.tag) params.set("tag", filters.tag);
+    if (filters.status) params.set("status", filters.status);
+
+    const sortStr = SORT_MAP[filters.sort] || SORT_MAP["none"];
+    params.set("sort", sortStr);
+
+    params.set("page", meta.page || 1);
+    params.set("limit", meta.limit || 20);
+    return params.toString();
+  }, [filters, meta.page, meta.limit]);
+
+  // 1) One-time fetch for FilterBar options (if needed)
   useEffect(() => {
-    const fetchAllBills = async () => {
+    let ignore = false;
+
+    async function fetchAllForFilters() {
       try {
-        const res = await fetch("/api/bills");
-        if (!res.ok) {
-          const errJson = await res.json().catch(() => ({}));
-          console.error("Failed to fetch all bills", errJson);
-          setError("Failed to fetch bills");
-          setAllBills([]);
-          return;
-        }
-        const data = await res.json();
+        // Pull a larger slice solely for FilterBar (titles/tags etc.)
+        const res = await fetch(`/api/bills?limit=1000&sort=title`, {
+          cache: "no-store",
+        });
+        if (!res.ok) throw new Error("Failed to fetch all bills");
+        const payload = await res.json();
 
-        if (!Array.isArray(data)) {
-          console.error("Unexpected bills payload", data);
-          setError("Failed to fetch bills");
-          setAllBills([]);
-          return;
-        }
-        const trackedIds = await fetchTrackedIds("bills");
-        const merged = data.map((bill) => ({
-          ...bill,
-          isTracked: trackedIds.has(bill._id), //Mark the users tracked bills
-        }));
-
-        setAllBills(merged);
-      } catch (err) {
-        console.error("Failed to fetch all bills", err);
+        // Payload may be envelope {meta,data} or legacy array.
+        const list = Array.isArray(payload)
+          ? payload
+          : Array.isArray(payload?.data)
+          ? payload.data
+          : [];
+        if (!ignore) setAllBills(list);
+      } catch (e) {
+        console.warn("FilterBar bootstrap failed:", e);
+        if (!ignore) setAllBills([]);
       }
-    };
+    }
 
-    fetchAllBills();
+    fetchAllForFilters();
+    return () => {
+      ignore = true;
+    };
   }, []);
 
-  // Main useEffect for handling filters
+  // 2) Main fetch: bills list (paged) + merge tracked flags
   useEffect(() => {
-    const fetchData = async () => {
+    let ignore = false;
+
+    async function fetchPage() {
       setLoading(true);
       setError(null);
       try {
-        // 1. Build bill filter query
-        const query = new URLSearchParams();
-        if (filters.title) query.append("title", filters.title);
-        if (filters.tag) query.append("tag", filters.tag); // Tag now sends _id
-        if (filters.status) query.append("status", filters.status);
+        const res = await fetch(`/api/bills?${apiParams}`, {
+          cache: "no-store",
+        });
+        if (!res.ok) throw new Error("Failed to fetch bills");
 
-        const queryString = query.toString();
-        const billsUrl = `/api/bills${queryString ? `?${queryString}` : ""}`;
+        const payload = await res.json();
+        const list = Array.isArray(payload)
+          ? payload
+          : Array.isArray(payload?.data)
+          ? payload.data
+          : [];
+        const metaObj = payload?.meta ?? {
+          page: 1,
+          pages: 1,
+          limit: 20,
+          total: list.length,
+        };
 
-        //2. Get all bills
-        const billsRes = await fetch(billsUrl);
-
-        if (!billsRes.ok) throw new Error("Failed to fetch bills");
-        const billsData = await billsRes.json();
-
-        // 3. Get tracked bills
+        // Get tracked IDs and merge
         const trackedIds = await fetchTrackedIds("bills");
-
-        // 4. Merge tracked info into bills
-        const mergedBills = billsData.map((bill) => ({
+        const merged = list.map((bill) => ({
           ...bill,
           isTracked: trackedIds.has(bill._id),
         }));
 
-        setBills(mergedBills); // store filtered result
-      } catch (err) {
-        setError(err.message || "Something went wrong");
+        if (!ignore) {
+          setBills(merged);
+          setMeta((m) => ({
+            ...m,
+            page: metaObj.page,
+            pages: metaObj.pages,
+            limit: metaObj.limit,
+            total: metaObj.total,
+          }));
+        }
+      } catch (e) {
+        if (!ignore) {
+          setError(e.message || "Something went wrong");
+          setBills([]);
+        }
       } finally {
-        setLoading(false);
+        if (!ignore) setLoading(false);
       }
+    }
+
+    fetchPage();
+    return () => {
+      ignore = true;
     };
+  }, [apiParams]);
 
-    fetchData();
-  }, [filters]); // watch the entire filters object:
-
+  // Handlers
   const handleBillClick = (bill) => {
     const id = normalizeId(bill._id);
     if (bill.isTracked && session?.user) {
@@ -112,29 +163,16 @@ export default function BillListPage() {
   };
 
   const handleResetFilters = () => {
-    setFilters({
-      title: "",
-      tag: "",
-      status: "",
-      sort: "none",
-    });
+    setFilters({ title: "", tag: "", status: "", sort: "none" });
+    setMeta((m) => ({ ...m, page: 1 })); // reset to first page
   };
 
-  const sortedBills = [...bills].sort((a, b) => {
-    switch (filters.sort) {
-      case "title-asc":
-        return a.title.localeCompare(b.title);
-      case "title-desc":
-        return b.title.localeCompare(a.title);
-      case "date-asc":
-        return new Date(a.createdAt) - new Date(b.createdAt);
-      case "date-desc":
-        return new Date(b.createdAt) - new Date(a.createdAt);
-      case "none":
-      default:
-        return 0; // no sorting
-    }
-  });
+  const handlePageChange = (nextPage) => {
+    // clamp between 1 and meta.pages
+    const p = Math.max(1, Math.min(nextPage, meta.pages || 1));
+    setMeta((m) => ({ ...m, page: p }));
+    // keep filters as-is
+  };
 
   return (
     <div className="w-full">
@@ -146,7 +184,10 @@ export default function BillListPage() {
         <FilterBar
           allBills={allBills}
           filters={filters}
-          setFilters={setFilters}
+          setFilters={(f) => {
+            setMeta((m) => ({ ...m, page: 1 })); // whenever filters change, go back to page 1
+            setFilters(f);
+          }}
         />
         <div className="flex justify-between items-center mt-4">
           <button
@@ -167,32 +208,58 @@ export default function BillListPage() {
       {error && <p className="text-danger">{error}</p>}
 
       {!loading && !error && (
-        <div className="mt-12 grid grid-cols-1 md:grid-cols-2 gap-6">
-          {sortedBills.length > 0 ? (
-            sortedBills.map((bill) => (
-              <div
-                key={normalizeId(bill._id)}
-                onClick={() => handleBillClick(bill)}
-                className="cursor-pointer"
-              >
-                <BillCard
-                  bill={{
-                    id: normalizeId(bill._id),
-                    number: bill.number,
-                    title: bill.title,
-                    summary: bill.summary,
-                    tags: (bill.tags ?? []).map((tag) => tag.name),
-                    current_stage: bill.status?.current_stage,
-                    isTracked: bill.isTracked,
-                    provisionCount: bill.provisionCount ?? 0,
-                  }}
-                />
-              </div>
-            ))
-          ) : (
-            <p className="text-neutral-muted">No bills match your filters.</p>
-          )}
-        </div>
+        <>
+          <div className="mt-12 grid grid-cols-1 md:grid-cols-2 gap-6">
+            {bills.length > 0 ? (
+              bills.map((bill) => (
+                <div
+                  key={normalizeId(bill._id)}
+                  onClick={() => handleBillClick(bill)}
+                  className="cursor-pointer"
+                >
+                  <BillCard
+                    bill={{
+                      id: normalizeId(bill._id),
+                      number: bill.number || bill.billNumber, // support either field
+                      title: bill.title,
+                      summary: bill.summary,
+                      tags: Array.isArray(bill.tags)
+                        ? bill.tags.map((t) => t.name ?? t)
+                        : [],
+                      current_stage: bill.status?.current_stage,
+                      isTracked: bill.isTracked,
+                      provisionCount: bill.provisionCount ?? 0,
+                    }}
+                  />
+                </div>
+              ))
+            ) : (
+              <p className="text-neutral-muted">No bills match your filters.</p>
+            )}
+          </div>
+
+          {/* Basic pagination */}
+          <div className="flex items-center justify-center gap-4 mt-10">
+            <button
+              onClick={() => handlePageChange((meta.page || 1) - 1)}
+              disabled={(meta.page || 1) <= 1}
+              className="px-3 py-2 border rounded disabled:opacity-50"
+            >
+              Prev
+            </button>
+            <span className="text-sm">
+              Page {meta.page || 1} of {meta.pages || 1} • {meta.total || 0}{" "}
+              total
+            </span>
+            <button
+              onClick={() => handlePageChange((meta.page || 1) + 1)}
+              disabled={(meta.page || 1) >= (meta.pages || 1)}
+              className="px-3 py-2 border rounded disabled:opacity-50"
+            >
+              Next
+            </button>
+          </div>
+        </>
       )}
     </div>
   );
