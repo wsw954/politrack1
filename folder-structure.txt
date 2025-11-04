@@ -134,6 +134,8 @@
 │               └── page.js
 ├── components
 │   ├── annotation
+│   │   ├── AnnotationsDrawer.js
+│   │   ├── AnnotationsPanel.js
 │   │   ├── AttachmentGallery.js
 │   │   ├── BillAnnotationsCard.js
 │   │   ├── GeneralNotesEditor.js
@@ -216,6 +218,8 @@
 ├── eslint.config.mjs
 ├── jsconfig.json
 ├── lib
+│   ├── api
+│   │   └── annotations.js
 │   ├── auth
 │   │   ├── api-protect.js
 │   │   ├── options.js
@@ -223,8 +227,14 @@
 │   │   ├── useRequireGuest.js
 │   │   └── useRequireRole.js
 │   ├── axiosInstance.js
+│   ├── hooks
+│   │   └── useAnnotationsDrawer.js
+│   ├── services
+│   │   └── tracker.js
 │   ├── trackerClient.js
-│   └── useUserId.js
+│   ├── useUserId.js
+│   └── validation
+│       └── annotations.js
 ├── models
 │   ├── Bill.js
 │   ├── Politician.js
