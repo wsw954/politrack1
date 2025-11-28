@@ -1,4 +1,4 @@
-//ccomponents/annotation/LinkList.js
+//components/annotation/LinkList.js
 "use client";
 import { useState } from "react";
 
@@ -55,8 +55,8 @@ export default function LinksList({
       )}
 
       <ul className="space-y-3">
-        {items.map((l) => (
-          <li key={l._id || l.url} className="rounded-lg border p-3">
+        {items.map((l, idx) => (
+          <li key={l._id || l.url || idx} className="rounded-lg border p-3">
             <div className="flex justify-between items-start gap-3">
               <div>
                 <a
@@ -71,10 +71,10 @@ export default function LinksList({
                   <p className="text-xs text-gray-600 mt-1">{l.note}</p>
                 ) : null}
               </div>
-              {!readOnly && l._id ? (
+              {!readOnly ? (
                 <button
                   className="text-xs text-red-600"
-                  onClick={() => onRemove(l._id)}
+                  onClick={() => onRemove(idx)}
                 >
                   Remove
                 </button>

@@ -73,7 +73,6 @@ export default function BillListPage() {
         });
         if (!res.ok) throw new Error("Failed to fetch all bills");
         const payload = await res.json();
-
         // Payload may be envelope {meta,data} or legacy array.
         const list = Array.isArray(payload)
           ? payload

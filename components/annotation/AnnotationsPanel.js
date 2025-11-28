@@ -1,4 +1,4 @@
-//components/annotations/AnnotationsPanel.js
+//components/annotation/AnnotationsPanel.js
 "use client";
 
 /**
@@ -84,7 +84,7 @@ export default function AnnotationsPanel({ scope, provId, value, onChange }) {
           value={value.generalNotes || ""}
           onChange={(text) => update({ generalNotes: text })}
           maxLength={20000}
-          autoSave={false}
+          autoSave={true}
         />
       </section>
 
@@ -108,19 +108,11 @@ export default function AnnotationsPanel({ scope, provId, value, onChange }) {
               });
               update({ links: next });
             }}
-            onRemove={(id) => {
-              // find by synthesized _id (or by URL fallback)
-              const next = (
-                Array.isArray(value.links) ? [...value.links] : []
-              ).filter(
-                (item, idx) => `${"link"}:${idx}:${item.url || ""}` !== id
-              );
-              // Fallback: if not found, try match by url equality
-              const removedByUrl =
-                next.length === value.links?.length
-                  ? value.links.filter((l) => l.url !== id)
-                  : next;
-              update({ links: removedByUrl });
+            onRemove={(index) => {
+              const next = Array.isArray(value.links) ? [...value.links] : [];
+              if (index < 0 || index >= next.length) return;
+              next.splice(index, 1);
+              update({ links: next });
             }}
             readOnly={false}
           />

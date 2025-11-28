@@ -12,10 +12,12 @@ import {
   putProvisionAnnotations,
   deleteProvisionAnnotations,
 } from "@/lib/api/annotations";
+import { useRouter } from "next/navigation";
 import AnnotationsPanel from "./AnnotationsPanel";
 
-export default function AnnotationsDrawer({ userId, billId }) {
+export default function AnnotationsDrawer({ userId, billId, onSaved }) {
   const { isOpen, scope, provId, close } = useAnnotationsDrawer();
+  const router = useRouter();
 
   const [mounted, setMounted] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -112,15 +114,18 @@ export default function AnnotationsDrawer({ userId, billId }) {
         } else {
           await putBillAnnotations(userId, billId, nextValue);
         }
+
         setValue(nextValue);
-        // You can add a toast here if you have a lib/toast.js util.
+        onSaved?.();
+        close();
+        router.refresh();
       } catch (e) {
         console.error("Save annotations error:", e);
       } finally {
         setSaving(false);
       }
     },
-    [userId, billId, scope, provId]
+    [userId, billId, scope, provId, close, onSaved, router]
   );
 
   // Clear handler (DELETE)
@@ -134,12 +139,15 @@ export default function AnnotationsDrawer({ userId, billId }) {
         await deleteBillAnnotations(userId, billId);
       }
       setValue({ generalNotes: "", links: [], attachments: [], labels: [] });
+      onSaved?.();
+      router.refresh();
+      // optionally close() as well if you want Clear to exit the drawer
     } catch (e) {
       console.error("Clear annotations error:", e);
     } finally {
       setSaving(false);
     }
-  }, [userId, billId, scope, provId]);
+  }, [userId, billId, scope, provId, onSaved, router]);
 
   // Close on ESC
   useEffect(() => {

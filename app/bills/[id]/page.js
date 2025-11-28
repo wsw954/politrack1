@@ -9,6 +9,7 @@ import { authOptions } from "@/lib/auth/options";
 import AddToTrackerButton from "@/components/user/AddToTrackerButton";
 import ViewProvisionsButton from "@/components/provisions/ViewProvisionsButton";
 import UnloggedTrackerPrompt from "@/components/user/UnloggedTrackerPrompt";
+import AnnotationsDrawer from "@/components/annotation/AnnotationsDrawer";
 
 export default async function BillDetailPage({ params }) {
   const session = await getServerSession(authOptions);
@@ -22,6 +23,7 @@ export default async function BillDetailPage({ params }) {
   if (!res.ok) return notFound();
 
   const bill = await res.json();
+
   return (
     <section className="py-6 space-y-6">
       <h3 className="text-3xl font-bold mb-2">{bill.title}</h3>
@@ -60,13 +62,12 @@ export default async function BillDetailPage({ params }) {
       </section>
 
       <section className="mt-6">
-        <h2 className="text-xl font-semibold">Why It Matters</h2>
-        <p className="mt-2">{bill.why_it_matters || "No information."}</p>
-      </section>
-
-      <section className="mt-6">
         <h2 className="text-xl font-semibold">Tags</h2>
-        <TagList tags={bill.tags.map((tag) => tag.name)} />
+        <TagList
+          tags={(Array.isArray(bill.tags) ? bill.tags : [])
+            .map((t) => (typeof t === "string" ? t : t?.name))
+            .filter(Boolean)}
+        />
       </section>
 
       <section className="mt-6">
@@ -87,6 +88,8 @@ export default async function BillDetailPage({ params }) {
           provisionCount={bill.provisionCount}
         />
       </div>
+      {/* Mount once — inert until ?panel=annotations… is present */}
+      <AnnotationsDrawer userId={session?.user?.id || ""} billId={bill._id} />
     </section>
   );
 }

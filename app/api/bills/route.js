@@ -49,6 +49,7 @@ export async function GET(req) {
           title: 1,
           session: 1,
           status: 1,
+          summary: 1,
           updatedAt: 1,
           // Compute count without returning the full provisions array
           provisionCount: {

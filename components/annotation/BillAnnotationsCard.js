@@ -16,6 +16,7 @@ export default function BillAnnotationsCard({
   labels = [],
   attachments = [],
   editHref = "#",
+  onEdit,
 }) {
   const counts = useMemo(
     () => ({
@@ -38,9 +39,19 @@ export default function BillAnnotationsCard({
     <div className="rounded-2xl border p-4 bg-white">
       <div className="flex items-center justify-between">
         <h2 className="text-lg font-semibold">Annotations</h2>
-        <a href={editHref} className="rounded-lg border px-3 py-1 text-sm">
-          Edit annotations
-        </a>
+        {onEdit ? (
+          <button
+            type="button"
+            onClick={onEdit}
+            className="rounded-lg border px-3 py-1 text-sm"
+          >
+            Edit annotations
+          </button>
+        ) : (
+          <a href={editHref} className="rounded-lg border px-3 py-1 text-sm">
+            Edit annotations
+          </a>
+        )}
       </div>
 
       <div className="mt-4 grid gap-6">

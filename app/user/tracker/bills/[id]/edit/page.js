@@ -4,7 +4,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useParams } from "next/navigation";
 import { useUserId } from "@/lib/useUserId";
-import { getTrackedBill, patchTrackedBill } from "@/lib/trackerClient";
+import { getTrackedBill, putBillAnnotations } from "@/lib/trackerClient";
 
 import PageHeader from "@/components/ui/PageHeader";
 import Section from "@/components/annotation/Section";
@@ -17,6 +17,7 @@ const byId = (x) => String(x._id);
 const hasId = (x) => !!x && !!x._id;
 
 export default function EditTrackedBillPage() {
+  console.log("app/user/tracker/bills/[id]edit/page.js +Line 20");
   const params = useParams();
   const billId = params?.id;
   const { userId, status } = useUserId();
@@ -59,6 +60,7 @@ export default function EditTrackedBillPage() {
           userId,
           billId /* { includeProvisions: false }*/
         );
+        console.log();
         if (cancel) return;
         setData(res);
 
@@ -134,7 +136,7 @@ export default function EditTrackedBillPage() {
       if (Object.keys(payload).length === 0) {
         setSaveMsg("No changes to save.");
       } else {
-        await patchTrackedBill(userId, billId, payload);
+        await putBillAnnotations(userId, billId, payload);
         setSaveMsg("Saved.");
         // refresh baseline so further edits compute correct diffs
         setBaseline({ generalNotes, links, labels });

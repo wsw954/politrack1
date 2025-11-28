@@ -9,14 +9,14 @@ import LinksList from "@/components/annotation/LinksList";
 
 /**
  * Props:
- * - open: boolean
+ * - isOpen: boolean
  * - onClose: () => void
  * - onSkipAndSave: () => Promise<void> | void
  * - onSaveWithAnnotations: ({ generalNotes, labels, links }) => Promise<void> | void
  * - billId?: string  // optional, for context in header
  */
 export default function AddAnnotationsDialog({
-  open,
+  isOpen,
   onClose,
   onSkipAndSave,
   onSaveWithAnnotations,
@@ -28,18 +28,18 @@ export default function AddAnnotationsDialog({
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
 
-  // reset on open/close
+  // reset on isOpen/close
   useEffect(() => {
-    if (!open) {
+    if (!isOpen) {
       setGeneralNotes("");
       setLabels([]);
       setLinks([]);
       setBusy(false);
       setError("");
     }
-  }, [open]);
+  }, [isOpen]);
 
-  if (!open) return null;
+  if (!isOpen) return null;
 
   const handleAddLabel = (lbl) => {
     // lbl = { label, note? }
