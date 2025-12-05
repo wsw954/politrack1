@@ -15,6 +15,7 @@ import AnnotationsDrawer from "@/components/annotation/AnnotationsDrawer";
 
 export default function TrackedBillDetailPage() {
   const params = useParams();
+
   const billId = params?.id;
   const [reloadTick, setReloadTick] = useState(0);
   const { openBill } = useAnnotationsDrawer();
@@ -32,6 +33,7 @@ export default function TrackedBillDetailPage() {
     }
 
     let cancelled = false;
+
     (async () => {
       try {
         setLoading(true);
@@ -40,6 +42,7 @@ export default function TrackedBillDetailPage() {
         const data = await getTrackedBill(userId, billId, {
           includeAnnotations: true,
         });
+
         if (!cancelled) setTracked(data);
       } catch (e) {
         if (!cancelled) setErr(e?.message || "Failed to load tracked bill.");
@@ -94,6 +97,8 @@ export default function TrackedBillDetailPage() {
       </section>
     );
   }
+
+  const isTracked = true;
 
   // Bill doc (populated on tracked record)
   const bill = tracked.itemId;
@@ -182,6 +187,7 @@ export default function TrackedBillDetailPage() {
         <ViewProvisionsButton
           billId={bill._id}
           provisionCount={provisionCount}
+          isTracked={isTracked}
         />
       </div>
 
