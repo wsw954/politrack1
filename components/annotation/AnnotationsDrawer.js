@@ -16,7 +16,7 @@ import { useRouter } from "next/navigation";
 import AnnotationsPanel from "./AnnotationsPanel";
 
 export default function AnnotationsDrawer({ userId, billId, onSaved }) {
-  const { isOpen, scope, provId, close } = useAnnotationsDrawer();
+  const { isOpen, scope, pid, close } = useAnnotationsDrawer();
   const router = useRouter();
 
   const [mounted, setMounted] = useState(false);
@@ -61,8 +61,8 @@ export default function AnnotationsDrawer({ userId, billId, onSaved }) {
     (async () => {
       setLoading(true);
       try {
-        if (scope === "provision" && provId) {
-          const data = await getProvisionAnnotations(userId, billId, provId);
+        if (scope === "provision" && pid) {
+          const data = await getProvisionAnnotations(userId, billId, pid);
           if (!cancelled)
             setValue(
               data ?? {
@@ -101,7 +101,7 @@ export default function AnnotationsDrawer({ userId, billId, onSaved }) {
     return () => {
       cancelled = true;
     };
-  }, [isOpen, scope, provId, userId, billId]);
+  }, [isOpen, scope, pid, userId, billId]);
 
   // Save handler (PUT)
   const handleSave = useCallback(
@@ -109,8 +109,8 @@ export default function AnnotationsDrawer({ userId, billId, onSaved }) {
       if (!userId || !billId) return;
       setSaving(true);
       try {
-        if (scope === "provision" && provId) {
-          await putProvisionAnnotations(userId, billId, provId, nextValue);
+        if (scope === "provision" && pid) {
+          await putProvisionAnnotations(userId, billId, pid, nextValue);
         } else {
           await putBillAnnotations(userId, billId, nextValue);
         }
@@ -125,7 +125,7 @@ export default function AnnotationsDrawer({ userId, billId, onSaved }) {
         setSaving(false);
       }
     },
-    [userId, billId, scope, provId, close, onSaved, router]
+    [userId, billId, scope, pid, close, onSaved, router]
   );
 
   // Clear handler (DELETE)
@@ -133,8 +133,8 @@ export default function AnnotationsDrawer({ userId, billId, onSaved }) {
     if (!userId || !billId) return;
     setSaving(true);
     try {
-      if (scope === "provision" && provId) {
-        await deleteProvisionAnnotations(userId, billId, provId);
+      if (scope === "provision" && pid) {
+        await deleteProvisionAnnotations(userId, billId, pid);
       } else {
         await deleteBillAnnotations(userId, billId);
       }
@@ -147,7 +147,7 @@ export default function AnnotationsDrawer({ userId, billId, onSaved }) {
     } finally {
       setSaving(false);
     }
-  }, [userId, billId, scope, provId, onSaved, router]);
+  }, [userId, billId, scope, pid, onSaved, router]);
 
   // Close on ESC
   useEffect(() => {
@@ -222,7 +222,7 @@ export default function AnnotationsDrawer({ userId, billId, onSaved }) {
           ) : (
             <AnnotationsPanel
               scope={scope} // "bill" | "provision"
-              provId={provId || null}
+              pid={pid || null}
               value={value} // { generalNotes, links, attachments, labels }
               onChange={setValue} // pass state setter so panel can be controlled
             />

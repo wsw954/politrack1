@@ -73,6 +73,8 @@ export default function ProvisionAnnotationsCard({
   const hasAny =
     hasNotes || counts.links > 0 || counts.attachments > 0 || counts.labels > 0;
 
+  const buttonText = hasAny ? "Edit annotations" : "Add annotations";
+
   const [notesExpanded, setNotesExpanded] = useState(false);
   const MAX_PREVIEW_CHARS = 1200;
   const notesPreview =
@@ -86,17 +88,18 @@ export default function ProvisionAnnotationsCard({
         <h2 className="text-lg font-semibold">
           Your Annotations for This Provision
         </h2>
+
         {onEdit ? (
           <button
             type="button"
             onClick={onEdit}
             className="rounded-lg border px-3 py-1 text-sm"
           >
-            Edit annotations
+            {buttonText}
           </button>
         ) : (
           <a href={editHref} className="rounded-lg border px-3 py-1 text-sm">
-            Edit annotations
+            {buttonText}
           </a>
         )}
       </div>

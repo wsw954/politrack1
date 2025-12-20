@@ -1,4 +1,4 @@
-// /app/api/users/[id]/tracker/bills/[itemId]/provisions/[provId]/annotations/route.js
+// /app/api/users/[id]/tracker/bills/[itemId]/provisions/[pid]/annotations/route.js
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth/options";
@@ -22,15 +22,15 @@ export async function GET(_req, context) {
     if (!session)
       return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
 
-    const { id: userId, itemId, provId } = await context.params; // Next 15: await params
+    const { id: userId, itemId, pid } = await context.params; // Next 15: await params
     if (String(session.user.id) !== String(userId)) {
       return NextResponse.json({ message: "Forbidden" }, { status: 403 });
     }
 
-    const data = await svcGetProvAnn({ userId, billId: itemId, provId });
+    const data = await svcGetProvAnn({ userId, billId: itemId, pid });
     if (!data) {
       return NextResponse.json(
-        { message: "Tracked bill not found" },
+        { message: "No provision annotations found" },
         { status: 404 }
       );
     }
@@ -47,12 +47,14 @@ export async function GET(_req, context) {
  * Replaces (upserts) annotations for a provision (idempotent).
  */
 export async function PUT(req, context) {
+  console.log("Line 50 in API route GET");
   try {
     const session = await getServerSession(authOptions);
     if (!session)
       return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
 
-    const { id: userId, itemId, provId } = await context.params;
+    const { id: userId, itemId, pid } = await context.params;
+    console.log(pid);
     if (String(session.user.id) !== String(userId)) {
       return NextResponse.json({ message: "Forbidden" }, { status: 403 });
     }
@@ -61,7 +63,7 @@ export async function PUT(req, context) {
     const result = await svcPutProvAnn({
       userId,
       billId: itemId,
-      provId,
+      pid,
       payload: body,
     });
 
@@ -96,16 +98,16 @@ export async function DELETE(_req, context) {
     if (!session)
       return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
 
-    const { id: userId, itemId, provId } = await context.params;
+    const { id: userId, itemId, pid } = await context.params;
     if (String(session.user.id) !== String(userId)) {
       return NextResponse.json({ message: "Forbidden" }, { status: 403 });
     }
 
-    const result = await svcClearProvAnn({ userId, billId: itemId, provId });
+    const result = await svcClearProvAnn({ userId, billId: itemId, pid });
     if (!result.ok) {
       return NextResponse.json(
-        { message: result.message },
-        { status: result.status || 400 }
+        { message: result?.message || "Failed to clear provision annotations" },
+        { status: result?.status || 400 }
       );
     }
 

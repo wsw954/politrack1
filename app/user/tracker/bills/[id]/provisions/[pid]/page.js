@@ -6,17 +6,21 @@ import { useParams } from "next/navigation";
 import Link from "next/link";
 import LegalTextItem from "@/components/provisions/LegalTextItem";
 import { useUserId } from "@/lib/useUserId";
+import useAnnotationsDrawer from "@/lib/hooks/useAnnotationsDrawer";
 import ProvisionAnnotationsCard from "@/components/annotation/ProvisionAnnotationsCard";
+import AnnotationsDrawer from "@/components/annotation/AnnotationsDrawer";
 
 export default function TrackedProvisionDetailPage() {
   const { id, pid } = useParams();
   const { userId, status } = useUserId();
+  const [reloadTick, setReloadTick] = useState(0);
 
   // --- Provision state (same feel as untracked version) ---
   const [prov, setProv] = useState(null);
   const [loadingProv, setLoadingProv] = useState(true);
   const [errorProv, setErrorProv] = useState(null);
 
+  const { openProvision } = useAnnotationsDrawer();
   const [showLegalText, setShowLegalText] = useState(false);
   const [hasLoadedLT, setHasLoadedLT] = useState(false);
   const [loadingLT, setLoadingLT] = useState(false);
@@ -30,31 +34,28 @@ export default function TrackedProvisionDetailPage() {
   useEffect(() => {
     if (!id || !pid) return;
 
-    if (status === "loading") return;
-
-    if (!userId) {
-      setErrorAnn("You must be signed in to view provision annotations.");
-      setLoadingAnn(false);
-      return;
-    }
-
     let cancelled = false;
 
     (async () => {
-      setLoadingAnn(true);
-      setErrorAnn(null);
+      setLoadingProv(true);
+      setErrorProv(null);
+
       try {
         const res = await fetch(`/api/bills/${id}/provisions/${pid}`);
         if (!res.ok) throw new Error("Failed to fetch provision");
         const data = await res.json();
-        setProv(data);
+        if (!cancelled) setProv(data);
       } catch (e) {
         console.error(e);
-        setErrorProv(e.message || "Something went wrong");
+        if (!cancelled) setErrorProv(e.message || "Something went wrong");
       } finally {
-        setLoadingProv(false);
+        if (!cancelled) setLoadingProv(false);
       }
     })();
+
+    return () => {
+      cancelled = true;
+    };
   }, [id, pid]);
 
   // --- Lazy-load full legal_text once, same as untracked page ---
@@ -84,6 +85,7 @@ export default function TrackedProvisionDetailPage() {
   };
 
   // --- Fetch provision-level annotations for this tracked bill ---
+  //  - This IS auth-protected (user-specific annotations)
   useEffect(() => {
     if (!id || !pid) return;
     if (status === "loading") return;
@@ -126,7 +128,7 @@ export default function TrackedProvisionDetailPage() {
     return () => {
       cancelled = true;
     };
-  }, [userId, status, id, pid]);
+  }, [userId, status, id, pid, reloadTick]);
 
   // --- High-level auth/session handling (match Tracked Bill page style) ---
   if (status === "loading") {
@@ -258,12 +260,20 @@ export default function TrackedProvisionDetailPage() {
       )}
 
       {/* Provision-level annotations card (like BillAnnotationsCard) */}
-      <ProvisionAnnotationsCard
-        annotations={annotations}
-        loading={loadingAnn}
-        error={errorAnn}
-        // onEdit={...} // hook up later when you have a provision-level drawer
-        // editHref={`/user/tracker/bills/${id}/provisions/${pid}/edit`}
+      <section className="mt-8">
+        <ProvisionAnnotationsCard
+          annotations={annotations}
+          loading={loadingAnn}
+          error={errorAnn}
+          onEdit={() => openProvision(pid)} // hook up later when you have a provision-level drawer
+          // editHref={`/user/tracker/bills/${id}/provisions/${pid}/edit`}
+        />
+      </section>
+      {/* Drawer mounted (inert until ?panel=annotations… is in URL) */}
+      <AnnotationsDrawer
+        userId={userId}
+        billId={id}
+        onSaved={() => setReloadTick((t) => t + 1)}
       />
     </section>
   );

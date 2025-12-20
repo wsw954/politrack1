@@ -50,9 +50,10 @@ const annotationUnitFields = {
  */
 const provisionAnnotationSchema = new mongoose.Schema(
   {
-    provisionId: { type: mongoose.Schema.Types.ObjectId, required: true },
+    pid: { type: mongoose.Schema.Types.ObjectId, required: true },
     anchorPath: { type: String, trim: true },
     ...annotationUnitFields,
+    createdAt: { type: Date, default: Date.now },
     updatedAt: { type: Date, default: Date.now },
   },
   { _id: true }

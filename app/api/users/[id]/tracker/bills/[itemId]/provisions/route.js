@@ -165,7 +165,7 @@ export async function GET(req, context) {
       if (trackedBill?.provisionAnnotations?.length) {
         const map = {};
         for (const pa of trackedBill.provisionAnnotations) {
-          map[String(pa.provisionId)] = {
+          map[String(pa.pid)] = {
             generalNotes: pa.generalNotes,
             links: pa.links,
             attachments: pa.attachments,

@@ -42,7 +42,7 @@
 │   │       │       │   │   ├── annotations
 │   │       │       │   │   │   └── route.js
 │   │       │       │   │   ├── provisions
-│   │       │       │   │   │   ├── [provId]
+│   │       │       │   │   │   ├── [pid]
 │   │       │       │   │   │   │   └── annotations
 │   │       │       │   │   │   │       └── route.js
 │   │       │       │   │   │   └── route.js
@@ -118,7 +118,7 @@
 │           │   │   │   └── page.js
 │           │   │   ├── page.js
 │           │   │   └── provisions
-│           │   │       ├── [provId]
+│           │   │       ├── [pid]
 │           │   │       │   └── page.js
 │           │   │       └── page.js
 │           │   └── page.js
@@ -145,6 +145,7 @@
 │   │   ├── InlineCountBadges.js
 │   │   ├── LabelsChips.js
 │   │   ├── LinksList.js
+│   │   ├── ProvisionAnnotationsCard.js
 │   │   └── Section.js
 │   ├── bills
 │   │   ├── BillCard.js

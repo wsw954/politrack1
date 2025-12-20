@@ -129,7 +129,8 @@ export default function TrackedProvisionsListPage() {
           ) : (
             <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
               {provisions.map((prov) => {
-                const ann = annotationsByProvision[prov._id] || {};
+                const pid = prov.pid || prov._id;
+                const ann = annotationsByProvision[String(pid)] || {};
                 const notes = ann.generalNotes || "";
                 const linksCount = (ann.links || []).length;
                 const attachmentsCount = (ann.attachments || []).length;
@@ -142,10 +143,10 @@ export default function TrackedProvisionsListPage() {
                   labelsCount > 0;
 
                 return (
-                  <div key={prov._id} className="cursor-pointer">
+                  <div key={pid} className="cursor-pointer">
                     {/* Card itself is clickable, like Tracked Bills list */}
                     <Link
-                      href={`/user/tracker/bills/${billId}/provisions/${prov._id}`}
+                      href={`/user/tracker/bills/${billId}/provisions/${pid}`}
                       className="block"
                     >
                       <ProvisionCard

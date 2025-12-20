@@ -27,6 +27,14 @@ export default function BillAnnotationsCard({
     [links, attachments, labels]
   );
 
+  const hasAny =
+    !!(notes && notes.trim()) ||
+    counts.links > 0 ||
+    counts.attachments > 0 ||
+    counts.labels > 0;
+
+  const buttonText = hasAny ? "Edit annotations" : "Add annotations";
+
   // Clamp long notes with a simple expand toggle
   const [notesExpanded, setNotesExpanded] = useState(false);
   const MAX_PREVIEW_CHARS = 1200;
@@ -39,17 +47,18 @@ export default function BillAnnotationsCard({
     <div className="rounded-2xl border p-4 bg-white">
       <div className="flex items-center justify-between">
         <h2 className="text-lg font-semibold">Annotations</h2>
+
         {onEdit ? (
           <button
             type="button"
             onClick={onEdit}
             className="rounded-lg border px-3 py-1 text-sm"
           >
-            Edit annotations
+            {buttonText}
           </button>
         ) : (
           <a href={editHref} className="rounded-lg border px-3 py-1 text-sm">
-            Edit annotations
+            {buttonText}
           </a>
         )}
       </div>
